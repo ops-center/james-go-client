@@ -13,6 +13,7 @@ package openapi
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -68,8 +69,8 @@ func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/address/groups/{groupAddress}"
-	localVarPath = strings.Replace(localVarPath, "{"+"groupAddress"+"}", url.PathEscape(parameterValueToString(r.groupAddress, "groupAddress")), -1)
+	localVarPath := fmt.Sprintf("%s/%s/%s", localBasePath + "/address/groups", r.groupAddress, *r.memberAddress)
+
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
