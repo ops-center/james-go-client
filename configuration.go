@@ -12,7 +12,9 @@ package openapi
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
+	"golang.org/x/oauth2"
 	"net/http"
 	"strings"
 )
@@ -212,4 +214,31 @@ func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint strin
 	}
 
 	return sc.URL(index, variables)
+}
+
+// WithBasicAuth sets the HttpClient to a client which authenticates using the provided
+// username and password
+func (c *Configuration) WithBasicAuth(username string, password string) *Configuration {
+	ctx := context.Background()
+	auth := username + ":" + password
+	t := &oauth2.Token{
+		AccessToken: base64.StdEncoding.EncodeToString([]byte(auth)),
+		TokenType:   "basic",
+	}
+	cfg := &oauth2.Config{}
+	c.HTTPClient = oauth2.NewClient(ctx, cfg.TokenSource(ctx, t))
+	return c
+}
+
+// WithAccessToken sets the HttpClient to a client which authenticates using the provided Access
+// Token
+func (c *Configuration) WithAccessToken(token string) *Configuration {
+	ctx := context.Background()
+	t := &oauth2.Token{
+		AccessToken: token,
+		TokenType:   "bearer",
+	}
+	cfg := &oauth2.Config{}
+	c.HTTPClient = oauth2.NewClient(ctx, cfg.TokenSource(ctx, t))
+	return c
 }
