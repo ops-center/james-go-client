@@ -368,17 +368,19 @@ func (a *AddressGroupAPIService) RemoveMemberExecute(r ApiRemoveMemberRequest) (
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/address/groups/{groupAddress}"
-	localVarPath = strings.Replace(localVarPath, "{"+"groupAddress"+"}", url.PathEscape(parameterValueToString(r.groupAddress, "groupAddress")), -1)
-
-	localVarHeaderParams := make(map[string]string)
-	localVarQueryParams := url.Values{}
-	localVarFormParams := url.Values{}
 	if r.memberAddress == nil {
 		return nil, reportError("memberAddress is required and must be specified")
 	}
 
-	parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
+	localVarPath := localBasePath + "/address/groups/{groupAddress}"
+	localVarPath = strings.Replace(localVarPath, "{"+"groupAddress"+"}", url.PathEscape(parameterValueToString(r.groupAddress, "groupAddress")), -1) + "/" + *r.memberAddress
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+
+	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
