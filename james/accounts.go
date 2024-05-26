@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"net/http"
 
-	openapi "github.com/searchlight/james-go-client"
+	openapi "github.com/ops-center/james-go-client"
 )
 
 // todo james: restructure errors
