@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	openapi "github.com/ops-center/james-go-client"
 	"github.com/pkg/errors"
-	openapi "github.com/searchlight/james-go-client"
 )
 
 type Config struct {
@@ -82,7 +82,7 @@ const (
 	TokenCookieName     = "_james_token"
 	TokenCookieDuration = DurationDay
 
-	GlobalMailDomain = "mail.appscode.com"
+	GlobalMailDomain = "cloud.appscode.com"
 )
 
 type ObjectTypeIdentifier int
@@ -95,10 +95,11 @@ const (
 	ClusterType
 	NamespaceType
 	DbType
+	AgentType
 )
 
 func (i ObjectTypeIdentifier) String() string {
-	return []string{"usr", "org", "tm", "grp", "cluster", "ns", "db"}[i-1]
+	return []string{"usr", "org", "tm", "grp", "cluster", "ns", "db", "agent"}[i-1]
 }
 
 func (i ObjectTypeIdentifier) EnumIndex() int {
@@ -124,6 +125,17 @@ type Object interface {
 	//   - For a user object, GetName() might return a username like "john.doe".
 	//   - For a product object, GetName() might return a product code like "ABC123".
 	GetName() string
+
+	// GetUniqueID returns a globally unique identifier for the object. This identifier
+	// is distinct from the name returned by GetName(), providing a guaranteed unique
+	// reference to the object within the system.
+	//
+	// The unique ID is typically generated using a UUID or similar mechanism to ensure
+	// its uniqueness across the entire system.
+	//
+	// Return value:
+	//   - string: The globally unique identifier for the object.
+	GetUniqueID() string
 
 	// GetType returns the type of the object, indicating whether it's
 	// an account or a group. This is important to decide what
@@ -157,6 +169,7 @@ type Object interface {
 
 type ObjectIdentifier struct {
 	ObjectName       string
+	ObjectUniqueID   string
 	ObjectType       ObjectTypeIdentifier
 	IsGroupType      bool
 	ParentObject     *ObjectIdentifier
@@ -168,6 +181,10 @@ var _ Object = (*ObjectIdentifier)(nil)
 
 func (o ObjectIdentifier) GetName() string {
 	return o.ObjectName
+}
+
+func (o ObjectIdentifier) GetUniqueID() string {
+	return o.ObjectUniqueID
 }
 
 func (o ObjectIdentifier) GetType() ObjectTypeIdentifier {

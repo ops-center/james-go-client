@@ -25,9 +25,9 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 		return addr, nil
 	}
 	if isEmptyString(addr) {
-		addr = fmt.Sprintf("%s.%s", object.GetName(), object.GetType())
+		addr = fmt.Sprintf("%s$%s.%s", object.GetName(), object.GetUniqueID(), object.GetType())
 	} else {
-		addr = fmt.Sprintf("%s.%s.%s", addr, object.GetName(), object.GetType())
+		addr = fmt.Sprintf("%s.%s$%s.%s", addr, object.GetName(), object.GetUniqueID(), object.GetType())
 	}
 
 	if object.HasParentObject() {
