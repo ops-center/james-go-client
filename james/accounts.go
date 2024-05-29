@@ -2,8 +2,7 @@ package james
 
 import (
 	"context"
-	"errors"
-	"fmt"
+	"github.com/pkg/errors"
 	"net/http"
 
 	openapi "github.com/ops-center/james-go-client"
@@ -27,19 +26,17 @@ func (js *Service) createAccount(object Object) error {
 	}
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 	r, err := js.Client.UsersAPI.UpsertUser(context.TODO(), objectAddr).
 		UpsertUserRequest(openapi.UpsertUserRequest{Password: RandomPassword}).Execute()
 
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, err)
 	}
-	if r.StatusCode == http.StatusConflict {
-		return ErrUserAlreadyExists
-	}
+
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to create user account, status: %v", r.Status)
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil
@@ -52,16 +49,16 @@ func (js *Service) deleteAccount(object Object) error {
 
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
 	r, err := js.Client.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to delete user account, status: %v", r.Status)
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil
@@ -86,11 +83,14 @@ func (js *Service) DeleteObject(object Object) error {
 func (js *Service) AddGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := js.GetObjectAddr(grpObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		if err != nil {
+			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+		}
 	}
 	memberAddr, err := js.GetObjectAddr(memberObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+
 	}
 
 	return js.addGroupMember(grpAddr, memberAddr)
@@ -99,11 +99,11 @@ func (js *Service) AddGroupMember(grpObject, memberObject Object) error {
 func (js *Service) addGroupMember(grpAddr, memberAddr string) error {
 	r, err := js.Client.AddressGroupAPI.AddMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to add group member, status: %v", r.Status)
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil
@@ -112,11 +112,13 @@ func (js *Service) addGroupMember(grpAddr, memberAddr string) error {
 func (js *Service) RemoveGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+
 	}
 	memberAddr, err := generateObjectAddr(memberObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+
 	}
 
 	return js.removeGroupMember(grpAddr, memberAddr)
@@ -125,11 +127,11 @@ func (js *Service) RemoveGroupMember(grpObject, memberObject Object) error {
 func (js *Service) removeGroupMember(grpAddr, memberAddr string) error {
 	r, err := js.Client.AddressGroupAPI.RemoveMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to remove group member, status: %v", r.Status)
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil
@@ -138,14 +140,11 @@ func (js *Service) removeGroupMember(grpAddr, memberAddr string) error {
 func (js *Service) createGroup(object Object) error {
 	grpAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return err
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 	r, err := js.Client.AddressGroupAPI.CreateGroup(context.Background(), grpAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
-	}
-	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed to create group, status: %v", r.Status)
+		return newServerError(r, err)
 	}
 
 	return nil
@@ -154,16 +153,12 @@ func (js *Service) createGroup(object Object) error {
 func (js *Service) deleteGroup(grpObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
-		return err
+		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 	}
 
 	r, err := js.Client.AddressGroupAPI.DeleteGroup(context.TODO(), grpAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
-	}
-
-	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed get delete group, status code: %v", r.StatusCode)
+		return newServerError(r, err)
 	}
 
 	return nil
@@ -174,17 +169,13 @@ func (js *Service) DeleteGroups(grpObjects []Object) error {
 	for i := 0; i < len(grpObjects); i++ {
 		grpAddr, err := js.GetObjectAddr(grpObjects[i])
 		if err != nil {
-			return err
+			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 		grpAddresses[i] = grpAddr
 	}
 	r, err := js.Client.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
-	}
-
-	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed get delete group list, status code: %v", r.StatusCode)
+		return newServerError(r, err)
 	}
 
 	return nil
@@ -193,7 +184,7 @@ func (js *Service) DeleteGroups(grpObjects []Object) error {
 func (js *Service) CheckObjectExistence(object Object) error {
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
 	return js.checkAddrExistence(objectAddr)
@@ -202,11 +193,11 @@ func (js *Service) CheckObjectExistence(object Object) error {
 func (js *Service) checkAddrExistence(objectAddr string) error {
 	r, err := js.Client.UsersAPI.ExistsUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return fmt.Errorf("user doesn't exits, status: %v", r.Status)
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil
@@ -215,15 +206,15 @@ func (js *Service) checkAddrExistence(objectAddr string) error {
 func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
 	oldObjectAddr, err := generateObjectAddr(oldObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 	newObjectAddr, err := generateObjectAddr(newObject)
 	if err != nil {
-		return fmt.Errorf("generate object address: %v", err)
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
 	if err = js.checkAddrExistence(oldObjectAddr); err != nil {
-		return fmt.Errorf("update username: %v", err)
+		return errors.Errorf("address doesn't exits: %v", err)
 	}
 
 	err = js.createAccount(newObject)
@@ -233,11 +224,10 @@ func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
 
 	r, err := js.Client.UsersAPI.ChangeUsername(context.TODO(), oldObjectAddr, newObjectAddr).Execute()
 	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+		return newServerError(r, errors.Errorf("failed to change username: %v", err))
 	}
 	if r.StatusCode != http.StatusCreated {
-		// todo: get the server error, unmarshal it and generated new error
-		return fmt.Errorf("failed to update usrename")
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil

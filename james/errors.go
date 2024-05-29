@@ -1,12 +1,10 @@
 package james
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
-
-	"github.com/pkg/errors"
 )
 
 type JamesServerError struct {
@@ -16,27 +14,30 @@ type JamesServerError struct {
 	Details    string `json:"details"`
 }
 
-func unmarshalToJamesServerError(r *http.Response) *JamesServerError {
-	bodyData, err := io.ReadAll(r.Body)
+func newServerError(resp *http.Response, err error) *JamesServerError {
+	if resp == nil {
+		return &JamesServerError{
+			StatusCode: http.StatusInternalServerError,
+			Message:    err.Error(),
+		}
+	}
+
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return &JamesServerError{
-			StatusCode: 500,
-			Type:       "InternalServerError",
-		}
-	}
-	je := JamesServerError{}
-	if err := json.Unmarshal(bodyData, &je); err != nil {
-		return &JamesServerError{
-			StatusCode: 500,
-			Type:       "InternalServerError",
+			StatusCode: http.StatusInternalServerError,
+			Message:    errors.Wrap(err, "failed to read response body").Error(),
 		}
 	}
 
-	if je.StatusCode == 0 {
-		je.StatusCode = r.StatusCode
+	return &JamesServerError{
+		StatusCode: resp.StatusCode,
+		Message:    errors.Wrap(err, string(body)).Error(),
 	}
+}
 
-	return &je
+func (j *JamesServerError) Error() string {
+	return j.Message
 }
 
 func (j *JamesServerError) GetError() error {
