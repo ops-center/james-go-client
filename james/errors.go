@@ -1,9 +1,8 @@
 package james
 
 import (
-	"errors"
 	"fmt"
-	errors2 "github.com/pkg/errors"
+	"github.com/pkg/errors"
 	"io"
 	"net/http"
 )
@@ -15,48 +14,40 @@ type JamesServerError struct {
 	Details    string `json:"details"`
 }
 
-func (e JamesServerError) Error() string {
-	return fmt.Sprintf("james server responded with status code: %d, type: %s, message: %s, details: %s\n", e.StatusCode, e.Type, e.Message, e.Details)
-}
-
-func toJamesServerError(r *http.Response, errorList ...error) *JamesServerError {
-	if r == nil {
+func newServerError(resp *http.Response, err error) *JamesServerError {
+	if resp == nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    errors.Join(errorList...).Error(),
+			Message:    err.Error(),
 		}
 	}
 
-	bodyData, err := io.ReadAll(r.Body)
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    errors.Join(append(errorList, err)...).Error(),
+			Message:    errors.Wrap(err, "failed to read response body").Error(),
 		}
 	}
 
 	return &JamesServerError{
-		StatusCode: r.StatusCode,
-		Message:    errors.Join(append(errorList, errors.New(string(bodyData[:])))...).Error(),
+		StatusCode: resp.StatusCode,
+		Message:    errors.Wrap(err, string(body)).Error(),
 	}
 }
 
-func (j JamesServerError) GetError() error {
+func (j *JamesServerError) Error() string {
+	return j.Message
+}
+
+func (j *JamesServerError) GetError() error {
 	err := fmt.Errorf("%s", j.Type)
 	if !isEmptyString(j.Message) {
-		err = errors2.Wrap(err, j.Message)
+		err = errors.Wrap(err, j.Message)
 	}
 	if !isEmptyString(j.Details) {
-		err = errors2.Wrap(err, j.Details)
+		err = errors.Wrap(err, j.Details)
 	}
 
 	return err
-}
-
-func (j JamesServerError) GetStatusCode() int {
-	return j.StatusCode
-}
-
-func (j JamesServerError) GetMessage() string {
-	return j.Message
 }
