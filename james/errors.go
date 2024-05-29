@@ -1,7 +1,6 @@
 package james
 
 import (
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -16,30 +15,33 @@ type JamesServerError struct {
 	Details    string `json:"details"`
 }
 
+func (e JamesServerError) Error() string {
+	return fmt.Sprintf("james server responded with status code: %d, type: %s, message: %s, details: %s\n", e.StatusCode, e.Type, e.Message, e.Details)
+}
+
 func unmarshalToJamesServerError(r *http.Response) *JamesServerError {
+	if r == nil {
+		return &JamesServerError{
+			StatusCode: http.StatusInternalServerError,
+			Message:    "nil response",
+		}
+	}
+
 	bodyData, err := io.ReadAll(r.Body)
 	if err != nil {
 		return &JamesServerError{
-			StatusCode: 500,
-			Type:       "InternalServerError",
-		}
-	}
-	je := JamesServerError{}
-	if err := json.Unmarshal(bodyData, &je); err != nil {
-		return &JamesServerError{
-			StatusCode: 500,
-			Type:       "InternalServerError",
+			StatusCode: http.StatusInternalServerError,
+			Message:    fmt.Sprintf("Failed to read response body: %s", err),
 		}
 	}
 
-	if je.StatusCode == 0 {
-		je.StatusCode = r.StatusCode
+	return &JamesServerError{
+		StatusCode: r.StatusCode,
+		Message:    string(bodyData[:]),
 	}
-
-	return &je
 }
 
-func (j *JamesServerError) GetError() error {
+func (j JamesServerError) GetError() error {
 	err := fmt.Errorf("%s", j.Type)
 	if !isEmptyString(j.Message) {
 		err = errors.Wrap(err, j.Message)
@@ -49,4 +51,12 @@ func (j *JamesServerError) GetError() error {
 	}
 
 	return err
+}
+
+func (j JamesServerError) GetStatusCode() int {
+	return j.StatusCode
+}
+
+func (j JamesServerError) GetMessage() string {
+	return j.Message
 }
