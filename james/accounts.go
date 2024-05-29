@@ -32,14 +32,17 @@ func (js *Service) createAccount(object Object) error {
 	r, err := js.Client.UsersAPI.UpsertUser(context.TODO(), objectAddr).
 		UpsertUserRequest(openapi.UpsertUserRequest{Password: RandomPassword}).Execute()
 
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 	if r.StatusCode == http.StatusConflict {
 		return ErrUserAlreadyExists
 	}
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to create user account, status: %v", r.Status)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to create user account",
+		}
 	}
 
 	return nil
@@ -56,12 +59,15 @@ func (js *Service) deleteAccount(object Object) error {
 	}
 
 	r, err := js.Client.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to delete user account, status: %v", r.Status)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to delete user account",
+		}
 	}
 
 	return nil
@@ -98,12 +104,15 @@ func (js *Service) AddGroupMember(grpObject, memberObject Object) error {
 
 func (js *Service) addGroupMember(grpAddr, memberAddr string) error {
 	r, err := js.Client.AddressGroupAPI.AddMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to add group member, status: %v", r.Status)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to add member to group",
+		}
 	}
 
 	return nil
@@ -124,12 +133,15 @@ func (js *Service) RemoveGroupMember(grpObject, memberObject Object) error {
 
 func (js *Service) removeGroupMember(grpAddr, memberAddr string) error {
 	r, err := js.Client.AddressGroupAPI.RemoveMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return fmt.Errorf("failed to remove group member, status: %v", r.Status)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to remove group member",
+		}
 	}
 
 	return nil
@@ -141,11 +153,15 @@ func (js *Service) createGroup(object Object) error {
 		return err
 	}
 	r, err := js.Client.AddressGroupAPI.CreateGroup(context.Background(), grpAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
+
 	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed to create group, status: %v", r.Status)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to create group",
+		}
 	}
 
 	return nil
@@ -158,12 +174,15 @@ func (js *Service) deleteGroup(grpObject Object) error {
 	}
 
 	r, err := js.Client.AddressGroupAPI.DeleteGroup(context.TODO(), grpAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 
 	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed get delete group, status code: %v", r.StatusCode)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to delete group",
+		}
 	}
 
 	return nil
@@ -179,12 +198,15 @@ func (js *Service) DeleteGroups(grpObjects []Object) error {
 		grpAddresses[i] = grpAddr
 	}
 	r, err := js.Client.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 
 	if r.StatusCode >= 300 {
-		return fmt.Errorf("failed get delete group list, status code: %v", r.StatusCode)
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to delete group list",
+		}
 	}
 
 	return nil
@@ -232,12 +254,15 @@ func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
 	}
 
 	r, err := js.Client.UsersAPI.ChangeUsername(context.TODO(), oldObjectAddr, newObjectAddr).Execute()
-	if err != nil {
-		return fmt.Errorf("server error: %v", err)
+	if r == nil || err != nil {
+		return unmarshalToJamesServerError(r)
 	}
 	if r.StatusCode != http.StatusCreated {
 		// todo: get the server error, unmarshal it and generated new error
-		return fmt.Errorf("failed to update usrename")
+		return &JamesServerError{
+			StatusCode: r.StatusCode,
+			Message:    "failed to update username",
+		}
 	}
 
 	return nil
