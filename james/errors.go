@@ -32,7 +32,7 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 
 	return &JamesServerError{
 		StatusCode: resp.StatusCode,
-		Message:    errors.Wrap(err, string(body)).Error(),
+		Message:    string(body),
 	}
 }
 
