@@ -96,10 +96,20 @@ const (
 	NamespaceType
 	DbType
 	AgentType
+
+	WorkloadTypeDeployment
+	WorkloadTypeReplicaSet
+	WorkloadTypeDaemonSet
+	WorkloadTypeStatefulSet
+	WorkloadTypePod
+	WorkloadTypeStatefulJob
+	WorkloadTypeStatefulCronJob
+	WorkloadTypeReplicationController
 )
 
 func (i ObjectTypeIdentifier) String() string {
-	return []string{"usr", "org", "tm", "grp", "cluster", "ns", "db", "agent"}[i-1]
+	return []string{"usr", "org", "tm", "grp", "cluster", "ns", "db", "agent",
+		"Deployment", "ReplicaSet", "DaemonSet", "StatefulSet", "Pod", "Job", "CronJob", "ReplicationController"}[i-1]
 }
 
 func (i ObjectTypeIdentifier) EnumIndex() int {
