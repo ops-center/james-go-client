@@ -102,8 +102,8 @@ const (
 	WorkloadTypeDaemonSet
 	WorkloadTypeStatefulSet
 	WorkloadTypePod
-	WorkloadTypeStatefulJob
-	WorkloadTypeStatefulCronJob
+	WorkloadTypeJob
+	WorkloadTypeCronJob
 	WorkloadTypeReplicationController
 )
 
