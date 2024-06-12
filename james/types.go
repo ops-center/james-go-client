@@ -166,15 +166,28 @@ type Object interface {
 	// This method is useful for extending the standard JWT token with domain-specific information,
 	// allowing for more context-rich authentication and authorization mechanisms.
 	AdditionalTokenClaims() *jwt.MapClaims
+
+	// GetBoundedUserIdentity returns key-value pairs representing the system user
+	// associated with the object, in cases where the object is not a user or organization.
+	// This can include details such as userID, userName, etc.
+	//
+	// This method is useful for identifying the system user context associated with
+	// non-user objects, facilitating better tracking and management of object-user
+	// relationships within the system.
+	//
+	// Return value:
+	//   - map[string]string: Key-value pairs representing the bounded user identity.
+	GetBoundedUserIdentity() map[string]string
 }
 
 type ObjectIdentifier struct {
-	ObjectName       string
-	ObjectUniqueID   string
-	ObjectType       ObjectTypeIdentifier
-	IsGroupType      bool
-	ParentObject     *ObjectIdentifier
-	AdditionalClaims *jwt.MapClaims
+	ObjectName          string
+	ObjectUniqueID      string
+	ObjectType          ObjectTypeIdentifier
+	IsGroupType         bool
+	ParentObject        *ObjectIdentifier
+	AdditionalClaims    *jwt.MapClaims
+	BoundedUserIdentity map[string]string
 }
 
 // Implements the Object interface
@@ -206,4 +219,8 @@ func (o ObjectIdentifier) IsGroup() bool {
 
 func (o ObjectIdentifier) AdditionalTokenClaims() *jwt.MapClaims {
 	return o.AdditionalClaims
+}
+
+func (o ObjectIdentifier) GetBoundedUserIdentity() map[string]string {
+	return o.BoundedUserIdentity
 }

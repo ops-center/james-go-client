@@ -12,9 +12,13 @@ func generateObjectAddr(object Object) (string, error) {
 	}
 
 	if object.IsGroup() {
-		addr = fmt.Sprintf("%s.x&grp", addr)
+		addr = fmt.Sprintf("%s.x&type:grp", addr)
 	} else {
-		addr = fmt.Sprintf("%s.x&acc", addr)
+		addr = fmt.Sprintf("%s.x&type:acc", addr)
+	}
+
+	for key, value := range object.GetBoundedUserIdentity() {
+		addr = fmt.Sprintf("%s-%s:%s", addr, key, value)
 	}
 
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
