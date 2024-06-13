@@ -83,9 +83,7 @@ func (js *Service) DeleteObject(object Object) error {
 func (js *Service) AddGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := js.GetObjectAddr(grpObject)
 	if err != nil {
-		if err != nil {
-			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
-		}
+		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 	}
 	memberAddr, err := js.GetObjectAddr(memberObject)
 	if err != nil {
@@ -193,11 +191,10 @@ func (js *Service) CheckObjectExistence(object Object) error {
 func (js *Service) checkAddrExistence(objectAddr string) error {
 	r, err := js.Client.UsersAPI.ExistsUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
+		if r != nil && r.StatusCode == http.StatusNotFound {
+			return ErrUserNotExists
+		}
 		return newServerError(r, err)
-	}
-
-	if r.StatusCode != http.StatusOK {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
 	return nil

@@ -51,3 +51,16 @@ func (j *JamesServerError) GetError() error {
 
 	return err
 }
+
+func serverError(statusCode int, errType, message string) *JamesServerError {
+	return &JamesServerError{
+		StatusCode: statusCode,
+		Type:       errType,
+		Message:    message,
+	}
+}
+
+var (
+	ErrUserNotExists  = serverError(404, "USER_DOES_NOT_EXISTS", "User does not exist")
+	ErrObjectCreation = serverError(500, "OBJECT_CREATION_ERROR", "Object creation error")
+)
