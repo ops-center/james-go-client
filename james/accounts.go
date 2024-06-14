@@ -238,3 +238,28 @@ func (js *Service) GetObjectAddr(object Object) (string, error) {
 
 	return addrStr, nil
 }
+
+func (js *Service) IsObjectExists(object Object) (bool, error) {
+	err := js.CheckObjectExistence(object)
+	if err != nil {
+		if !errors.Is(err, ErrUserNotExists) {
+			return false, err
+		}
+		return false, nil
+	}
+
+	return true, nil
+}
+
+func (js *Service) CreateObjectIfNotExists(object Object) error {
+	exists, err := js.IsObjectExists(object)
+	if err != nil {
+		return err
+	}
+
+	if !exists {
+		return js.CreateObject(object)
+	}
+
+	return nil
+}
