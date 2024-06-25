@@ -78,6 +78,7 @@ func New(c *Config) (*Service, error) {
 const (
 	DurationDay             = time.Hour * 24
 	DefaultTokenExpDuration = DurationDay
+	AdminTokenExpDuration   = DurationDay * 10 * 365
 
 	TokenCookieName     = "_james_token"
 	TokenCookieDuration = DurationDay
