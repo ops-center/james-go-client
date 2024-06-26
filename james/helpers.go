@@ -2,6 +2,7 @@ package james
 
 import (
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -17,8 +18,21 @@ func generateObjectAddr(object Object) (string, error) {
 		addr = fmt.Sprintf("%s.x&type-acc", addr)
 	}
 
+	type keyValPair struct {
+		key, val string
+	}
+	bui := []keyValPair{}
+
 	for key, value := range object.GetBoundedUserIdentity() {
-		addr = fmt.Sprintf("%s&%s-%s", addr, key, value)
+		bui = append(bui, keyValPair{key, value})
+	}
+
+	sort.Slice(bui, func(i, j int) bool {
+		return bui[i].key < bui[j].key
+	})
+
+	for _, kv := range bui {
+		addr = fmt.Sprintf("%s&%s-%s", addr, kv.key, kv.val)
 	}
 
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
