@@ -194,7 +194,7 @@ type Object interface {
 	//
 	// Return value:
 	//   - map[string]string: Key-value pairs representing the bounded user identity.
-	GetBoundedUserIdentity() map[string]string
+	GetBoundedUserIdentity() BoundedUserIdentityType
 }
 
 type ObjectIdentifier struct {
@@ -204,7 +204,7 @@ type ObjectIdentifier struct {
 	IsGroupType         bool
 	ParentObject        *ObjectIdentifier
 	AdditionalClaims    *jwt.MapClaims
-	BoundedUserIdentity map[string]string
+	BoundedUserIdentity BoundedUserIdentityType
 }
 
 // Implements the Object interface
@@ -238,6 +238,12 @@ func (o ObjectIdentifier) AdditionalTokenClaims() *jwt.MapClaims {
 	return o.AdditionalClaims
 }
 
-func (o ObjectIdentifier) GetBoundedUserIdentity() map[string]string {
+func (o ObjectIdentifier) GetBoundedUserIdentity() BoundedUserIdentityType {
 	return o.BoundedUserIdentity
+}
+
+type BoundedUserIdentityType struct {
+	OwnerName string
+	OwnerID   string
+	OwnerType string
 }
