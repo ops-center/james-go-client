@@ -247,3 +247,7 @@ type UserIdentity struct {
 	OwnerID   string
 	OwnerType string
 }
+
+func (u UserIdentity) String() string {
+	return fmt.Sprintf("nm-%s&id-%s&typ-%s", u.OwnerName, u.OwnerID, u.OwnerType)
+}

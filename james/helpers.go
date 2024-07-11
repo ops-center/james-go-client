@@ -17,16 +17,7 @@ func generateObjectAddr(object Object) (string, error) {
 		addr = fmt.Sprintf("%s.x&type-acc", addr)
 	}
 
-	bui := object.GetBoundedUserIdentity()
-	if bui.OwnerName != "" {
-		addr = fmt.Sprintf("%s&%s-%s", addr, "ownername", bui.OwnerName)
-	}
-	if bui.OwnerID != "" {
-		addr = fmt.Sprintf("%s&%s-%s", addr, "ownerid", bui.OwnerID)
-	}
-	if bui.OwnerType != "" {
-		addr = fmt.Sprintf("%s&%s-%s", addr, "ownertype", bui.OwnerType)
-	}
+	addr = fmt.Sprintf("%s&%s", addr, object.GetBoundedUserIdentity().String())
 
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
 }
