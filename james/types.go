@@ -3,6 +3,7 @@ package james
 import (
 	"crypto/rsa"
 	"fmt"
+	"git.sr.ht/~rockorager/go-jmap"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -10,41 +11,70 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Config struct {
+type WebAdminConf struct {
 	WebAdminServiceAddr string
 	WebAdminServicePort string
 	WebAdminAuthnToken  string
-	PrivateKey          string
 }
 
-func (c *Config) checkValidity(ignorePrivateKey bool) (err error) {
-	if isEmptyString(c.WebAdminServiceAddr) {
+func (wc *WebAdminConf) checkValidity() (err error) {
+	if isEmptyString(wc.WebAdminServiceAddr) {
 		err = errors.Wrapf(err, "web admin address is required")
 	}
-	if isEmptyString(c.WebAdminServicePort) {
+	if isEmptyString(wc.WebAdminServicePort) {
 		err = errors.Wrapf(err, "web admin port is required")
 	}
-	if !ignorePrivateKey {
-		if isEmptyString(c.PrivateKey) {
-			err = errors.Wrapf(err, "private key is required")
-		}
-		_, _, perr := jwt.NewParser().ParseUnverified(c.WebAdminAuthnToken, jwt.MapClaims{})
-		if perr != nil {
-			err = errors.Wrapf(err, perr.Error())
-		}
+
+	_, _, perr := jwt.NewParser().ParseUnverified(c.WebAdminAuthnToken, jwt.MapClaims{})
+	if perr != nil {
+		err = errors.Wrapf(err, perr.Error())
+	}
+
+	return err
+}
+
+type JmapConf struct {
+	JmapServerAddr      string
+	JmapServerPort      string
+	JmapSessionEndpoint string
+}
+
+func (jc *JmapConf) checkValidity() (err error) {
+	if isEmptyString(jc.JmapServerAddr) {
+		err = errors.Wrapf(err, "jmap server address is required")
+	}
+	if isEmptyString(jc.JmapServerPort) {
+		err = errors.Wrapf(err, "jmap port address is required")
+	}
+	if isEmptyString(jc.JmapSessionEndpoint) {
+		err = errors.Wrapf(err, "jmap session endpoint is required")
+	}
+
+	return err
+}
+
+type Config struct {
+	WebAdminConf
+	PrivateKey string
+}
+
+func (c *Config) checkValidity() (err error) {
+	err = c.WebAdminConf.checkValidity()
+	if isEmptyString(c.PrivateKey) {
+		err = errors.Wrapf(err, "private key is required")
 	}
 
 	return
 }
 
-func (c *Config) getJamesWebAdminApiClient() *openapi.APIClient {
+func (c *Config) getJamesWebAdminApiClient() WebAdminClient {
 	configuration := openapi.NewConfiguration().WithAccessToken(c.WebAdminAuthnToken)
 	configuration.Servers[0] = openapi.ServerConfiguration{
 		URL: fmt.Sprintf("%v:%v", c.WebAdminServiceAddr, c.WebAdminServicePort),
 	}
 	apiClient := openapi.NewAPIClient(configuration)
 
-	return apiClient
+	return WebAdminClient(*apiClient)
 }
 
 func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
@@ -56,13 +86,15 @@ func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
 	return rsaPk, nil
 }
 
+type WebAdminClient openapi.APIClient
+
 type Service struct {
-	Client *openapi.APIClient
+	WebAdminClient
 	tokenService
 }
 
 func New(c *Config) (*Service, error) {
-	if err := c.checkValidity(false); err != nil {
+	if err := c.checkValidity(); err != nil {
 		return nil, err
 	}
 
@@ -72,23 +104,28 @@ func New(c *Config) (*Service, error) {
 	}
 
 	return &Service{
-		Client:       c.getJamesWebAdminApiClient(),
-		tokenService: newTokenService(rsaPrivateKey),
+		WebAdminClient: c.getJamesWebAdminApiClient(),
+		tokenService:   newTokenService(rsaPrivateKey),
 	}, nil
 }
 
-type ClientService struct {
-	*openapi.APIClient
+type ClientsHubConf struct {
+	WebAdminConf
+	JmapConf
 }
 
-func NewClientService(c *Config) (*ClientService, error) {
-	if err := c.checkValidity(true); err != nil {
-		return nil, err
-	}
+func (ch *ClientsHubConf) checkValidity() (err error) {
+	err = ch.WebAdminConf.checkValidity()
+	err = errors.Wrapf(err, ch.JmapConf.checkValidity().Error())
 
-	return &ClientService{
-		c.getJamesWebAdminApiClient(),
-	}, nil
+	return err
+}
+
+type JmapClient jmap.Client
+
+type ClientsHubService struct {
+	WebAdminClient
+	JmapClient
 }
 
 const (

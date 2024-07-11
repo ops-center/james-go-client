@@ -8,10 +8,6 @@ import (
 	openapi "github.com/ops-center/james-go-client"
 )
 
-// todo james: restructure errors
-// todo james: manage error handling in a proper way
-// todo james: use context in every exported function
-
 const (
 	RandomPassword = "H1sJk6ORaS" // todo james: remove that later
 )
@@ -20,7 +16,7 @@ var (
 	ErrUserAlreadyExists = errors.New("user already exists")
 )
 
-func (js *Service) createAccount(object Object) error {
+func (jc *WebAdminClient) createAccount(object Object) error {
 	if object.IsGroup() { // don't need to create account for groups
 		return nil
 	}
@@ -28,7 +24,7 @@ func (js *Service) createAccount(object Object) error {
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
-	r, err := js.Client.UsersAPI.UpsertUser(context.TODO(), objectAddr).
+	r, err := jc.UsersAPI.UpsertUser(context.TODO(), objectAddr).
 		UpsertUserRequest(openapi.UpsertUserRequest{Password: RandomPassword}).Execute()
 
 	if err != nil {
@@ -42,7 +38,7 @@ func (js *Service) createAccount(object Object) error {
 	return nil
 }
 
-func (js *Service) deleteAccount(object Object) error {
+func (jc *WebAdminClient) deleteAccount(object Object) error {
 	if object.IsGroup() {
 		return nil
 	}
@@ -52,7 +48,7 @@ func (js *Service) deleteAccount(object Object) error {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
-	r, err := js.Client.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
+	r, err := jc.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -64,38 +60,38 @@ func (js *Service) deleteAccount(object Object) error {
 	return nil
 }
 
-func (js *Service) CreateObject(object Object) error {
+func (jc *WebAdminClient) CreateObject(object Object) error {
 	if object.IsGroup() {
-		return js.createGroup(object)
+		return jc.createGroup(object)
 	}
 
-	return js.createAccount(object)
+	return jc.createAccount(object)
 }
 
-func (js *Service) DeleteObject(object Object) error {
+func (jc *WebAdminClient) DeleteObject(object Object) error {
 	if object.IsGroup() {
-		return js.deleteGroup(object)
+		return jc.deleteGroup(object)
 	}
 
-	return js.deleteAccount(object)
+	return jc.deleteAccount(object)
 }
 
-func (js *Service) AddGroupMember(grpObject, memberObject Object) error {
-	grpAddr, err := js.GetObjectAddr(grpObject)
+func (jc *WebAdminClient) AddGroupMember(grpObject, memberObject Object) error {
+	grpAddr, err := jc.GetObjectAddr(grpObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 	}
-	memberAddr, err := js.GetObjectAddr(memberObject)
+	memberAddr, err := jc.GetObjectAddr(memberObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
 
 	}
 
-	return js.addGroupMember(grpAddr, memberAddr)
+	return jc.addGroupMember(grpAddr, memberAddr)
 }
 
-func (js *Service) addGroupMember(grpAddr, memberAddr string) error {
-	r, err := js.Client.AddressGroupAPI.AddMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
+func (jc *WebAdminClient) addGroupMember(grpAddr, memberAddr string) error {
+	r, err := jc.AddressGroupAPI.AddMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -107,7 +103,7 @@ func (js *Service) addGroupMember(grpAddr, memberAddr string) error {
 	return nil
 }
 
-func (js *Service) RemoveGroupMember(grpObject, memberObject Object) error {
+func (jc *WebAdminClient) RemoveGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
@@ -119,11 +115,11 @@ func (js *Service) RemoveGroupMember(grpObject, memberObject Object) error {
 
 	}
 
-	return js.removeGroupMember(grpAddr, memberAddr)
+	return jc.removeGroupMember(grpAddr, memberAddr)
 }
 
-func (js *Service) removeGroupMember(grpAddr, memberAddr string) error {
-	r, err := js.Client.AddressGroupAPI.RemoveMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
+func (jc *WebAdminClient) removeGroupMember(grpAddr, memberAddr string) error {
+	r, err := jc.AddressGroupAPI.RemoveMember(context.TODO(), grpAddr).MemberAddress(memberAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -135,12 +131,12 @@ func (js *Service) removeGroupMember(grpAddr, memberAddr string) error {
 	return nil
 }
 
-func (js *Service) createGroup(object Object) error {
+func (jc *WebAdminClient) createGroup(object Object) error {
 	grpAddr, err := generateObjectAddr(object)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
-	r, err := js.Client.AddressGroupAPI.CreateGroup(context.Background(), grpAddr).Execute()
+	r, err := jc.AddressGroupAPI.CreateGroup(context.Background(), grpAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -148,13 +144,13 @@ func (js *Service) createGroup(object Object) error {
 	return nil
 }
 
-func (js *Service) deleteGroup(grpObject Object) error {
+func (jc *WebAdminClient) deleteGroup(grpObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 	}
 
-	r, err := js.Client.AddressGroupAPI.DeleteGroup(context.TODO(), grpAddr).Execute()
+	r, err := jc.AddressGroupAPI.DeleteGroup(context.TODO(), grpAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -162,16 +158,16 @@ func (js *Service) deleteGroup(grpObject Object) error {
 	return nil
 }
 
-func (js *Service) DeleteGroups(grpObjects []Object) error {
+func (jc *WebAdminClient) DeleteGroups(grpObjects []Object) error {
 	grpAddresses := make([]string, len(grpObjects))
 	for i := 0; i < len(grpObjects); i++ {
-		grpAddr, err := js.GetObjectAddr(grpObjects[i])
+		grpAddr, err := jc.GetObjectAddr(grpObjects[i])
 		if err != nil {
 			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 		grpAddresses[i] = grpAddr
 	}
-	r, err := js.Client.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
+	r, err := jc.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -179,17 +175,17 @@ func (js *Service) DeleteGroups(grpObjects []Object) error {
 	return nil
 }
 
-func (js *Service) CheckObjectExistence(object Object) error {
+func (jc *WebAdminClient) CheckObjectExistence(object Object) error {
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
-	return js.checkAddrExistence(objectAddr)
+	return jc.checkAddrExistence(objectAddr)
 }
 
-func (js *Service) checkAddrExistence(objectAddr string) error {
-	r, err := js.Client.UsersAPI.ExistsUser(context.TODO(), objectAddr).Execute()
+func (jc *WebAdminClient) checkAddrExistence(objectAddr string) error {
+	r, err := jc.UsersAPI.ExistsUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
 		if r != nil && r.StatusCode == http.StatusNotFound {
 			return ErrUserNotExists
@@ -200,7 +196,7 @@ func (js *Service) checkAddrExistence(objectAddr string) error {
 	return nil
 }
 
-func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
+func (jc *WebAdminClient) UpdateObjectAddr(oldObject, newObject Object) error {
 	oldObjectAddr, err := generateObjectAddr(oldObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
@@ -210,16 +206,16 @@ func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
 
-	if err = js.checkAddrExistence(oldObjectAddr); err != nil {
+	if err = jc.checkAddrExistence(oldObjectAddr); err != nil {
 		return errors.Errorf("address doesn't exits: %v", err)
 	}
 
-	err = js.createAccount(newObject)
+	err = jc.createAccount(newObject)
 	if err != nil && errors.As(err, &ErrUserAlreadyExists) {
 		return err
 	}
 
-	r, err := js.Client.UsersAPI.ChangeUsername(context.TODO(), oldObjectAddr, newObjectAddr).Execute()
+	r, err := jc.UsersAPI.ChangeUsername(context.TODO(), oldObjectAddr, newObjectAddr).Execute()
 	if err != nil {
 		return newServerError(r, errors.Errorf("failed to change username: %v", err))
 	}
@@ -230,7 +226,7 @@ func (js *Service) UpdateObjectAddr(oldObject, newObject Object) error {
 	return nil
 }
 
-func (js *Service) GetObjectAddr(object Object) (string, error) {
+func (jc *WebAdminClient) GetObjectAddr(object Object) (string, error) {
 	addrStr, err := generateObjectAddr(object)
 	if err != nil {
 		return "", err
@@ -239,8 +235,8 @@ func (js *Service) GetObjectAddr(object Object) (string, error) {
 	return addrStr, nil
 }
 
-func (js *Service) IsObjectExists(object Object) (bool, error) {
-	err := js.CheckObjectExistence(object)
+func (jc *WebAdminClient) IsObjectExists(object Object) (bool, error) {
+	err := jc.CheckObjectExistence(object)
 	if err != nil {
 		if !errors.Is(err, ErrUserNotExists) {
 			return false, err
@@ -251,14 +247,14 @@ func (js *Service) IsObjectExists(object Object) (bool, error) {
 	return true, nil
 }
 
-func (js *Service) CreateObjectIfNotExists(object Object) error {
-	exists, err := js.IsObjectExists(object)
+func (jc *WebAdminClient) CreateObjectIfNotExists(object Object) error {
+	exists, err := jc.IsObjectExists(object)
 	if err != nil {
 		return err
 	}
 
 	if !exists {
-		return js.CreateObject(object)
+		return jc.CreateObject(object)
 	}
 
 	return nil
