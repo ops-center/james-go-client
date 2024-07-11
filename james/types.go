@@ -25,12 +25,22 @@ func (wc *WebAdminConf) checkValidity() (err error) {
 		err = errors.Wrapf(err, "web admin port is required")
 	}
 
-	_, _, perr := jwt.NewParser().ParseUnverified(c.WebAdminAuthnToken, jwt.MapClaims{})
+	_, _, perr := jwt.NewParser().ParseUnverified(wc.WebAdminAuthnToken, jwt.MapClaims{})
 	if perr != nil {
 		err = errors.Wrapf(err, perr.Error())
 	}
 
 	return err
+}
+
+func (wc *WebAdminConf) getJamesWebAdminApiClient() WebAdminClient {
+	configuration := openapi.NewConfiguration().WithAccessToken(wc.WebAdminAuthnToken)
+	configuration.Servers[0] = openapi.ServerConfiguration{
+		URL: fmt.Sprintf("%v:%v", wc.WebAdminServiceAddr, wc.WebAdminServicePort),
+	}
+	apiClient := openapi.NewAPIClient(configuration)
+
+	return WebAdminClient(*apiClient)
 }
 
 type JmapConf struct {
@@ -65,16 +75,6 @@ func (c *Config) checkValidity() (err error) {
 	}
 
 	return
-}
-
-func (c *Config) getJamesWebAdminApiClient() WebAdminClient {
-	configuration := openapi.NewConfiguration().WithAccessToken(c.WebAdminAuthnToken)
-	configuration.Servers[0] = openapi.ServerConfiguration{
-		URL: fmt.Sprintf("%v:%v", c.WebAdminServiceAddr, c.WebAdminServicePort),
-	}
-	apiClient := openapi.NewAPIClient(configuration)
-
-	return WebAdminClient(*apiClient)
 }
 
 func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
