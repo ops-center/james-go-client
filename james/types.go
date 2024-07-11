@@ -17,19 +17,21 @@ type Config struct {
 	PrivateKey          string
 }
 
-func (c *Config) checkValidity() (err error) {
+func (c *Config) checkValidity(ignorePrivateKey bool) (err error) {
 	if isEmptyString(c.WebAdminServiceAddr) {
 		err = errors.Wrapf(err, "web admin address is required")
 	}
 	if isEmptyString(c.WebAdminServicePort) {
 		err = errors.Wrapf(err, "web admin port is required")
 	}
-	if isEmptyString(c.PrivateKey) {
-		err = errors.Wrapf(err, "private key is required")
-	}
-	_, _, perr := jwt.NewParser().ParseUnverified(c.WebAdminAuthnToken, jwt.MapClaims{})
-	if perr != nil {
-		err = errors.Wrapf(err, perr.Error())
+	if !ignorePrivateKey {
+		if isEmptyString(c.PrivateKey) {
+			err = errors.Wrapf(err, "private key is required")
+		}
+		_, _, perr := jwt.NewParser().ParseUnverified(c.WebAdminAuthnToken, jwt.MapClaims{})
+		if perr != nil {
+			err = errors.Wrapf(err, perr.Error())
+		}
 	}
 
 	return
@@ -60,7 +62,7 @@ type Service struct {
 }
 
 func New(c *Config) (*Service, error) {
-	if err := c.checkValidity(); err != nil {
+	if err := c.checkValidity(false); err != nil {
 		return nil, err
 	}
 
@@ -72,6 +74,20 @@ func New(c *Config) (*Service, error) {
 	return &Service{
 		Client:       c.getJamesWebAdminApiClient(),
 		tokenService: newTokenService(rsaPrivateKey),
+	}, nil
+}
+
+type ClientService struct {
+	*openapi.APIClient
+}
+
+func NewClientService(c *Config) (*ClientService, error) {
+	if err := c.checkValidity(true); err != nil {
+		return nil, err
+	}
+
+	return &ClientService{
+		c.getJamesWebAdminApiClient(),
 	}, nil
 }
 
