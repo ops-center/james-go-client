@@ -4,6 +4,10 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"git.sr.ht/~rockorager/go-jmap"
+	"git.sr.ht/~rockorager/go-jmap/mail"
+	"git.sr.ht/~rockorager/go-jmap/mail/email"
+	"strings"
+	"sync"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -47,6 +51,7 @@ type JmapConf struct {
 	JmapServerAddr      string
 	JmapServerPort      string
 	JmapSessionEndpoint string
+	JmapAuthnToken      string
 }
 
 func (jc *JmapConf) checkValidity() (err error) {
@@ -121,7 +126,114 @@ func (ch *ClientsHubConf) checkValidity() (err error) {
 	return err
 }
 
-type JmapClient jmap.Client
+type JmapClient struct {
+	jmap.Client
+	muJmap     sync.RWMutex
+	userId     jmap.ID
+	userEmail  string
+	mailboxIds map[string]jmap.ID
+}
+
+func NewJmapClient(jc *JmapConf) (*JmapClient, error) {
+	jmapClient := &JmapClient{
+		Client: jmap.Client{
+			SessionEndpoint: jc.JmapSessionEndpoint,
+		},
+	}
+
+	jmapClient.WithAccessToken(jc.JmapAuthnToken)
+	if err := jmapClient.Client.Authenticate(); err != nil {
+		return nil, err
+	}
+
+	if userId, ok := jmapClient.Session.PrimaryAccounts[mail.URI]; ok {
+		jmapClient.userId = userId
+	} else {
+		return nil, fmt.Errorf("user id not found in session")
+	}
+
+	if account, ok := jmapClient.Session.Accounts[jmapClient.userId]; ok {
+		jmapClient.userEmail = account.Name
+	} else {
+		return nil, fmt.Errorf("user account not found in session")
+	}
+
+	if err := jmapClient.initializeMailboxIds(); err != nil {
+		return nil, err
+	}
+
+	return jmapClient, nil
+}
+
+func (j *JmapClient) GetUserId() jmap.ID {
+	j.muJmap.RLock()
+	defer j.muJmap.RUnlock()
+	return j.getUserId()
+}
+
+func (j *JmapClient) getUserId() jmap.ID {
+	return j.userId
+}
+
+func (j *JmapClient) GetUserEmail() string {
+	j.muJmap.RLock()
+	defer j.muJmap.RUnlock()
+	return j.getUserEmail()
+}
+
+func (j *JmapClient) getUserEmail() string {
+	return j.userEmail
+}
+
+type JamesMailboxName string
+
+const (
+	DraftMailbox   JamesMailboxName = "Drafts"
+	SentMailbox    JamesMailboxName = "Sent"
+	InboxMailbox   JamesMailboxName = "INBOX"
+	ArchiveMailbox JamesMailboxName = "Archive"
+	OutboxMailbox  JamesMailboxName = "Outbox"
+	TrashMailbox   JamesMailboxName = "Trash"
+	SpamMailbox    JamesMailboxName = "Spam"
+)
+
+func (j *JmapClient) GetMailboxId(role JamesMailboxName) (jmap.ID, error) {
+	j.muJmap.RLock()
+	defer j.muJmap.RUnlock()
+	return j.getMailboxId(role)
+}
+
+func (j *JmapClient) getMailboxId(role JamesMailboxName) (jmap.ID, error) {
+	trimmed := strings.ToLower(strings.TrimSpace(string(role)))
+	if mailboxid, ok := j.mailboxIds[trimmed]; ok {
+		return mailboxid, nil
+	}
+	return "", fmt.Errorf("no mailbox found with tag: %s", trimmed)
+}
+
+type JmapSortProperty string
+
+const (
+	//Properties supported by james distributed 3.9
+	ReceivedAt JmapSortProperty = "receivedAt"
+	SentAt     JmapSortProperty = "sentAt"
+	Size       JmapSortProperty = "size"
+	From       JmapSortProperty = "from"
+	To         JmapSortProperty = "to"
+	Subject    JmapSortProperty = "subject"
+)
+
+type JmapEmailFilter struct {
+	email.FilterCondition
+	HasProperties       []string
+	AscendingOrder      bool
+	MaxEmails           uint64
+	SortProperty        JmapSortProperty
+	Position            int64
+	FetchAllBodyValues  bool
+	FetchHTMLBodyValues bool
+	InMailboxWithName   JamesMailboxName
+}
 
 type ClientsHubService struct {
 	WebAdminClient
