@@ -64,3 +64,7 @@ var (
 	ErrUserNotExists  = serverError(404, "USER_DOES_NOT_EXISTS", "User does not exist")
 	ErrObjectCreation = serverError(500, "OBJECT_CREATION_ERROR", "Object creation error")
 )
+
+const MaxEmailLengthJames = 255
+
+var ErrMaxEmailLengthExceeded = fmt.Errorf("email cannot contain more than %d characters", MaxEmailLengthJames)
