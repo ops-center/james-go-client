@@ -112,9 +112,9 @@ func (j *JmapClient) GetEmails(filter JmapEmailFilter) ([]*email.Email, error) {
 	req.Invoke(&email.Get{
 		Account: j.getUserId(),
 		ReferenceIDs: &jmap.ResultReference{
-			ResultOf: callID,        // The CallID of the referenced method
-			Name:     "Email/query", // The name of the referenced method
-			Path:     "/ids",        // JSON pointer to the location of the reference
+			ResultOf: callID,
+			Name:     "Email/query",
+			Path:     "/ids",
 		},
 		Properties:          filter.HasProperties,
 		FetchAllBodyValues:  filter.FetchAllBodyValues,
@@ -166,9 +166,9 @@ func (j *JmapClient) DestroyAllEmails() (destroyed []jmap.ID, notDestroyed map[j
 	req.Invoke(&email.Set{
 		Account: j.getUserId(),
 		ReferenceDestroyIDs: &jmap.ResultReference{
-			ResultOf: callID1,     // The CallID of the referenced method
-			Name:     "Email/get", // The name of the referenced method
-			Path:     "list/*/id", // JSON pointer to the location of the reference
+			ResultOf: callID1,
+			Name:     "Email/get",
+			Path:     "list/*/id",
 		},
 	})
 

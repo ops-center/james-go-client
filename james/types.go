@@ -197,18 +197,18 @@ const (
 	SpamMailbox    JamesMailboxName = "Spam"
 )
 
-func (j *JmapClient) GetMailboxId(role JamesMailboxName) (jmap.ID, error) {
+func (j *JmapClient) GetMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
 	j.muJmap.RLock()
 	defer j.muJmap.RUnlock()
-	return j.getMailboxId(role)
+	return j.getMailboxId(mailboxName)
 }
 
-func (j *JmapClient) getMailboxId(role JamesMailboxName) (jmap.ID, error) {
-	trimmed := strings.ToLower(strings.TrimSpace(string(role)))
-	if mailboxid, ok := j.mailboxIds[trimmed]; ok {
+func (j *JmapClient) getMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
+	trimmedMailboxName := strings.ToLower(strings.TrimSpace(string(mailboxName)))
+	if mailboxid, ok := j.mailboxIds[trimmedMailboxName]; ok {
 		return mailboxid, nil
 	}
-	return "", fmt.Errorf("no mailbox found with tag: %s", trimmed)
+	return "", fmt.Errorf("no mailbox found with name: %s", trimmedMailboxName)
 }
 
 type JmapSortProperty string
@@ -226,9 +226,9 @@ const (
 type JmapEmailFilter struct {
 	email.FilterCondition
 	HasProperties       []string
-	AscendingOrder      bool
 	MaxEmails           uint64
 	SortProperty        JmapSortProperty
+	AscendingOrder      bool
 	Position            int64
 	FetchAllBodyValues  bool
 	FetchHTMLBodyValues bool
