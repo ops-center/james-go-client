@@ -79,6 +79,10 @@ type JMAPConf struct {
 	JMAPSessionEndpoint string
 }
 
+type TokenInterface interface {
+	GetToken()
+}
+
 func (c *Config) checkValidity() (err error) {
 	err = c.WebAdminConf.checkValidity()
 	if isEmptyString(c.PrivateKey) {
@@ -102,6 +106,9 @@ type WebAdminClient struct {
 	mu              sync.RWMutex
 	authRenewTicker *time.Ticker
 	authRenewChan   chan chan error
+	started         bool
+	done            chan struct{}
+	sessionEndpoint string
 }
 
 type Service struct {
@@ -145,37 +152,130 @@ type ClientsHubService struct {
 // ------------Inbox-agent WebAdmin and JMAP Clients------------
 
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
-	token, err := getJamesToken()
-	if err != nil {
+	client := WebAdminClient{
+		sessionEndpoint: wc.WebAdminSessionEndpoint,
+	}
+	if err := client.renew(); err != nil {
 		return nil, err
 	}
 
-	configuration := openapi.NewConfiguration().WithAccessToken(token)
-	configuration.Servers = []openapi.ServerConfiguration{
-		{
-			URL:         wc.WebAdminSessionEndpoint,
-			Description: "Appscode James WebAdmin endpoint",
-		},
-	}
-
-	client := WebAdminClient{
-		APIClient: *openapi.NewAPIClient(configuration),
-	}
+	client.Start()
 
 	return &client, nil
 }
 
+func (w *WebAdminClient) Start() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if w.started {
+		return
+	}
+	w.started = true
+
+	w.done = make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-w.done:
+				return
+			case errChan := <-w.authRenewChan:
+				w.mu.Lock()
+				err := w.renew()
+				w.mu.Unlock()
+				time.Sleep(20 * time.Millisecond)
+				errChan <- err
+				chanlen := len(w.authRenewChan)
+				for i := 0; i < chanlen; i++ {
+					c := <-w.authRenewChan
+					c <- err
+				}
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-w.done:
+				return
+			case <-w.authRenewTicker.C:
+				if err := w.RenewSession(); err != nil {
+					log.Println("error during scheduled jmap client renewal: ", err)
+				}
+			}
+		}
+	}()
+}
+
+func (w *WebAdminClient) Close() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if w.started {
+		return
+	}
+	w.started = false
+
+	close(w.done)
+}
+
+func (w *WebAdminClient) RenewSession() error {
+	w.mu.RLock()
+	if !w.started {
+		return fmt.Errorf("webadmin client auth channel closed")
+	}
+	w.mu.RUnlock()
+
+	errChan := make(chan error)
+	w.authRenewChan <- errChan
+	return <-errChan
+}
+
+func (w *WebAdminClient) renew() error {
+	var lastErr error
+	err := wait.PollUntilContextTimeout(
+		context.TODO(),
+		100*time.Millisecond,
+		5*time.Second,
+		true,
+		func(ctx context.Context) (bool, error) {
+			token, err := getJamesToken()
+			if err != nil {
+				lastErr = err
+				return false, nil
+			}
+
+			configuration := openapi.NewConfiguration().WithAccessToken(token)
+			configuration.Servers = []openapi.ServerConfiguration{
+				{
+					URL:         w.sessionEndpoint,
+					Description: "Appscode James WebAdmin endpoint",
+				},
+			}
+			w.APIClient = *openapi.NewAPIClient(configuration)
+
+			return true, nil
+		},
+	)
+
+	if err != nil {
+		return errors.Wrap(lastErr, err.Error())
+	}
+	return nil
+}
+
 type JMAPClient struct {
 	jmap.Client
-	muJmap              sync.RWMutex
-	userId              jmap.ID
-	userEmail           string
-	mailboxIds          map[string]jmap.ID
-	authRenewTicker     *time.Ticker
-	authRenewChan       chan chan error
-	done                chan struct{}
-	started             bool
-	jmapSessionEndpoint string
+	muJmap          sync.RWMutex
+	userId          jmap.ID
+	userEmail       string
+	mailboxIds      map[string]jmap.ID
+	authRenewTicker *time.Ticker
+	authRenewChan   chan chan error
+	done            chan struct{}
+	started         bool
 }
 
 const (
@@ -278,6 +378,7 @@ func (j *JMAPClient) renew() error {
 		5*time.Second,
 		true,
 		func(ctx context.Context) (bool, error) {
+
 			if token, err := getJamesToken(); err == nil {
 				j.WithAccessToken(token)
 			} else {
