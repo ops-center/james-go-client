@@ -22,9 +22,6 @@ var (
 func getJamesToken() (string, error) {
 	{
 		if token, ok := os.LookupEnv("INBOX_SERVER_TOKEN"); ok && len(token) > 0 {
-			/*log.Println("\n--------------------------------\n" +
-			"using james token from env" +
-			"\n--------------------------------")*/
 			return token, nil
 		}
 	}

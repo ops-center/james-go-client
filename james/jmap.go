@@ -241,11 +241,6 @@ func (j *JMAPClient) GetTestRecipient() (string, error) {
 	return Recipient, nil
 }
 
-/*
------------------------------------------
-JMAP E-mail builder with options pattern
------------------------------------------
-*/
 type emailData struct {
 	recipient, subject, bodyValue string
 	customHeaders                 []*email.Header
