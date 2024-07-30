@@ -2,9 +2,11 @@ package james
 
 import (
 	"fmt"
-	"github.com/pkg/errors"
+	"git.sr.ht/~rockorager/go-jmap"
 	"io"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 type JamesServerError struct {
@@ -34,6 +36,16 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 		StatusCode: resp.StatusCode,
 		Message:    string(body),
 	}
+}
+
+func IsUnauthorizedError(err error) bool {
+	var je *JamesServerError
+	if errors.As(err, &je) && je.StatusCode == 401 {
+		return true
+	}
+
+	var re *jmap.RequestError
+	return errors.As(err, &re) && re.Status == 401
 }
 
 func (j *JamesServerError) Error() string {

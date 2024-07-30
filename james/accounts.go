@@ -2,8 +2,9 @@ package james
 
 import (
 	"context"
-	"github.com/pkg/errors"
 	"net/http"
+
+	"github.com/pkg/errors"
 
 	openapi "github.com/ops-center/james-go-client"
 )

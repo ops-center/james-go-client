@@ -1,14 +1,18 @@
 package james
 
 import (
+	"context"
 	"crypto/rsa"
 	"fmt"
-	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
-	"git.sr.ht/~rockorager/go-jmap/mail/email"
+	"k8s.io/apimachinery/pkg/util/wait"
+	"log"
 	"strings"
 	"sync"
 	"time"
+
+	"git.sr.ht/~rockorager/go-jmap"
+	"git.sr.ht/~rockorager/go-jmap/mail/email"
 
 	"github.com/golang-jwt/jwt/v5"
 	openapi "github.com/ops-center/james-go-client"
@@ -16,9 +20,10 @@ import (
 )
 
 type WebAdminConf struct {
-	WebAdminServiceAddr string
-	WebAdminServicePort string
-	WebAdminAuthnToken  string
+	WebAdminServiceAddr     string
+	WebAdminServicePort     string
+	WebAdminSessionEndpoint string
+	WebAdminAuthnToken      string
 }
 
 func (wc *WebAdminConf) checkValidity() (err error) {
@@ -44,24 +49,19 @@ func (wc *WebAdminConf) getJamesWebAdminApiClient() WebAdminClient {
 	}
 	apiClient := openapi.NewAPIClient(configuration)
 
-	return WebAdminClient(*apiClient)
+	return WebAdminClient{
+		APIClient: *apiClient,
+	}
 }
 
-type JmapConf struct {
-	JmapServerAddr      string
-	JmapServerPort      string
-	JmapSessionEndpoint string
-	JmapAuthnToken      string
-}
-
-func (jc *JmapConf) checkValidity() (err error) {
-	if isEmptyString(jc.JmapServerAddr) {
+func (jc *JMAPConf) checkValidity() (err error) {
+	if isEmptyString(jc.JMAPServerAddr) {
 		err = errors.Wrapf(err, "jmap server address is required")
 	}
-	if isEmptyString(jc.JmapServerPort) {
+	if isEmptyString(jc.JMAPServerPort) {
 		err = errors.Wrapf(err, "jmap port address is required")
 	}
-	if isEmptyString(jc.JmapSessionEndpoint) {
+	if isEmptyString(jc.JMAPSessionEndpoint) {
 		err = errors.Wrapf(err, "jmap session endpoint is required")
 	}
 
@@ -71,6 +71,16 @@ func (jc *JmapConf) checkValidity() (err error) {
 type Config struct {
 	WebAdminConf
 	PrivateKey string
+}
+
+type JMAPConf struct {
+	JMAPServerAddr      string
+	JMAPServerPort      string
+	JMAPSessionEndpoint string
+}
+
+type TokenInterface interface {
+	GetToken()
 }
 
 func (c *Config) checkValidity() (err error) {
@@ -91,7 +101,15 @@ func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
 	return rsaPk, nil
 }
 
-type WebAdminClient openapi.APIClient
+type WebAdminClient struct {
+	openapi.APIClient
+	mu              sync.RWMutex
+	authRenewTicker *time.Ticker
+	authRenewChan   chan chan error
+	started         bool
+	done            chan struct{}
+	sessionEndpoint string
+}
 
 type Service struct {
 	WebAdminClient
@@ -116,73 +134,289 @@ func New(c *Config) (*Service, error) {
 
 type ClientsHubConf struct {
 	WebAdminConf
-	JmapConf
+	JMAPConf
 }
 
 func (ch *ClientsHubConf) checkValidity() (err error) {
 	err = ch.WebAdminConf.checkValidity()
-	err = errors.Wrapf(err, ch.JmapConf.checkValidity().Error())
+	err = errors.Wrapf(err, ch.JMAPConf.checkValidity().Error())
 
 	return err
 }
 
-type JmapClient struct {
-	jmap.Client
-	muJmap     sync.RWMutex
-	userId     jmap.ID
-	userEmail  string
-	mailboxIds map[string]jmap.ID
+type ClientsHubService struct {
+	WebAdminClient
+	JMAPClient
 }
 
-func NewJmapClient(jc *JmapConf) (*JmapClient, error) {
-	jmapClient := &JmapClient{
-		Client: jmap.Client{
-			SessionEndpoint: jc.JmapSessionEndpoint,
+// ------------Inbox-agent WebAdmin and JMAP Clients------------
+
+func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
+	client := WebAdminClient{
+		sessionEndpoint: wc.WebAdminSessionEndpoint,
+	}
+	if err := client.renew(); err != nil {
+		return nil, err
+	}
+
+	client.Start()
+
+	return &client, nil
+}
+
+func (w *WebAdminClient) Start() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if w.started {
+		return
+	}
+	w.started = true
+
+	w.done = make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-w.done:
+				return
+			case errChan := <-w.authRenewChan:
+				w.mu.Lock()
+				err := w.renew()
+				w.mu.Unlock()
+				time.Sleep(20 * time.Millisecond)
+				errChan <- err
+				chanlen := len(w.authRenewChan)
+				for i := 0; i < chanlen; i++ {
+					c := <-w.authRenewChan
+					c <- err
+				}
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-w.done:
+				return
+			case <-w.authRenewTicker.C:
+				if err := w.RenewSession(); err != nil {
+					log.Println("error during scheduled jmap client renewal: ", err)
+				}
+			}
+		}
+	}()
+}
+
+func (w *WebAdminClient) Close() {
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	if w.started {
+		return
+	}
+	w.started = false
+
+	close(w.done)
+}
+
+func (w *WebAdminClient) RenewSession() error {
+	w.mu.RLock()
+	if !w.started {
+		return fmt.Errorf("webadmin client auth channel closed")
+	}
+	w.mu.RUnlock()
+
+	errChan := make(chan error)
+	w.authRenewChan <- errChan
+	return <-errChan
+}
+
+func (w *WebAdminClient) renew() error {
+	var lastErr error
+	err := wait.PollUntilContextTimeout(
+		context.TODO(),
+		100*time.Millisecond,
+		5*time.Second,
+		true,
+		func(ctx context.Context) (bool, error) {
+			token, err := getJamesToken()
+			if err != nil {
+				lastErr = err
+				return false, nil
+			}
+
+			configuration := openapi.NewConfiguration().WithAccessToken(token)
+			configuration.Servers = []openapi.ServerConfiguration{
+				{
+					URL:         w.sessionEndpoint,
+					Description: "Appscode James WebAdmin endpoint",
+				},
+			}
+			w.APIClient = *openapi.NewAPIClient(configuration)
+
+			return true, nil
 		},
+	)
+
+	if err != nil {
+		return errors.Wrap(lastErr, err.Error())
+	}
+	return nil
+}
+
+type JMAPClient struct {
+	jmap.Client
+	muJmap          sync.RWMutex
+	userId          jmap.ID
+	userEmail       string
+	mailboxIds      map[string]jmap.ID
+	authRenewTicker *time.Ticker
+	authRenewChan   chan chan error
+	done            chan struct{}
+	started         bool
+}
+
+const (
+	Recipient         = "recipient.acc@cloud.appscode.com"
+	authRenewInterval = 20 * time.Second
+)
+
+func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
+	client := &JMAPClient{
+		Client: jmap.Client{
+			SessionEndpoint: jc.JMAPSessionEndpoint,
+		},
+		authRenewChan:   make(chan chan error),
+		authRenewTicker: time.NewTicker(authRenewInterval),
 	}
 
-	jmapClient.WithAccessToken(jc.JmapAuthnToken)
-	if err := jmapClient.Client.Authenticate(); err != nil {
+	if err := client.renew(); err != nil {
 		return nil, err
 	}
 
-	if userId, ok := jmapClient.Session.PrimaryAccounts[mail.URI]; ok {
-		jmapClient.userId = userId
-	} else {
-		return nil, fmt.Errorf("user id not found in session")
-	}
+	client.Start()
 
-	if account, ok := jmapClient.Session.Accounts[jmapClient.userId]; ok {
-		jmapClient.userEmail = account.Name
-	} else {
-		return nil, fmt.Errorf("user account not found in session")
-	}
-
-	if err := jmapClient.initializeMailboxIds(); err != nil {
-		return nil, err
-	}
-
-	return jmapClient, nil
+	return client, nil
 }
 
-func (j *JmapClient) GetUserId() jmap.ID {
+func (j *JMAPClient) Start() {
+	j.muJmap.Lock()
+	defer j.muJmap.Unlock()
+
+	if j.started {
+		return
+	}
+	j.started = true
+
+	j.done = make(chan struct{})
+
+	go func() {
+		for {
+			select {
+			case <-j.done:
+				return
+			case errChan := <-j.authRenewChan:
+				j.muJmap.Lock()
+				err := j.renew()
+				j.muJmap.Unlock()
+				time.Sleep(20 * time.Millisecond)
+				errChan <- err
+				chanlen := len(j.authRenewChan)
+				for i := 0; i < chanlen; i++ {
+					c := <-j.authRenewChan
+					c <- err
+				}
+			}
+		}
+	}()
+
+	go func() {
+		for {
+			select {
+			case <-j.done:
+				return
+			case <-j.authRenewTicker.C:
+				if err := j.RenewSession(); err != nil {
+					log.Println("error during scheduled jmap client renewal: ", err)
+				}
+			}
+		}
+	}()
+}
+
+func (j *JMAPClient) Close() {
+	j.muJmap.Lock()
+	defer j.muJmap.Unlock()
+
+	if !j.started {
+		return
+	}
+	j.started = false
+
+	close(j.done)
+}
+
+func (j *JMAPClient) RenewSession() error {
 	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
-	return j.getUserId()
+	if !j.started {
+		return fmt.Errorf("jmap client auth channel closed")
+	}
+	j.muJmap.RUnlock()
+
+	errChan := make(chan error, 1)
+	j.authRenewChan <- errChan
+	return <-errChan
 }
 
-func (j *JmapClient) getUserId() jmap.ID {
-	return j.userId
-}
+func (j *JMAPClient) renew() error {
+	var lastErr error
+	err := wait.PollUntilContextTimeout(
+		context.TODO(),
+		100*time.Millisecond,
+		5*time.Second,
+		true,
+		func(ctx context.Context) (bool, error) {
 
-func (j *JmapClient) GetUserEmail() string {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
-	return j.getUserEmail()
-}
+			if token, err := getJamesToken(); err == nil {
+				j.WithAccessToken(token)
+			} else {
+				lastErr = err
+				return false, nil
+			}
 
-func (j *JmapClient) getUserEmail() string {
-	return j.userEmail
+			if err := j.Client.Authenticate(); err != nil {
+				lastErr = err
+				return false, nil
+			}
+
+			if userId, ok := j.Session.PrimaryAccounts[mail.URI]; ok {
+				j.userId = userId
+			} else {
+				lastErr = fmt.Errorf("user id not found in session")
+				return false, nil
+			}
+
+			if account, ok := j.Session.Accounts[j.userId]; ok {
+				j.userEmail = account.Name
+			} else {
+				lastErr = fmt.Errorf("user email not found in session")
+				return false, nil
+			}
+
+			if err := j.initializeMailboxIds(); err != nil {
+				lastErr = err
+				return false, nil
+			}
+
+			return true, nil
+		})
+
+	if err != nil {
+		return errors.Wrap(lastErr, err.Error())
+	}
+	return nil
 }
 
 type JamesMailboxName string
@@ -197,13 +431,7 @@ const (
 	SpamMailbox    JamesMailboxName = "Spam"
 )
 
-func (j *JmapClient) GetMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
-	return j.getMailboxId(mailboxName)
-}
-
-func (j *JmapClient) getMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
+func (j *JMAPClient) getMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
 	trimmedMailboxName := strings.ToLower(strings.TrimSpace(string(mailboxName)))
 	if mailboxid, ok := j.mailboxIds[trimmedMailboxName]; ok {
 		return mailboxid, nil
@@ -214,7 +442,7 @@ func (j *JmapClient) getMailboxId(mailboxName JamesMailboxName) (jmap.ID, error)
 type JmapSortProperty string
 
 const (
-	//Properties supported by james distributed 3.9
+	//Sort Properties supported by james distributed 3.9
 	ReceivedAt JmapSortProperty = "receivedAt"
 	SentAt     JmapSortProperty = "sentAt"
 	Size       JmapSortProperty = "size"
@@ -233,11 +461,6 @@ type JmapEmailFilter struct {
 	FetchAllBodyValues  bool
 	FetchHTMLBodyValues bool
 	InMailboxWithName   JamesMailboxName
-}
-
-type ClientsHubService struct {
-	WebAdminClient
-	JmapClient
 }
 
 const (
