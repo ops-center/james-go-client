@@ -2,15 +2,10 @@ package james
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"net/http"
 
-	"github.com/pkg/errors"
-
 	openapi "github.com/ops-center/james-go-client"
-)
-
-const (
-	RandomPassword = "H1sJk6ORaS" // todo james: remove that later
 )
 
 var (
@@ -25,8 +20,14 @@ func (jc *WebAdminClient) createAccount(object Object) error {
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
 	}
+
+	password, err := generateRandomPassword()
+	if err != nil {
+		return newServerError(nil, errors.Errorf("failed to generate random password: %v", err))
+	}
+
 	r, err := jc.UsersAPI.UpsertUser(context.TODO(), objectAddr).
-		UpsertUserRequest(openapi.UpsertUserRequest{Password: RandomPassword}).Execute()
+		UpsertUserRequest(openapi.UpsertUserRequest{Password: password}).Execute()
 
 	if err != nil {
 		return newServerError(r, err)
@@ -75,6 +76,43 @@ func (jc *WebAdminClient) DeleteObject(object Object) error {
 	}
 
 	return jc.deleteAccount(object)
+}
+
+func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMembers) error {
+	var groupList []*openapi.Group
+
+	for _, group := range groups {
+		groupAddr, err := generateObjectAddr(group.GetGroup())
+		if err != nil {
+			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+		}
+
+		var memberAddrs []string
+		for _, member := range group.GetMembers() {
+			memberAddr, err := generateObjectAddr(member)
+			if err != nil {
+				return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+			}
+			memberAddrs = append(memberAddrs, memberAddr)
+		}
+
+		groupList = append(groupList, openapi.NewGroup(groupAddr, memberAddrs))
+	}
+
+	return jc.addGroups(groupList)
+}
+
+func (jc *WebAdminClient) addGroups(groups []*openapi.Group) error {
+	r, err := jc.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return nil
 }
 
 func (jc *WebAdminClient) AddGroupMember(grpObject, memberObject Object) error {

@@ -29,6 +29,7 @@ type ApiAddMemberRequest struct {
 	ApiService *AddressGroupAPIService
 	groupAddress string
 	memberAddress *string
+	groups []*Group
 }
 
 // Member mail address
@@ -124,6 +125,105 @@ func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.
 
 	return localVarHTTPResponse, nil
 }
+
+type ApiAddGroupsRequest struct {
+	ctx context.Context
+	ApiService *AddressGroupAPIService
+	groups []*Group
+}
+
+func (r ApiAddGroupsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.AddGroupsExecute(r)
+}
+
+
+/*
+AddGroups Add multiple groups with members
+
+Adds multiple groups along with their members.
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return AddGroupsRequest
+*/
+func (a *AddressGroupAPIService) AddGroups(ctx context.Context, groups []*Group) ApiAddGroupsRequest {
+	return ApiAddGroupsRequest{
+		ApiService: a,
+		ctx: ctx,
+		groups: groups,
+	}
+}
+
+// Execute executes the request
+//  @return AddGroups200Response
+func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) ( *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.AddressGroupsAddGroupsPost")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/address/groups/add-groups"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.groups == nil {
+		return nil, reportError("group is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.groups
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return  nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return  localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 
 type ApiListGroupsRequest struct {
 	ctx context.Context
