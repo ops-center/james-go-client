@@ -154,6 +154,9 @@ type ClientsHubService struct {
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 	client := WebAdminClient{
 		sessionEndpoint: wc.WebAdminSessionEndpoint,
+		authRenewTicker: time.NewTicker(authRenewInterval),
+		authRenewChan:   make(chan chan error),
+		started:         false,
 	}
 	if err := client.renew(); err != nil {
 		return nil, err
@@ -172,7 +175,6 @@ func (w *WebAdminClient) Start() {
 		return
 	}
 	w.started = true
-
 	w.done = make(chan struct{})
 
 	go func() {
@@ -290,6 +292,7 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		},
 		authRenewChan:   make(chan chan error),
 		authRenewTicker: time.NewTicker(authRenewInterval),
+		started:         false,
 	}
 
 	if err := client.renew(); err != nil {
@@ -309,7 +312,6 @@ func (j *JMAPClient) Start() {
 		return
 	}
 	j.started = true
-
 	j.done = make(chan struct{})
 
 	go func() {
