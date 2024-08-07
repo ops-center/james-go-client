@@ -2,11 +2,12 @@ module github.com/ops-center/james-go-client
 
 go 1.22.1
 
-toolchain go1.22.4
+toolchain go1.22.5
 
 require (
 	git.sr.ht/~rockorager/go-jmap v0.4.6
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/google/uuid v1.6.0
 	github.com/pkg/errors v0.9.1
 	github.com/searchlight/james-go-client v0.0.0-20231113195825-c235670364db
 	github.com/stretchr/testify v1.9.0
@@ -28,7 +29,6 @@ require (
 	github.com/docker/distribution v2.8.2+incompatible // indirect
 	github.com/docker/docker v24.0.9+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/emicklei/go-restful/v3 v3.11.0 // indirect
 	github.com/evanphx/json-patch v5.7.0+incompatible // indirect
 	github.com/evanphx/json-patch/v5 v5.9.0 // indirect
@@ -45,7 +45,6 @@ require (
 	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/go-containerregistry v0.19.1 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
-	github.com/google/uuid v1.6.0 // indirect
 	github.com/huandu/xstrings v1.4.0 // indirect
 	github.com/imdario/mergo v0.3.16 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -87,8 +86,6 @@ require (
 	golang.org/x/time v0.5.0 // indirect
 	gomodules.xyz/encoding v0.0.8 // indirect
 	gomodules.xyz/jsonpatch/v2 v2.4.0 // indirect
-	gomodules.xyz/jsonpath v0.0.2 // indirect
-	gomodules.xyz/mergo v0.3.13 // indirect
 	gomodules.xyz/pointer v0.1.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/inf.v0 v0.9.1 // indirect
@@ -112,13 +109,3 @@ require (
 )
 
 replace git.sr.ht/~rockorager/go-jmap => github.com/ops-center/go-jmap v0.4.7-0.20240424042927-c18631092ce1
-
-replace github.com/imdario/mergo => github.com/imdario/mergo v0.3.6
-
-replace github.com/Masterminds/sprig/v3 => github.com/gomodules/sprig/v3 v3.2.3-0.20220405051441-0a8a99bac1b8
-
-replace k8s.io/apiserver => github.com/kmodules/apiserver v0.30.3-0.20240710215914-588ed1f51176
-
-replace k8s.io/kubernetes => github.com/kmodules/kubernetes v1.30.0-alpha.0.0.20231224075822-3bd9a13c86db
-
-replace sigs.k8s.io/controller-runtime => github.com/kmodules/controller-runtime v0.18.3

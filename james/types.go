@@ -204,7 +204,7 @@ func (w *WebAdminClient) Start() {
 				return
 			case <-w.authRenewTicker.C:
 				if err := w.RenewSession(); err != nil {
-					log.Println("error during scheduled jmap client renewal: ", err)
+					log.Println("error during scheduled webAdmin client renewal: ", err)
 				}
 			}
 		}
@@ -341,7 +341,7 @@ func (j *JMAPClient) Start() {
 				return
 			case <-j.authRenewTicker.C:
 				if err := j.RenewSession(); err != nil {
-					log.Println("error during scheduled jmap client renewal: ", err)
+					log.Println("error during scheduled JMAP client renewal: ", err)
 				}
 			}
 		}
@@ -496,6 +496,28 @@ func (i ObjectTypeIdentifier) String() string {
 
 func (i ObjectTypeIdentifier) EnumIndex() int {
 	return int(i)
+}
+
+type GroupObject interface {
+	GetGroup() Object
+	GetMembers() []Object
+}
+
+type GroupObjectIdentifier struct {
+	Group   *ObjectIdentifier
+	Members []*ObjectIdentifier
+}
+
+func (g *GroupObjectIdentifier) GetGroup() Object {
+	return g.Group
+}
+
+func (g *GroupObjectIdentifier) GetMembers() []Object {
+	members := make([]Object, len(g.Members))
+	for i, member := range g.Members {
+		members[i] = member
+	}
+	return members
 }
 
 // Object interface represents an entity within the Apache James server,
