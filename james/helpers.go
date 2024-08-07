@@ -2,6 +2,7 @@ package james
 
 import (
 	"fmt"
+	"github.com/google/uuid"
 	"strings"
 )
 
@@ -48,6 +49,14 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 	}
 
 	return addr, nil
+}
+
+func generateRandomPassword() (string, error) {
+	pass, err := uuid.NewRandom()
+	if err != nil {
+		return "", err
+	}
+	return pass.String(), nil
 }
 
 func isEmptyString(s string) bool {
