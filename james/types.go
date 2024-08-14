@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"k8s.io/apimachinery/pkg/util/wait"
-	"log"
 	"strings"
 	"sync"
 	"time"
@@ -73,10 +72,17 @@ type Config struct {
 	PrivateKey string
 }
 
+type BasicAuthCredentials struct {
+	Username string
+	Password string
+}
+
 type JMAPConf struct {
 	JMAPServerAddr      string
 	JMAPServerPort      string
 	JMAPSessionEndpoint string
+	ForceBasicAuth      bool
+	BasicAuthCreds      BasicAuthCredentials
 }
 
 type TokenInterface interface {
@@ -104,7 +110,6 @@ func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
 type WebAdminClient struct {
 	openapi.APIClient
 	mu              sync.RWMutex
-	authRenewTicker *time.Ticker
 	authRenewChan   chan chan error
 	started         bool
 	done            chan struct{}
@@ -154,7 +159,6 @@ type ClientsHubService struct {
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 	client := WebAdminClient{
 		sessionEndpoint: wc.WebAdminSessionEndpoint,
-		authRenewTicker: time.NewTicker(authRenewInterval),
 		authRenewChan:   make(chan chan error),
 		started:         false,
 	}
@@ -192,19 +196,6 @@ func (w *WebAdminClient) Start() {
 				for i := 0; i < chanlen; i++ {
 					c := <-w.authRenewChan
 					c <- err
-				}
-			}
-		}
-	}()
-
-	go func() {
-		for {
-			select {
-			case <-w.done:
-				return
-			case <-w.authRenewTicker.C:
-				if err := w.RenewSession(); err != nil {
-					log.Println("error during scheduled webAdmin client renewal: ", err)
 				}
 			}
 		}
@@ -270,19 +261,19 @@ func (w *WebAdminClient) renew() error {
 
 type JMAPClient struct {
 	jmap.Client
-	muJmap          sync.RWMutex
-	userId          jmap.ID
-	userEmail       string
-	mailboxIds      map[string]jmap.ID
-	authRenewTicker *time.Ticker
-	authRenewChan   chan chan error
-	done            chan struct{}
-	started         bool
+	muJmap         sync.RWMutex
+	userId         jmap.ID
+	userEmail      string
+	mailboxIds     map[string]jmap.ID
+	forceBasicAuth bool
+	basicAuthCreds BasicAuthCredentials
+	authRenewChan  chan chan error
+	done           chan struct{}
+	started        bool
 }
 
 const (
-	Recipient         = "recipient.acc@cloud.appscode.com"
-	authRenewInterval = 20 * time.Second
+	Recipient = "recipient.acc@cloud.appscode.com"
 )
 
 func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
@@ -290,9 +281,14 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		Client: jmap.Client{
 			SessionEndpoint: jc.JMAPSessionEndpoint,
 		},
-		authRenewChan:   make(chan chan error),
-		authRenewTicker: time.NewTicker(authRenewInterval),
-		started:         false,
+		authRenewChan:  make(chan chan error),
+		started:        false,
+		forceBasicAuth: false,
+	}
+
+	if jc.ForceBasicAuth {
+		client.basicAuthCreds = jc.BasicAuthCreds
+		client.forceBasicAuth = true
 	}
 
 	if err := client.renew(); err != nil {
@@ -333,19 +329,6 @@ func (j *JMAPClient) Start() {
 			}
 		}
 	}()
-
-	go func() {
-		for {
-			select {
-			case <-j.done:
-				return
-			case <-j.authRenewTicker.C:
-				if err := j.RenewSession(); err != nil {
-					log.Println("error during scheduled JMAP client renewal: ", err)
-				}
-			}
-		}
-	}()
 }
 
 func (j *JMAPClient) Close() {
@@ -381,11 +364,15 @@ func (j *JMAPClient) renew() error {
 		true,
 		func(ctx context.Context) (bool, error) {
 
-			if token, err := getJamesToken(); err == nil {
-				j.WithAccessToken(token)
+			if j.forceBasicAuth {
+				j.WithBasicAuth(j.basicAuthCreds.Username, j.basicAuthCreds.Password)
 			} else {
-				lastErr = err
-				return false, nil
+				if token, err := getJamesToken(); err == nil {
+					j.WithAccessToken(token)
+				} else {
+					lastErr = err
+					return false, nil
+				}
 			}
 
 			if err := j.Client.Authenticate(); err != nil {
