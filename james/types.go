@@ -485,21 +485,21 @@ func (i ObjectTypeIdentifier) EnumIndex() int {
 	return int(i)
 }
 
-type GroupObject interface {
+type GroupAndAssociatedMembers interface {
 	GetGroup() Object
 	GetMembers() []Object
 }
 
-type GroupObjectIdentifier struct {
+type GroupAndAssociatedMembersIdentifier struct {
 	Group   *ObjectIdentifier
 	Members []*ObjectIdentifier
 }
 
-func (g *GroupObjectIdentifier) GetGroup() Object {
+func (g *GroupAndAssociatedMembersIdentifier) GetGroup() Object {
 	return g.Group
 }
 
-func (g *GroupObjectIdentifier) GetMembers() []Object {
+func (g *GroupAndAssociatedMembersIdentifier) GetMembers() []Object {
 	members := make([]Object, len(g.Members))
 	for i, member := range g.Members {
 		members[i] = member

@@ -78,7 +78,7 @@ func (jc *WebAdminClient) DeleteObject(object Object) error {
 	return jc.deleteAccount(object)
 }
 
-func (jc *WebAdminClient) AddGroups(groups []GroupObject) error {
+func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMembers) error {
 	var groupList []*openapi.Group
 
 	for _, group := range groups {
