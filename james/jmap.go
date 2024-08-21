@@ -242,11 +242,11 @@ func (j *JMAPClient) GetTestRecipient() (string, error) {
 }
 
 type emailData struct {
-	recipient, subject, bodyValue string
-	customHeaders                 []*email.Header
-	inReplyTo, references         []string
-	attachments                   []*email.BodyPart
-	client                        *JMAPClient
+	recipient, subject                        string
+	customHeaders                             []*email.Header
+	inReplyTo, references, textBody, htmlBody []string
+	attachments                               []*email.BodyPart
+	client                                    *JMAPClient
 }
 
 type Option func(data *emailData) error
@@ -283,13 +283,37 @@ func (j *JMAPClient) NewEmail(options ...Option) (*email.Email, error) {
 		Email: myMailData.recipient,
 	}
 
-	myBodyValue := email.BodyValue{
-		Value: myMailData.bodyValue,
+	partIDCounter := 0
+	getNewPartId := func() string {
+		partIDCounter++
+		return fmt.Sprintf("body%d", partIDCounter)
 	}
 
-	myBodyPart := email.BodyPart{
-		PartID: "body",
-		Type:   "text/plain",
+	bodyValues := make(map[string]*email.BodyValue)
+	var textBodyParts, htmlBodyParts []*email.BodyPart
+
+	for _, textBodyData := range myMailData.textBody {
+		PartId := getNewPartId()
+
+		bodyValues[PartId] = &email.BodyValue{
+			Value: textBodyData,
+		}
+		textBodyParts = append(textBodyParts, &email.BodyPart{
+			PartID: PartId,
+			Type:   "text/plain",
+		})
+	}
+
+	for _, htmlBodyData := range myMailData.htmlBody {
+		PartId := getNewPartId()
+
+		bodyValues[PartId] = &email.BodyValue{
+			Value: htmlBodyData,
+		}
+		htmlBodyParts = append(htmlBodyParts, &email.BodyPart{
+			PartID: PartId,
+			Type:   "text/html",
+		})
 	}
 
 	myMail := email.Email{
@@ -305,9 +329,10 @@ func (j *JMAPClient) NewEmail(options ...Option) (*email.Email, error) {
 		Subject:       myMailData.subject,
 		Keywords:      map[string]bool{"$draft": true},
 		MailboxIDs:    map[jmap.ID]bool{draftMailboxID: true},
-		BodyValues:    map[string]*email.BodyValue{"body": &myBodyValue},
-		TextBody:      []*email.BodyPart{&myBodyPart},
-		HasAttachment: true,
+		BodyValues:    bodyValues,
+		TextBody:      textBodyParts,
+		HTMLBody:      htmlBodyParts,
+		HasAttachment: len(myMailData.attachments) > 0,
 		Attachments:   myMailData.attachments,
 	}
 
@@ -335,9 +360,16 @@ func WithReference(reference []string) Option {
 	}
 }
 
-func WithBodyValue(body string) Option {
+func WithTextBody(textBody string) Option {
 	return func(e *emailData) error {
-		e.bodyValue = body
+		e.textBody = append(e.textBody, textBody)
+		return nil
+	}
+}
+
+func WithHTMLBody(htmlBody string) Option {
+	return func(e *emailData) error {
+		e.htmlBody = append(e.htmlBody, htmlBody)
 		return nil
 	}
 }
