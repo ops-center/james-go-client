@@ -271,8 +271,8 @@ func (j *JMAPClient) NewEmail(options ...Option) (*email.Email, error) {
 		}
 	}
 
-	if len(myMailData.recipients) == 0 {
-		return nil, errors.New("no recipient defined")
+	if len(myMailData.recipients) == 0 && len(myMailData.bcc) == 0 && len(myMailData.cc) == 0 {
+		return nil, errors.New("no recipients defined")
 	}
 
 	bodyValues := make(map[string]*email.BodyValue)
