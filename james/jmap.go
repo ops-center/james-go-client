@@ -196,8 +196,8 @@ func (j *JMAPClient) DestroyAllEmails() (destroyed []jmap.ID, notDestroyed map[j
 	return nil, nil, fmt.Errorf("email/set response not found")
 }
 
-// James Distributed Server 3.9 doesn't generate mailboxes
-// for new users until a "mailbox/get" query is made
+// A general Email/get method call must be made for new users
+// in order to generate the default mailboxes
 func (j *JMAPClient) initializeMailboxIds() error {
 	req := &jmap.Request{
 		Using: []jmap.URI{"urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail"},
@@ -235,6 +235,7 @@ func (j *JMAPClient) initializeMailboxIds() error {
 	return nil
 }
 
+// TODO: Remove this
 func (j *JMAPClient) GetTestRecipient() (string, error) {
 	j.muJmap.RLock()
 	defer j.muJmap.RUnlock()
@@ -242,11 +243,12 @@ func (j *JMAPClient) GetTestRecipient() (string, error) {
 }
 
 type emailData struct {
-	recipient, subject, bodyValue string
-	customHeaders                 []*email.Header
-	inReplyTo, references         []string
-	attachments                   []*email.BodyPart
-	client                        *JMAPClient
+	subject                                   string
+	recipients, cc, bcc                       []*mail.Address
+	customHeaders                             []*email.Header
+	inReplyTo, references, textBody, htmlBody []string
+	attachments                               []*email.BodyPart
+	client                                    *JMAPClient
 }
 
 type Option func(data *emailData) error
@@ -269,46 +271,60 @@ func (j *JMAPClient) NewEmail(options ...Option) (*email.Email, error) {
 		}
 	}
 
-	if len(myMailData.recipient) == 0 {
-		return nil, errors.New("no recipient defined")
+	if len(myMailData.recipients) == 0 && len(myMailData.bcc) == 0 && len(myMailData.cc) == 0 {
+		return nil, errors.New("no recipients defined")
 	}
 
-	from := mail.Address{
-		Name:  j.userEmail,
-		Email: j.userEmail,
+	bodyValues := make(map[string]*email.BodyValue)
+	var textBodyParts, htmlBodyParts []*email.BodyPart
+
+	for id, textBodyData := range myMailData.textBody {
+		partID := fmt.Sprintf("textbody%d", id)
+
+		bodyValues[partID] = &email.BodyValue{
+			Value: textBodyData,
+		}
+		textBodyParts = append(textBodyParts, &email.BodyPart{
+			PartID: partID,
+			Type:   "text/plain",
+		})
 	}
 
-	to := mail.Address{
-		Name:  myMailData.recipient,
-		Email: myMailData.recipient,
-	}
+	for id, htmlBodyData := range myMailData.htmlBody {
+		partID := fmt.Sprintf("htmlbody%d", id)
 
-	myBodyValue := email.BodyValue{
-		Value: myMailData.bodyValue,
-	}
-
-	myBodyPart := email.BodyPart{
-		PartID: "body",
-		Type:   "text/plain",
+		bodyValues[partID] = &email.BodyValue{
+			Value: htmlBodyData,
+		}
+		htmlBodyParts = append(htmlBodyParts, &email.BodyPart{
+			PartID: partID,
+			Type:   "text/html",
+		})
 	}
 
 	myMail := email.Email{
-		CustomHeaders: myMailData.customHeaders,
+		Subject: myMailData.subject,
 		From: []*mail.Address{
-			&from,
+			{
+				Name:  j.userEmail,
+				Email: j.userEmail,
+			},
 		},
-		To: []*mail.Address{
-			&to,
-		},
-		InReplyTo:     myMailData.inReplyTo,
-		References:    myMailData.references,
-		Subject:       myMailData.subject,
-		Keywords:      map[string]bool{"$draft": true},
-		MailboxIDs:    map[jmap.ID]bool{draftMailboxID: true},
-		BodyValues:    map[string]*email.BodyValue{"body": &myBodyValue},
-		TextBody:      []*email.BodyPart{&myBodyPart},
-		HasAttachment: true,
+		To:         myMailData.recipients,
+		CC:         myMailData.cc,
+		BCC:        myMailData.bcc,
+		InReplyTo:  myMailData.inReplyTo,
+		References: myMailData.references,
+
+		Keywords:   map[string]bool{"$draft": true},
+		MailboxIDs: map[jmap.ID]bool{draftMailboxID: true},
+		BodyValues: bodyValues,
+		TextBody:   textBodyParts,
+		HTMLBody:   htmlBodyParts,
+
+		HasAttachment: len(myMailData.attachments) > 0,
 		Attachments:   myMailData.attachments,
+		CustomHeaders: myMailData.customHeaders,
 	}
 
 	return &myMail, nil
@@ -328,35 +344,70 @@ func WithInReplyTo(inReplyTo []string) Option {
 	}
 }
 
-func WithReference(reference []string) Option {
+// WithReferences references must contain the messageID(s) of the email it's replying to
+func WithReferences(references []string) Option {
 	return func(e *emailData) error {
-		e.references = append(e.references, reference...)
+		e.references = append(e.references, references...)
 		return nil
 	}
 }
 
-func WithBodyValue(body string) Option {
+func WithTextBody(textBody string) Option {
 	return func(e *emailData) error {
-		e.bodyValue = body
+		e.textBody = append(e.textBody, textBody)
 		return nil
 	}
 }
 
-func WithRecipient(recipient string) Option {
+func WithHTMLBody(htmlBody string) Option {
 	return func(e *emailData) error {
-		e.recipient = recipient
+		e.htmlBody = append(e.htmlBody, htmlBody)
+		return nil
+	}
+}
+
+func WithCC(ccList []string) Option {
+	return func(e *emailData) error {
+		for _, cc := range ccList {
+			e.cc = append(e.cc, &mail.Address{
+				Name:  cc,
+				Email: cc,
+			})
+		}
+		return nil
+	}
+}
+
+func WithBCC(bccList []string) Option {
+	return func(e *emailData) error {
+		for _, bcc := range bccList {
+			e.bcc = append(e.bcc, &mail.Address{
+				Name:  bcc,
+				Email: bcc,
+			})
+		}
+		return nil
+	}
+}
+
+func WithRecipients(recipients []string) Option {
+	return func(e *emailData) error {
+		for _, recipient := range recipients {
+			e.recipients = append(e.recipients, &mail.Address{
+				Name:  recipient,
+				Email: recipient,
+			})
+		}
 		return nil
 	}
 }
 
 func WithCustomHeader(key string, value string) Option {
 	return func(e *emailData) error {
-		customHeader := email.Header{
+		e.customHeaders = append(e.customHeaders, &email.Header{
 			Name:  key,
 			Value: value,
-		}
-
-		e.customHeaders = append(e.customHeaders, &customHeader)
+		})
 		return nil
 	}
 }
@@ -367,7 +418,6 @@ func WithAttachment(attachmentName string, blob io.Reader) Option {
 		if err != nil {
 			return err
 		}
-
 		e.attachments = append(e.attachments, myAttachment)
 		return nil
 	}
@@ -379,13 +429,11 @@ func (j *JMAPClient) uploadAttachment(attachmentName string, blob io.Reader) (*e
 		return nil, err
 	}
 
-	myAttachment := email.BodyPart{
+	return &email.BodyPart{
 		BlobID:      resp.ID,
 		Size:        resp.Size,
 		Type:        resp.Type,
 		Name:        attachmentName,
 		Disposition: "attachment",
-	}
-
-	return &myAttachment, nil
+	}, nil
 }
