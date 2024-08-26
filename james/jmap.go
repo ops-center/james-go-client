@@ -239,7 +239,7 @@ func (j *JMAPClient) initializeMailboxIds() error {
 func (j *JMAPClient) GetTestRecipient() (string, error) {
 	j.muJmap.RLock()
 	defer j.muJmap.RUnlock()
-	return Recipient, nil
+	return "recipient.acc@cloud.appscode.com", nil
 }
 
 type emailData struct {

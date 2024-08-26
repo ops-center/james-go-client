@@ -20,7 +20,7 @@ func generateObjectAddr(object Object) (string, error) {
 
 	addr = fmt.Sprintf("%s&%s", addr, object.GetBoundedUserIdentity().String())
 
-	if len(addr) > MaxEmailLengthJames {
+	if len(addr) > MaxEmailLength {
 		return "", ErrMaxEmailLengthExceeded
 	}
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
@@ -36,7 +36,7 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 		addr = fmt.Sprintf("%s.%s$%s&%s", addr, object.GetName(), object.GetUniqueID(), object.GetType())
 	}
 
-	if len(addr) > MaxEmailLengthJames {
+	if len(addr) > MaxEmailLength {
 		return "", ErrMaxEmailLengthExceeded
 	}
 
