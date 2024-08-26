@@ -18,7 +18,10 @@ func generateObjectAddr(object Object) (string, error) {
 		addr = fmt.Sprintf("%s.x&type-acc", addr)
 	}
 
-	addr = fmt.Sprintf("%s&%s", addr, object.GetBoundedUserIdentity().String())
+	boundedUserIdentity := object.GetBoundedUserIdentity()
+	if boundedUserIdentity != nil {
+		addr = fmt.Sprintf("%s&%s", addr, boundedUserIdentity.String())
+	}
 
 	if len(addr) > MaxEmailLengthJames {
 		return "", ErrMaxEmailLengthExceeded
