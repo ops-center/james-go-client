@@ -52,83 +52,41 @@ type ClientsHubService struct {
 	JMAPClient
 }
 
+const authRenewalCacheTTL = 5 * time.Second
+
 type WebAdminClient struct {
 	openapi.APIClient
 	mu              sync.RWMutex
-	authRenewChan   chan chan error
-	started         bool
-	done            chan struct{}
 	sessionEndpoint string
+
+	lastComputedCacheAt time.Time
+	cachedRenewalErr    error
 }
 
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 	client := WebAdminClient{
 		sessionEndpoint: wc.WebAdminSessionEndpoint,
-		authRenewChan:   make(chan chan error),
-		started:         false,
 	}
 	if err := client.renew(); err != nil {
 		return nil, err
 	}
 
-	client.Start()
+	client.lastComputedCacheAt = time.Now()
+	client.cachedRenewalErr = nil
 
 	return &client, nil
 }
 
-func (w *WebAdminClient) Start() {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-
-	if w.started {
-		return
-	}
-	w.started = true
-	w.done = make(chan struct{})
-
-	go func() {
-		for {
-			select {
-			case <-w.done:
-				return
-			case errChan := <-w.authRenewChan:
-				w.mu.Lock()
-				err := w.renew()
-				w.mu.Unlock()
-				time.Sleep(20 * time.Millisecond)
-				errChan <- err
-				chanlen := len(w.authRenewChan)
-				for i := 0; i < chanlen; i++ {
-					c := <-w.authRenewChan
-					c <- err
-				}
-			}
-		}
-	}()
-}
-
-func (w *WebAdminClient) Close() {
-	w.mu.Lock()
-	defer w.mu.Unlock()
-
-	if w.started {
-		return
-	}
-	w.started = false
-
-	close(w.done)
-}
-
 func (w *WebAdminClient) RenewSession() error {
-	w.mu.RLock()
-	if !w.started {
-		return fmt.Errorf("webadmin client auth channel closed")
-	}
-	w.mu.RUnlock()
+	w.mu.Lock()
+	defer w.mu.Unlock()
 
-	errChan := make(chan error)
-	w.authRenewChan <- errChan
-	return <-errChan
+	if time.Now().After(w.lastComputedCacheAt.Add(authRenewalCacheTTL)) {
+		w.cachedRenewalErr = w.renew()
+		w.lastComputedCacheAt = time.Now()
+	}
+
+	return w.cachedRenewalErr
 }
 
 func (w *WebAdminClient) renew() error {
@@ -166,28 +124,22 @@ func (w *WebAdminClient) renew() error {
 
 type JMAPClient struct {
 	jmap.Client
-	muJmap         sync.RWMutex
-	userId         jmap.ID
-	userEmail      string
-	mailboxIds     map[string]jmap.ID
-	forceBasicAuth bool
-	basicAuthCreds BasicAuthCredentials
-	authRenewChan  chan chan error
-	done           chan struct{}
-	started        bool
-}
+	muJmap     sync.RWMutex
+	userId     jmap.ID
+	userEmail  string
+	mailboxIds map[string]jmap.ID
 
-const (
-	Recipient = "recipient.acc@cloud.appscode.com"
-)
+	forceBasicAuth      bool
+	basicAuthCreds      BasicAuthCredentials
+	lastComputedCacheAt time.Time
+	cachedRenewalErr    error
+}
 
 func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 	client := &JMAPClient{
 		Client: jmap.Client{
 			SessionEndpoint: jc.JMAPSessionEndpoint,
 		},
-		authRenewChan:  make(chan chan error),
-		started:        false,
 		forceBasicAuth: false,
 	}
 
@@ -200,64 +152,22 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		return nil, err
 	}
 
-	client.Start()
+	client.lastComputedCacheAt = time.Now()
+	client.cachedRenewalErr = nil
 
 	return client, nil
 }
 
-func (j *JMAPClient) Start() {
-	j.muJmap.Lock()
-	defer j.muJmap.Unlock()
-
-	if j.started {
-		return
-	}
-	j.started = true
-	j.done = make(chan struct{})
-
-	go func() {
-		for {
-			select {
-			case <-j.done:
-				return
-			case errChan := <-j.authRenewChan:
-				j.muJmap.Lock()
-				err := j.renew()
-				j.muJmap.Unlock()
-				time.Sleep(20 * time.Millisecond)
-				errChan <- err
-				chanlen := len(j.authRenewChan)
-				for i := 0; i < chanlen; i++ {
-					c := <-j.authRenewChan
-					c <- err
-				}
-			}
-		}
-	}()
-}
-
-func (j *JMAPClient) Close() {
-	j.muJmap.Lock()
-	defer j.muJmap.Unlock()
-
-	if !j.started {
-		return
-	}
-	j.started = false
-
-	close(j.done)
-}
-
 func (j *JMAPClient) RenewSession() error {
-	j.muJmap.RLock()
-	if !j.started {
-		return fmt.Errorf("jmap client auth channel closed")
-	}
-	j.muJmap.RUnlock()
+	j.muJmap.Lock()
+	defer j.muJmap.Unlock()
 
-	errChan := make(chan error, 1)
-	j.authRenewChan <- errChan
-	return <-errChan
+	if time.Now().After(j.lastComputedCacheAt.Add(authRenewalCacheTTL)) {
+		j.cachedRenewalErr = j.renew()
+		j.lastComputedCacheAt = time.Now()
+	}
+
+	return j.cachedRenewalErr
 }
 
 func (j *JMAPClient) renew() error {
@@ -265,7 +175,7 @@ func (j *JMAPClient) renew() error {
 	err := wait.PollUntilContextTimeout(
 		context.TODO(),
 		100*time.Millisecond,
-		5*time.Second,
+		3*time.Second,
 		true,
 		func(ctx context.Context) (bool, error) {
 
@@ -313,19 +223,19 @@ func (j *JMAPClient) renew() error {
 	return nil
 }
 
-type JamesMailboxName string
+type MailboxName string
 
 const (
-	DraftMailbox   JamesMailboxName = "Drafts"
-	SentMailbox    JamesMailboxName = "Sent"
-	InboxMailbox   JamesMailboxName = "INBOX"
-	ArchiveMailbox JamesMailboxName = "Archive"
-	OutboxMailbox  JamesMailboxName = "Outbox"
-	TrashMailbox   JamesMailboxName = "Trash"
-	SpamMailbox    JamesMailboxName = "Spam"
+	DraftMailbox   MailboxName = "Drafts"
+	SentMailbox    MailboxName = "Sent"
+	InboxMailbox   MailboxName = "INBOX"
+	ArchiveMailbox MailboxName = "Archive"
+	OutboxMailbox  MailboxName = "Outbox"
+	TrashMailbox   MailboxName = "Trash"
+	SpamMailbox    MailboxName = "Spam"
 )
 
-func (j *JMAPClient) getMailboxId(mailboxName JamesMailboxName) (jmap.ID, error) {
+func (j *JMAPClient) getMailboxId(mailboxName MailboxName) (jmap.ID, error) {
 	trimmedMailboxName := strings.ToLower(strings.TrimSpace(string(mailboxName)))
 	if mailboxid, ok := j.mailboxIds[trimmedMailboxName]; ok {
 		return mailboxid, nil
@@ -354,5 +264,5 @@ type JmapEmailFilter struct {
 	Position            int64
 	FetchAllBodyValues  bool
 	FetchHTMLBodyValues bool
-	InMailboxWithName   JamesMailboxName
+	InMailboxWithName   MailboxName
 }
