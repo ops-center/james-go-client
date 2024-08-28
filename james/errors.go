@@ -77,6 +77,6 @@ var (
 	ErrObjectCreation = serverError(500, "OBJECT_CREATION_ERROR", "Object creation error")
 )
 
-const MaxEmailLengthJames = 255
+const MaxEmailLength = 255
 
-var ErrMaxEmailLengthExceeded = fmt.Errorf("email cannot contain more than %d characters", MaxEmailLengthJames)
+var ErrMaxEmailLengthExceeded = fmt.Errorf("email cannot contain more than %d characters", MaxEmailLength)
