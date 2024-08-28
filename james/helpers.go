@@ -54,6 +54,54 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 	return addr, nil
 }
 
+func getObjectIdentifierFromObjectInterface(object Object) *ObjectIdentifier {
+	if object == nil {
+		return nil
+	}
+
+	return &ObjectIdentifier{
+		ObjectName:          object.GetName(),
+		ObjectUniqueID:      object.GetUniqueID(),
+		ObjectType:          object.GetType(),
+		IsGroupType:         object.IsGroup(),
+		ParentObject:        getObjectIdentifierFromObjectInterface(object),
+		AdditionalClaims:    object.AdditionalTokenClaims(),
+		BoundedUserIdentity: object.GetBoundedUserIdentity(),
+	}
+}
+
+func GetObjectIdentifierFromObjectInterface(object Object) *ObjectIdentifier {
+	return getObjectIdentifierFromObjectInterface(object)
+}
+
+func getGroupAndAssociatedMembersIdentifier(object Object, childObjects []Object) ([]GroupAndAssociatedMembersIdentifier, error) {
+	if object == nil {
+		return nil, nil
+	}
+
+	result := GroupAndAssociatedMembersIdentifier{
+		Group: getObjectIdentifierFromObjectInterface(object),
+	}
+	for _, childObj := range childObjects {
+		result.Members = append(result.Members, getObjectIdentifierFromObjectInterface(childObj))
+	}
+
+	parentObject, err := object.GetParentObject()
+	if err != nil {
+		return nil, err
+	}
+	resultOfParentObject, err := getGroupAndAssociatedMembersIdentifier(parentObject, append(childObjects, object))
+	if err != nil {
+		return nil, err
+	}
+
+	return append(resultOfParentObject, result), nil
+}
+
+func GetGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
+	return getGroupAndAssociatedMembersIdentifier(object, nil)
+}
+
 func generateRandomPassword() (string, error) {
 	pass, err := uuid.NewRandom()
 	if err != nil {
