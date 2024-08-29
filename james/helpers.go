@@ -2,9 +2,9 @@ package james
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/google/uuid"
+	"reflect"
+	"strings"
 )
 
 func generateObjectAddr(object Object) (string, error) {
@@ -55,12 +55,16 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 	return addr, nil
 }
 
+func GetObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, error) {
+	return getObjectIdentifierFromObjectInterface(object)
+}
+
 func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, error) {
-	if object == nil {
-		return nil, fmt.Errorf("object is nil")
+	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
+		return nil, nil
 	}
 
-	var parentObjectIdentifier *ObjectIdentifier
+	var parentObjectIdentifier *ObjectIdentifier = nil
 
 	if object.HasParentObject() {
 		parentObject, err := object.GetParentObject()
@@ -85,49 +89,39 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 	}, nil
 }
 
-func GetObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, error) {
-	return getObjectIdentifierFromObjectInterface(object)
+func GetGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
+	return getGroupAndAssociatedMembersIdentifier(object, nil)
 }
 
-// A -> B -> C
-func getGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
-	if object == nil {
-		return nil, fmt.Errorf("object is nil")
+func getGroupAndAssociatedMembersIdentifier(object Object, childObject Object) ([]GroupAndAssociatedMembersIdentifier, error) {
+	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
+		return nil, nil
 	}
 
 	objectIdentifier, err := getObjectIdentifierFromObjectInterface(object)
 	if err != nil {
 		return nil, err
 	}
-	if objectIdentifier.ParentObject == nil {
-		return nil, fmt.Errorf("parent object is nil. cannot create group with no members")
+	member, err := getObjectIdentifierFromObjectInterface(childObject)
+	if err != nil {
+		return nil, err
+	}
+	result := GroupAndAssociatedMembersIdentifier{
+		Group: objectIdentifier,
+		Members: func() []*ObjectIdentifier {
+			if member != nil {
+				return []*ObjectIdentifier{member}
+			}
+			return nil
+		}(),
 	}
 
-	result := []GroupAndAssociatedMembersIdentifier{
-		{
-			Group:   objectIdentifier.ParentObject,
-			Members: []*ObjectIdentifier{objectIdentifier},
-		},
+	resultOfParentObject, err := getGroupAndAssociatedMembersIdentifier(objectIdentifier.ParentObject, object)
+	if err != nil {
+		return nil, err
 	}
 
-	prevGroupObjectIdentifier := result[len(result)-1].Group
-	curGroupObjectIdentifier := prevGroupObjectIdentifier.ParentObject
-
-	for curGroupObjectIdentifier != nil {
-		result = append(result, GroupAndAssociatedMembersIdentifier{
-			Group:   curGroupObjectIdentifier,
-			Members: []*ObjectIdentifier{prevGroupObjectIdentifier},
-		})
-
-		prevGroupObjectIdentifier = result[len(result)-1].Group
-		curGroupObjectIdentifier = curGroupObjectIdentifier.ParentObject
-	}
-
-	return result, nil
-}
-
-func GetGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
-	return getGroupAndAssociatedMembersIdentifier(object)
+	return append(resultOfParentObject, result), nil
 }
 
 func generateRandomPassword() (string, error) {
