@@ -233,6 +233,31 @@ type ObjectIdentifier struct {
 	BoundedUserIdentity *UserIdentity
 }
 
+func (in *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
+	if in == nil {
+		return nil
+	}
+
+	out := new(ObjectIdentifier)
+	if in.BoundedUserIdentity != nil {
+		out.BoundedUserIdentity = new(UserIdentity)
+		*out.BoundedUserIdentity = *in.BoundedUserIdentity
+	}
+
+	if in.AdditionalClaims != nil {
+		additionalClaims := jwt.MapClaims{}
+		for k, v := range *in.AdditionalClaims {
+			additionalClaims[k] = v
+		}
+		out.AdditionalClaims = &additionalClaims
+	}
+
+	if in.ParentObject != nil {
+		out.ParentObject = in.ParentObject.DeepCopy()
+	}
+	return out
+}
+
 // Implements the Object interface
 var _ Object = (*ObjectIdentifier)(nil)
 
