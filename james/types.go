@@ -233,27 +233,27 @@ type ObjectIdentifier struct {
 	BoundedUserIdentity *UserIdentity
 }
 
-func (in *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
-	if in == nil {
+func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
+	if o == nil {
 		return nil
 	}
 
 	out := new(ObjectIdentifier)
-	if in.BoundedUserIdentity != nil {
+	if o.BoundedUserIdentity != nil {
 		out.BoundedUserIdentity = new(UserIdentity)
-		*out.BoundedUserIdentity = *in.BoundedUserIdentity
+		*out.BoundedUserIdentity = *o.BoundedUserIdentity
 	}
 
-	if in.AdditionalClaims != nil {
+	if o.AdditionalClaims != nil {
 		additionalClaims := jwt.MapClaims{}
-		for k, v := range *in.AdditionalClaims {
+		for k, v := range *o.AdditionalClaims {
 			additionalClaims[k] = v
 		}
 		out.AdditionalClaims = &additionalClaims
 	}
 
-	if in.ParentObject != nil {
-		out.ParentObject = in.ParentObject.DeepCopy()
+	if o.ParentObject != nil {
+		out.ParentObject = o.ParentObject.DeepCopy()
 	}
 	return out
 }
@@ -278,6 +278,10 @@ func (o ObjectIdentifier) HasParentObject() bool {
 }
 
 func (o ObjectIdentifier) GetParentObject() (Object, error) {
+	//if !o.HasParentObject() {
+	//	return nil, nil
+	//}
+
 	return o.ParentObject, nil
 }
 
