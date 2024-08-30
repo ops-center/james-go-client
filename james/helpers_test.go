@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-func TestGetGroupAndAssociatedMembersIdentifier(t *testing.T) {
+func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 	jamesIdentifier := ObjectIdentifier{
 		ObjectName:     "test-obj",
 		ObjectUniqueID: "1",
@@ -25,7 +25,7 @@ func TestGetGroupAndAssociatedMembersIdentifier(t *testing.T) {
 		},
 	}
 
-	results, err := getGroupAndAssociatedMembersIdentifier(jamesIdentifier, nil)
+	results, err := getGroupAndAssociatedMemberIdentifier(jamesIdentifier, nil)
 	if err != nil {
 		t.Error(err)
 	}
@@ -36,13 +36,10 @@ func TestGetGroupAndAssociatedMembersIdentifier(t *testing.T) {
 
 	for idx, result := range results {
 		if idx == 2 {
-			if result.Members != nil {
+			if result.Member != nil {
 				t.Error(fmt.Errorf("length of members of group `%v` doesn't match, expected: %v, got: %v", result.Group.ObjectName, 0, len(result.Members)))
 			}
 			continue
-		}
-		if len(result.Members) != 1 {
-			t.Error(fmt.Errorf("length of members of group `%v` doesn't match, expected: %v, got: %v", result.Group.ObjectName, 1, len(result.Members)))
 		}
 	}
 }

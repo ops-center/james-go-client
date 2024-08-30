@@ -78,7 +78,7 @@ func (jc *WebAdminClient) DeleteObject(object Object) error {
 	return jc.deleteAccount(object)
 }
 
-func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMembers) error {
+func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) error {
 	var groupList []*openapi.Group
 
 	for _, group := range groups {
@@ -87,16 +87,17 @@ func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMembers) error {
 			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 
-		var memberAddrs []string
-		for _, member := range group.GetMembers() {
-			memberAddr, err := generateObjectAddr(member)
-			if err != nil {
-				return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
-			}
-			memberAddrs = append(memberAddrs, memberAddr)
+		member := group.GetMember()
+		if member == nil {
+			continue
 		}
 
-		groupList = append(groupList, openapi.NewGroup(groupAddr, memberAddrs))
+		memberAddr, err := generateObjectAddr(member)
+		if err != nil {
+			return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+		}
+
+		groupList = append(groupList, openapi.NewGroup(groupAddr, []string{memberAddr}))
 	}
 
 	return jc.addGroups(groupList)
