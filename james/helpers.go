@@ -61,7 +61,7 @@ func GetObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 
 func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, error) {
 	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
-		return nil, nil
+		return nil, ErrNilObjectIdentifierError
 	}
 
 	var parentObjectIdentifier *ObjectIdentifier = nil
@@ -90,33 +90,39 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 }
 
 func GetGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
-	return getGroupAndAssociatedMembersIdentifier(object, nil)
-}
-
-func getGroupAndAssociatedMembersIdentifier(object Object, childObject Object) ([]GroupAndAssociatedMembersIdentifier, error) {
-	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
-		return nil, nil
-	}
-
 	objectIdentifier, err := getObjectIdentifierFromObjectInterface(object)
 	if err != nil {
 		return nil, err
 	}
-	member, err := getObjectIdentifierFromObjectInterface(childObject)
-	if err != nil {
-		return nil, err
-	}
-	result := GroupAndAssociatedMembersIdentifier{
-		Group: objectIdentifier,
-		Members: func() []*ObjectIdentifier {
-			if member != nil {
-				return []*ObjectIdentifier{member}
-			}
-			return nil
-		}(),
+	return getGroupAndAssociatedMembersIdentifier(objectIdentifier, nil)
+}
+
+func getGroupAndAssociatedMembersIdentifier(objectIdentifier *ObjectIdentifier, childObjectIdentifier *ObjectIdentifier) ([]GroupAndAssociatedMembersIdentifier, error) {
+	if objectIdentifier == nil {
+		return nil, ErrNilObjectIdentifierError
 	}
 
-	resultOfParentObject, err := getGroupAndAssociatedMembersIdentifier(objectIdentifier.ParentObject, object)
+	if childObjectIdentifier == nil {
+		if objectIdentifier.HasParentObject() {
+			return getGroupAndAssociatedMembersIdentifier(objectIdentifier.ParentObject, objectIdentifier)
+		}
+		return nil, fmt.Errorf("at least one parent or child object is required")
+	}
+
+	if !childObjectIdentifier.HasParentObject() || (childObjectIdentifier.ParentObject.GetUniqueID() != objectIdentifier.GetUniqueID()) {
+		return nil, fmt.Errorf("child objectIdentifier is not associated with parent objectIdentifier")
+	}
+
+	result := GroupAndAssociatedMembersIdentifier{
+		Group:   objectIdentifier,
+		Members: []*ObjectIdentifier{childObjectIdentifier},
+	}
+
+	if !objectIdentifier.HasParentObject() {
+		return []GroupAndAssociatedMembersIdentifier{result}, nil
+	}
+
+	resultOfParentObject, err := getGroupAndAssociatedMembersIdentifier(objectIdentifier.ParentObject, objectIdentifier)
 	if err != nil {
 		return nil, err
 	}

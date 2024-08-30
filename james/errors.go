@@ -79,4 +79,7 @@ var (
 
 const MaxEmailLength = 255
 
-var ErrMaxEmailLengthExceeded = fmt.Errorf("email cannot contain more than %d characters", MaxEmailLength)
+var (
+	ErrMaxEmailLengthExceeded   = fmt.Errorf("email cannot contain more than %d characters", MaxEmailLength)
+	ErrNilObjectIdentifierError = fmt.Errorf("nil object identifier")
+)
