@@ -102,13 +102,24 @@ func getGroupAndAssociatedMemberIdentifier(object Object, childObject Object) ([
 	if err != nil {
 		return nil, err
 	}
+	if objectIdentifier == nil {
+		return nil, nil
+	}
+
 	member, err := getObjectIdentifierFromObjectInterface(childObject)
 	if err != nil {
 		return nil, err
 	}
+	if member == nil {
+		if !object.HasParentObject() {
+			return nil, nil
+		}
+		return getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, objectIdentifier)
+	}
+
 	result := GroupAndAssociatedMemberIdentifier{
-		Group:  objectIdentifier,
-		Member: member,
+		Group:  *objectIdentifier,
+		Member: *member,
 	}
 
 	resultOfParentObject, err := getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, object)

@@ -2,10 +2,9 @@ package james
 
 import (
 	"context"
+	openapi "github.com/ops-center/james-go-client"
 	"github.com/pkg/errors"
 	"net/http"
-
-	openapi "github.com/ops-center/james-go-client"
 )
 
 var (
@@ -82,17 +81,13 @@ func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) error {
 	var groupList []*openapi.Group
 
 	for _, group := range groups {
+
 		groupAddr, err := generateObjectAddr(group.GetGroup())
 		if err != nil {
 			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 
-		member := group.GetMember()
-		if member == nil {
-			continue
-		}
-
-		memberAddr, err := generateObjectAddr(member)
+		memberAddr, err := generateObjectAddr(group.GetMember())
 		if err != nil {
 			return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
 		}

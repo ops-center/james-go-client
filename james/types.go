@@ -134,8 +134,8 @@ type GroupAndAssociatedMember interface {
 }
 
 type GroupAndAssociatedMemberIdentifier struct {
-	Group  *ObjectIdentifier
-	Member *ObjectIdentifier
+	Group  ObjectIdentifier
+	Member ObjectIdentifier
 }
 
 func (g *GroupAndAssociatedMemberIdentifier) GetGroup() Object {
