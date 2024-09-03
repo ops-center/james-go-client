@@ -2,10 +2,10 @@ package james
 
 import (
 	"context"
+	"github.com/pkg/errors"
 	"net/http"
 
-	"github.com/pkg/errors"
-	openapi "go.opscenter.dev/james-go-client"
+	openapi "github.com/ops-center/james-go-client"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
@@ -26,6 +26,7 @@ func (jc *WebAdminClient) createAccount(object Object) error {
 
 	r, err := jc.UsersAPI.UpsertUser(context.TODO(), objectAddr).
 		UpsertUserRequest(openapi.UpsertUserRequest{Password: password}).Execute()
+
 	if err != nil {
 		return newServerError(r, err)
 	}
@@ -75,25 +76,22 @@ func (jc *WebAdminClient) DeleteObject(object Object) error {
 	return jc.deleteAccount(object)
 }
 
-func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMembers) error {
+func (jc *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) error {
 	var groupList []*openapi.Group
 
 	for _, group := range groups {
+
 		groupAddr, err := generateObjectAddr(group.GetGroup())
 		if err != nil {
 			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 
-		var memberAddrs []string
-		for _, member := range group.GetMembers() {
-			memberAddr, err := generateObjectAddr(member)
-			if err != nil {
-				return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
-			}
-			memberAddrs = append(memberAddrs, memberAddr)
+		memberAddr, err := generateObjectAddr(group.GetMember())
+		if err != nil {
+			return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
 		}
 
-		groupList = append(groupList, openapi.NewGroup(groupAddr, memberAddrs))
+		groupList = append(groupList, openapi.NewGroup(groupAddr, []string{memberAddr}))
 	}
 
 	return jc.addGroups(groupList)
@@ -120,6 +118,7 @@ func (jc *WebAdminClient) AddGroupMember(grpObject, memberObject Object) error {
 	memberAddr, err := jc.GetObjectAddr(memberObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+
 	}
 
 	return jc.addGroupMember(grpAddr, memberAddr)
@@ -142,10 +141,12 @@ func (jc *WebAdminClient) RemoveGroupMember(grpObject, memberObject Object) erro
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+
 	}
 	memberAddr, err := generateObjectAddr(memberObject)
 	if err != nil {
 		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+
 	}
 
 	return jc.removeGroupMember(grpAddr, memberAddr)
