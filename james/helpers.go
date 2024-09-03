@@ -89,11 +89,11 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 	}, nil
 }
 
-func GetGroupAndAssociatedMembersIdentifier(object Object) ([]GroupAndAssociatedMembersIdentifier, error) {
-	return getGroupAndAssociatedMembersIdentifier(object, nil)
+func GetGroupAndAssociatedMemberIdentifier(object Object) ([]GroupAndAssociatedMemberIdentifier, error) {
+	return getGroupAndAssociatedMemberIdentifier(object, nil)
 }
 
-func getGroupAndAssociatedMembersIdentifier(object Object, childObject Object) ([]GroupAndAssociatedMembersIdentifier, error) {
+func getGroupAndAssociatedMemberIdentifier(object Object, childObject Object) ([]GroupAndAssociatedMemberIdentifier, error) {
 	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
 		return nil, nil
 	}
@@ -102,21 +102,27 @@ func getGroupAndAssociatedMembersIdentifier(object Object, childObject Object) (
 	if err != nil {
 		return nil, err
 	}
+	if objectIdentifier == nil {
+		return nil, nil
+	}
+
 	member, err := getObjectIdentifierFromObjectInterface(childObject)
 	if err != nil {
 		return nil, err
 	}
-	result := GroupAndAssociatedMembersIdentifier{
-		Group: objectIdentifier,
-		Members: func() []*ObjectIdentifier {
-			if member != nil {
-				return []*ObjectIdentifier{member}
-			}
-			return nil
-		}(),
+	if member == nil {
+		if !object.HasParentObject() {
+			return nil, nil
+		}
+		return getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, objectIdentifier)
 	}
 
-	resultOfParentObject, err := getGroupAndAssociatedMembersIdentifier(objectIdentifier.ParentObject, object)
+	result := GroupAndAssociatedMemberIdentifier{
+		Group:  *objectIdentifier,
+		Member: *member,
+	}
+
+	resultOfParentObject, err := getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, object)
 	if err != nil {
 		return nil, err
 	}

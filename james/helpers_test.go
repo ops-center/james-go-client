@@ -5,19 +5,19 @@ import (
 	"testing"
 )
 
-func TestGetGroupAndAssociatedMembersIdentifier(t *testing.T) {
+func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 	jamesIdentifier := ObjectIdentifier{
-		ObjectName:     "test-obj",
+		ObjectName:     "workload",
 		ObjectUniqueID: "1",
 		ObjectType:     DbType,
 		IsGroupType:    true,
 		ParentObject: &ObjectIdentifier{
-			ObjectName:     "test-obj-2",
+			ObjectName:     "namespace",
 			ObjectUniqueID: "2",
 			ObjectType:     DbType,
 			IsGroupType:    true,
 			ParentObject: &ObjectIdentifier{
-				ObjectName:     "test-obj-3",
+				ObjectName:     "cluster",
 				ObjectUniqueID: "3",
 				ObjectType:     DbType,
 				IsGroupType:    true,
@@ -25,24 +25,26 @@ func TestGetGroupAndAssociatedMembersIdentifier(t *testing.T) {
 		},
 	}
 
-	results, err := getGroupAndAssociatedMembersIdentifier(jamesIdentifier, nil)
+	results, err := getGroupAndAssociatedMemberIdentifier(jamesIdentifier, nil)
 	if err != nil {
 		t.Error(err)
+		return
 	}
 
-	if len(results) != 3 {
+	if len(results) != 2 {
 		t.Error(fmt.Errorf("length of result doesn't match: expected: %v, got: %v", 3, len(results)))
+		return
 	}
 
-	for idx, result := range results {
-		if idx == 2 {
-			if result.Members != nil {
-				t.Error(fmt.Errorf("length of members of group `%v` doesn't match, expected: %v, got: %v", result.Group.ObjectName, 0, len(result.Members)))
-			}
-			continue
+	for _, result := range results {
+		fmt.Printf("group: %s, member: %s\n", result.Group.ObjectName, result.Member.ObjectName)
+		if !result.Member.HasParentObject() {
+			t.Errorf("member %s does not have parent object", result.Member.ObjectName)
+			return
 		}
-		if len(result.Members) != 1 {
-			t.Error(fmt.Errorf("length of members of group `%v` doesn't match, expected: %v, got: %v", result.Group.ObjectName, 1, len(result.Members)))
+		if result.Member.ParentObject.GetUniqueID() != result.Group.GetUniqueID() {
+			t.Errorf("member parent reference does not point to group object")
+			return
 		}
 	}
 }

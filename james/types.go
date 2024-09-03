@@ -128,26 +128,22 @@ func (i ObjectTypeIdentifier) EnumIndex() int {
 	return int(i)
 }
 
-type GroupAndAssociatedMembers interface {
+type GroupAndAssociatedMember interface {
 	GetGroup() Object
-	GetMembers() []Object
+	GetMember() Object
 }
 
-type GroupAndAssociatedMembersIdentifier struct {
-	Group   *ObjectIdentifier
-	Members []*ObjectIdentifier
+type GroupAndAssociatedMemberIdentifier struct {
+	Group  ObjectIdentifier
+	Member ObjectIdentifier
 }
 
-func (g *GroupAndAssociatedMembersIdentifier) GetGroup() Object {
+func (g *GroupAndAssociatedMemberIdentifier) GetGroup() Object {
 	return g.Group
 }
 
-func (g *GroupAndAssociatedMembersIdentifier) GetMembers() []Object {
-	members := make([]Object, len(g.Members))
-	for i, member := range g.Members {
-		members[i] = member
-	}
-	return members
+func (g *GroupAndAssociatedMemberIdentifier) GetMember() Object {
+	return g.Member
 }
 
 // Object interface represents an entity within the Apache James server,
