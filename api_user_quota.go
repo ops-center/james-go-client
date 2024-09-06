@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // UserQuotaAPIService UserQuotaAPI service
 type UserQuotaAPIService service
 
 type ApiDeleteQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
+	username   string
 }
 
 func (r ApiDeleteQuotaCountRequest) Execute() (*http.Response, error) {
@@ -36,24 +35,24 @@ func (r ApiDeleteQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 DeleteQuotaCount Delete the quota count for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiDeleteQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiDeleteQuotaCountRequest
 */
 func (a *UserQuotaAPIService) DeleteQuotaCount(ctx context.Context, username string) ApiDeleteQuotaCountRequest {
 	return ApiDeleteQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) DeleteQuotaCountExecute(r ApiDeleteQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.DeleteQuotaCount")
@@ -114,9 +113,9 @@ func (a *UserQuotaAPIService) DeleteQuotaCountExecute(r ApiDeleteQuotaCountReque
 }
 
 type ApiDeleteQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
+	username   string
 }
 
 func (r ApiDeleteQuotaSizeRequest) Execute() (*http.Response, error) {
@@ -126,24 +125,24 @@ func (r ApiDeleteQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 DeleteQuotaSize Delete the quota size for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiDeleteQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiDeleteQuotaSizeRequest
 */
 func (a *UserQuotaAPIService) DeleteQuotaSize(ctx context.Context, username string) ApiDeleteQuotaSizeRequest {
 	return ApiDeleteQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) DeleteQuotaSizeExecute(r ApiDeleteQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.DeleteQuotaSize")
@@ -204,9 +203,9 @@ func (a *UserQuotaAPIService) DeleteQuotaSizeExecute(r ApiDeleteQuotaSizeRequest
 }
 
 type ApiGetQuotaRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
+	username   string
 }
 
 func (r ApiGetQuotaRequest) Execute() (*http.Response, error) {
@@ -216,24 +215,24 @@ func (r ApiGetQuotaRequest) Execute() (*http.Response, error) {
 /*
 GetQuota Get the quota for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiGetQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiGetQuotaRequest
 */
 func (a *UserQuotaAPIService) GetQuota(ctx context.Context, username string) ApiGetQuotaRequest {
 	return ApiGetQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) GetQuotaExecute(r ApiGetQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.GetQuota")
@@ -294,9 +293,9 @@ func (a *UserQuotaAPIService) GetQuotaExecute(r ApiGetQuotaRequest) (*http.Respo
 }
 
 type ApiGetQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
+	username   string
 }
 
 func (r ApiGetQuotaCountRequest) Execute() (*http.Response, error) {
@@ -306,24 +305,24 @@ func (r ApiGetQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 GetQuotaCount Get the quota count for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiGetQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiGetQuotaCountRequest
 */
 func (a *UserQuotaAPIService) GetQuotaCount(ctx context.Context, username string) ApiGetQuotaCountRequest {
 	return ApiGetQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) GetQuotaCountExecute(r ApiGetQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.GetQuotaCount")
@@ -384,9 +383,9 @@ func (a *UserQuotaAPIService) GetQuotaCountExecute(r ApiGetQuotaCountRequest) (*
 }
 
 type ApiGetQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
+	username   string
 }
 
 func (r ApiGetQuotaSizeRequest) Execute() (*http.Response, error) {
@@ -396,24 +395,24 @@ func (r ApiGetQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 GetQuotaSize Get the quota size for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiGetQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiGetQuotaSizeRequest
 */
 func (a *UserQuotaAPIService) GetQuotaSize(ctx context.Context, username string) ApiGetQuotaSizeRequest {
 	return ApiGetQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) GetQuotaSizeExecute(r ApiGetQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.GetQuotaSize")
@@ -474,9 +473,9 @@ func (a *UserQuotaAPIService) GetQuotaSizeExecute(r ApiGetQuotaSizeRequest) (*ht
 }
 
 type ApiRecomputeCurrentQuotasRequest struct {
-	ctx context.Context
-	ApiService *UserQuotaAPIService
-	task *string
+	ctx                           context.Context
+	ApiService                    *UserQuotaAPIService
+	task                          *string
 	recomputeCurrentQuotasRequest *RecomputeCurrentQuotasRequest
 }
 
@@ -498,22 +497,22 @@ func (r ApiRecomputeCurrentQuotasRequest) Execute() (*http.Response, error) {
 /*
 RecomputeCurrentQuotas Recompute current quotas for users
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRecomputeCurrentQuotasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRecomputeCurrentQuotasRequest
 */
 func (a *UserQuotaAPIService) RecomputeCurrentQuotas(ctx context.Context) ApiRecomputeCurrentQuotasRequest {
 	return ApiRecomputeCurrentQuotasRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) RecomputeCurrentQuotasExecute(r ApiRecomputeCurrentQuotasRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.RecomputeCurrentQuotas")
@@ -579,13 +578,13 @@ func (a *UserQuotaAPIService) RecomputeCurrentQuotasExecute(r ApiRecomputeCurren
 }
 
 type ApiSearchByQuotaRequest struct {
-	ctx context.Context
-	ApiService *UserQuotaAPIService
+	ctx                context.Context
+	ApiService         *UserQuotaAPIService
 	minOccupationRatio *float32
 	maxOccupationRatio *float32
-	limit *int32
-	offset *int32
-	domain *string
+	limit              *int32
+	offset             *int32
+	domain             *string
 }
 
 // The minimum occupation ratio of users to be returned
@@ -625,22 +624,22 @@ func (r ApiSearchByQuotaRequest) Execute() (*http.Response, error) {
 /*
 SearchByQuota Search users by quota ratio
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiSearchByQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSearchByQuotaRequest
 */
 func (a *UserQuotaAPIService) SearchByQuota(ctx context.Context) ApiSearchByQuotaRequest {
 	return ApiSearchByQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) SearchByQuotaExecute(r ApiSearchByQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.SearchByQuota")
@@ -715,9 +714,9 @@ func (a *UserQuotaAPIService) SearchByQuotaExecute(r ApiSearchByQuotaRequest) (*
 }
 
 type ApiUpdateQuotaRequest struct {
-	ctx context.Context
-	ApiService *UserQuotaAPIService
-	username string
+	ctx                      context.Context
+	ApiService               *UserQuotaAPIService
+	username                 string
 	updateGlobalQuotaRequest *UpdateGlobalQuotaRequest
 }
 
@@ -734,24 +733,24 @@ func (r ApiUpdateQuotaRequest) Execute() (*http.Response, error) {
 /*
 UpdateQuota Update the quota for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiUpdateQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiUpdateQuotaRequest
 */
 func (a *UserQuotaAPIService) UpdateQuota(ctx context.Context, username string) ApiUpdateQuotaRequest {
 	return ApiUpdateQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) UpdateQuotaExecute(r ApiUpdateQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.UpdateQuota")
@@ -817,10 +816,10 @@ func (a *UserQuotaAPIService) UpdateQuotaExecute(r ApiUpdateQuotaRequest) (*http
 }
 
 type ApiUpdateQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
-	body *int32
+	username   string
+	body       *int32
 }
 
 // The new quota count for the user
@@ -836,24 +835,24 @@ func (r ApiUpdateQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 UpdateQuotaCount Update the quota count for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiUpdateQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiUpdateQuotaCountRequest
 */
 func (a *UserQuotaAPIService) UpdateQuotaCount(ctx context.Context, username string) ApiUpdateQuotaCountRequest {
 	return ApiUpdateQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) UpdateQuotaCountExecute(r ApiUpdateQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.UpdateQuotaCount")
@@ -922,10 +921,10 @@ func (a *UserQuotaAPIService) UpdateQuotaCountExecute(r ApiUpdateQuotaCountReque
 }
 
 type ApiUpdateQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserQuotaAPIService
-	username string
-	body *int32
+	username   string
+	body       *int32
 }
 
 // The new quota size for the user
@@ -941,24 +940,24 @@ func (r ApiUpdateQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 UpdateQuotaSize Update the quota size for a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiUpdateQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiUpdateQuotaSizeRequest
 */
 func (a *UserQuotaAPIService) UpdateQuotaSize(ctx context.Context, username string) ApiUpdateQuotaSizeRequest {
 	return ApiUpdateQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserQuotaAPIService) UpdateQuotaSizeExecute(r ApiUpdateQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserQuotaAPIService.UpdateQuotaSize")

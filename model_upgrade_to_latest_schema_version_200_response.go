@@ -20,8 +20,8 @@ var _ MappedNullable = &UpgradeToLatestSchemaVersion200Response{}
 // UpgradeToLatestSchemaVersion200Response struct for UpgradeToLatestSchemaVersion200Response
 type UpgradeToLatestSchemaVersion200Response struct {
 	AdditionalInformation *UpgradeToLatestSchemaVersion200ResponseAdditionalInformation `json:"additionalInformation,omitempty"`
-	TaskId *string `json:"taskId,omitempty"`
-	Type *string `json:"type,omitempty"`
+	TaskId                *string                                                       `json:"taskId,omitempty"`
+	Type                  *string                                                       `json:"type,omitempty"`
 }
 
 // NewUpgradeToLatestSchemaVersion200Response instantiates a new UpgradeToLatestSchemaVersion200Response object
@@ -138,7 +138,7 @@ func (o *UpgradeToLatestSchemaVersion200Response) SetType(v string) {
 }
 
 func (o UpgradeToLatestSchemaVersion200Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableUpgradeToLatestSchemaVersion200Response) UnmarshalJSON(src []by
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

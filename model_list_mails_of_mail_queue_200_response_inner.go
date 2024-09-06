@@ -20,10 +20,10 @@ var _ MappedNullable = &ListMailsOfMailQueue200ResponseInner{}
 
 // ListMailsOfMailQueue200ResponseInner struct for ListMailsOfMailQueue200ResponseInner
 type ListMailsOfMailQueue200ResponseInner struct {
-	Name *string `json:"name,omitempty"`
+	Name         *string    `json:"name,omitempty"`
 	NextDelivery *time.Time `json:"nextDelivery,omitempty"`
-	Recipients []string `json:"recipients,omitempty"`
-	Sender *string `json:"sender,omitempty"`
+	Recipients   []string   `json:"recipients,omitempty"`
+	Sender       *string    `json:"sender,omitempty"`
 }
 
 // NewListMailsOfMailQueue200ResponseInner instantiates a new ListMailsOfMailQueue200ResponseInner object
@@ -172,7 +172,7 @@ func (o *ListMailsOfMailQueue200ResponseInner) SetSender(v string) {
 }
 
 func (o ListMailsOfMailQueue200ResponseInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -231,5 +231,3 @@ func (v *NullableListMailsOfMailQueue200ResponseInner) UnmarshalJSON(src []byte)
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

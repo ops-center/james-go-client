@@ -19,9 +19,9 @@ var _ MappedNullable = &GetMailRepository200Response{}
 
 // GetMailRepository200Response struct for GetMailRepository200Response
 type GetMailRepository200Response struct {
-	Path *string `json:"path,omitempty"`
+	Path       *string `json:"path,omitempty"`
 	Repository *string `json:"repository,omitempty"`
-	Size *int32 `json:"size,omitempty"`
+	Size       *int32  `json:"size,omitempty"`
 }
 
 // NewGetMailRepository200Response instantiates a new GetMailRepository200Response object
@@ -138,7 +138,7 @@ func (o *GetMailRepository200Response) SetSize(v int32) {
 }
 
 func (o GetMailRepository200Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableGetMailRepository200Response) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

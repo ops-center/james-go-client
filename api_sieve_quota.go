@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // SieveQuotaAPIService SieveQuotaAPI service
 type SieveQuotaAPIService service
 
 type ApiGetUserSieveQuotaRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *SieveQuotaAPIService
-	userEmail string
+	userEmail  string
 }
 
 func (r ApiGetUserSieveQuotaRequest) Execute() (*http.Response, error) {
@@ -36,24 +35,24 @@ func (r ApiGetUserSieveQuotaRequest) Execute() (*http.Response, error) {
 /*
 GetUserSieveQuota Retrieve user sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userEmail
- @return ApiGetUserSieveQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userEmail
+	@return ApiGetUserSieveQuotaRequest
 */
 func (a *SieveQuotaAPIService) GetUserSieveQuota(ctx context.Context, userEmail string) ApiGetUserSieveQuotaRequest {
 	return ApiGetUserSieveQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
-		userEmail: userEmail,
+		ctx:        ctx,
+		userEmail:  userEmail,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) GetUserSieveQuotaExecute(r ApiGetUserSieveQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.GetUserSieveQuota")
@@ -114,9 +113,9 @@ func (a *SieveQuotaAPIService) GetUserSieveQuotaExecute(r ApiGetUserSieveQuotaRe
 }
 
 type ApiRemoveUserSieveQuotaRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *SieveQuotaAPIService
-	userEmail string
+	userEmail  string
 }
 
 func (r ApiRemoveUserSieveQuotaRequest) Execute() (*http.Response, error) {
@@ -126,24 +125,24 @@ func (r ApiRemoveUserSieveQuotaRequest) Execute() (*http.Response, error) {
 /*
 RemoveUserSieveQuota Remove user sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userEmail
- @return ApiRemoveUserSieveQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userEmail
+	@return ApiRemoveUserSieveQuotaRequest
 */
 func (a *SieveQuotaAPIService) RemoveUserSieveQuota(ctx context.Context, userEmail string) ApiRemoveUserSieveQuotaRequest {
 	return ApiRemoveUserSieveQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
-		userEmail: userEmail,
+		ctx:        ctx,
+		userEmail:  userEmail,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) RemoveUserSieveQuotaExecute(r ApiRemoveUserSieveQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.RemoveUserSieveQuota")
@@ -204,7 +203,7 @@ func (a *SieveQuotaAPIService) RemoveUserSieveQuotaExecute(r ApiRemoveUserSieveQ
 }
 
 type ApiSieveQuotaDefaultDeleteRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *SieveQuotaAPIService
 }
 
@@ -215,22 +214,22 @@ func (r ApiSieveQuotaDefaultDeleteRequest) Execute() (*http.Response, error) {
 /*
 SieveQuotaDefaultDelete Remove global sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiSieveQuotaDefaultDeleteRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSieveQuotaDefaultDeleteRequest
 */
 func (a *SieveQuotaAPIService) SieveQuotaDefaultDelete(ctx context.Context) ApiSieveQuotaDefaultDeleteRequest {
 	return ApiSieveQuotaDefaultDeleteRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) SieveQuotaDefaultDeleteExecute(r ApiSieveQuotaDefaultDeleteRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.SieveQuotaDefaultDelete")
@@ -290,7 +289,7 @@ func (a *SieveQuotaAPIService) SieveQuotaDefaultDeleteExecute(r ApiSieveQuotaDef
 }
 
 type ApiSieveQuotaDefaultGetRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *SieveQuotaAPIService
 }
 
@@ -301,22 +300,22 @@ func (r ApiSieveQuotaDefaultGetRequest) Execute() (*http.Response, error) {
 /*
 SieveQuotaDefaultGet Retrieve global sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiSieveQuotaDefaultGetRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSieveQuotaDefaultGetRequest
 */
 func (a *SieveQuotaAPIService) SieveQuotaDefaultGet(ctx context.Context) ApiSieveQuotaDefaultGetRequest {
 	return ApiSieveQuotaDefaultGetRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) SieveQuotaDefaultGetExecute(r ApiSieveQuotaDefaultGetRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.SieveQuotaDefaultGet")
@@ -376,8 +375,8 @@ func (a *SieveQuotaAPIService) SieveQuotaDefaultGetExecute(r ApiSieveQuotaDefaul
 }
 
 type ApiUpdateGlobalSieveQuotaRequest struct {
-	ctx context.Context
-	ApiService *SieveQuotaAPIService
+	ctx                           context.Context
+	ApiService                    *SieveQuotaAPIService
 	updateGlobalSieveQuotaRequest *UpdateGlobalSieveQuotaRequest
 }
 
@@ -393,22 +392,22 @@ func (r ApiUpdateGlobalSieveQuotaRequest) Execute() (*http.Response, error) {
 /*
 UpdateGlobalSieveQuota Update global sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpdateGlobalSieveQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpdateGlobalSieveQuotaRequest
 */
 func (a *SieveQuotaAPIService) UpdateGlobalSieveQuota(ctx context.Context) ApiUpdateGlobalSieveQuotaRequest {
 	return ApiUpdateGlobalSieveQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) UpdateGlobalSieveQuotaExecute(r ApiUpdateGlobalSieveQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.UpdateGlobalSieveQuota")
@@ -473,9 +472,9 @@ func (a *SieveQuotaAPIService) UpdateGlobalSieveQuotaExecute(r ApiUpdateGlobalSi
 }
 
 type ApiUpdateUserSieveQuotaRequest struct {
-	ctx context.Context
-	ApiService *SieveQuotaAPIService
-	userEmail string
+	ctx                         context.Context
+	ApiService                  *SieveQuotaAPIService
+	userEmail                   string
 	updateUserSieveQuotaRequest *UpdateUserSieveQuotaRequest
 }
 
@@ -491,24 +490,24 @@ func (r ApiUpdateUserSieveQuotaRequest) Execute() (*http.Response, error) {
 /*
 UpdateUserSieveQuota Update user sieve quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userEmail
- @return ApiUpdateUserSieveQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userEmail
+	@return ApiUpdateUserSieveQuotaRequest
 */
 func (a *SieveQuotaAPIService) UpdateUserSieveQuota(ctx context.Context, userEmail string) ApiUpdateUserSieveQuotaRequest {
 	return ApiUpdateUserSieveQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
-		userEmail: userEmail,
+		ctx:        ctx,
+		userEmail:  userEmail,
 	}
 }
 
 // Execute executes the request
 func (a *SieveQuotaAPIService) UpdateUserSieveQuotaExecute(r ApiUpdateUserSieveQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SieveQuotaAPIService.UpdateUserSieveQuota")

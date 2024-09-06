@@ -23,7 +23,7 @@ import (
     "context"
     "fmt"
     "os"
-    openapiclient "github.com/searchlight/james-go-client"
+    openapiclient "go.opscenter.dev/james-go-client"
 )
 
 func main() {

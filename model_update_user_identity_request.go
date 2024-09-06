@@ -19,12 +19,12 @@ var _ MappedNullable = &UpdateUserIdentityRequest{}
 
 // UpdateUserIdentityRequest struct for UpdateUserIdentityRequest
 type UpdateUserIdentityRequest struct {
-	Bcc []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
-	HtmlSignature *string `json:"htmlSignature,omitempty"`
-	Name *string `json:"name,omitempty"`
-	ReplyTo []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
-	SortOrder *int32 `json:"sortOrder,omitempty"`
-	TextSignature *string `json:"textSignature,omitempty"`
+	Bcc           []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
+	HtmlSignature *string                                      `json:"htmlSignature,omitempty"`
+	Name          *string                                      `json:"name,omitempty"`
+	ReplyTo       []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
+	SortOrder     *int32                                       `json:"sortOrder,omitempty"`
+	TextSignature *string                                      `json:"textSignature,omitempty"`
 }
 
 // NewUpdateUserIdentityRequest instantiates a new UpdateUserIdentityRequest object
@@ -237,7 +237,7 @@ func (o *UpdateUserIdentityRequest) SetTextSignature(v string) {
 }
 
 func (o UpdateUserIdentityRequest) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -302,5 +302,3 @@ func (v *NullableUpdateUserIdentityRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

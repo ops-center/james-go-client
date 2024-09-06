@@ -21,7 +21,7 @@ var _ MappedNullable = &TaskErrorsInner{}
 type TaskErrorsInner struct {
 	MailboxId *string `json:"mailboxId,omitempty"`
 	MessageId *string `json:"messageId,omitempty"`
-	Uid *int32 `json:"uid,omitempty"`
+	Uid       *int32  `json:"uid,omitempty"`
 }
 
 // NewTaskErrorsInner instantiates a new TaskErrorsInner object
@@ -138,7 +138,7 @@ func (o *TaskErrorsInner) SetUid(v int32) {
 }
 
 func (o TaskErrorsInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableTaskErrorsInner) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

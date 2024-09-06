@@ -20,8 +20,8 @@ var _ MappedNullable = &CorrectGhostMailbox201Response{}
 // CorrectGhostMailbox201Response struct for CorrectGhostMailbox201Response
 type CorrectGhostMailbox201Response struct {
 	AdditionalInformation *CorrectGhostMailbox201ResponseAdditionalInformation `json:"additionalInformation,omitempty"`
-	TaskId *string `json:"taskId,omitempty"`
-	Type *string `json:"type,omitempty"`
+	TaskId                *string                                              `json:"taskId,omitempty"`
+	Type                  *string                                              `json:"type,omitempty"`
 }
 
 // NewCorrectGhostMailbox201Response instantiates a new CorrectGhostMailbox201Response object
@@ -138,7 +138,7 @@ func (o *CorrectGhostMailbox201Response) SetType(v string) {
 }
 
 func (o CorrectGhostMailbox201Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableCorrectGhostMailbox201Response) UnmarshalJSON(src []byte) error
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

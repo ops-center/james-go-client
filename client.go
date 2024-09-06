@@ -31,14 +31,13 @@ import (
 	"strings"
 	"time"
 	"unicode/utf8"
-
 )
 
 var (
 	JsonCheck       = regexp.MustCompile(`(?i:(?:application|text)/(?:[^;]+\+)?json)`)
 	XmlCheck        = regexp.MustCompile(`(?i:(?:application|text)/(?:[^;]+\+)?xml)`)
 	queryParamSplit = regexp.MustCompile(`(^|&)([^&]+)`)
-	queryDescape    = strings.NewReplacer( "%5B", "[", "%5D", "]" )
+	queryDescape    = strings.NewReplacer("%5B", "[", "%5D", "]")
 )
 
 // APIClient manages communication with the Apache JAMES Web Admin API API v3.8.0
@@ -209,15 +208,15 @@ func typeCheckParameter(obj interface{}, expected string, name string) error {
 	return nil
 }
 
-func parameterValueToString( obj interface{}, key string ) string {
+func parameterValueToString(obj interface{}, key string) string {
 	if reflect.TypeOf(obj).Kind() != reflect.Ptr {
 		return fmt.Sprintf("%v", obj)
 	}
-	var param,ok = obj.(MappedNullable)
+	param, ok := obj.(MappedNullable)
 	if !ok {
 		return ""
 	}
-	dataMap,err := param.ToMap()
+	dataMap, err := param.ToMap()
 	if err != nil {
 		return ""
 	}
@@ -227,8 +226,8 @@ func parameterValueToString( obj interface{}, key string ) string {
 // parameterAddToHeaderOrQuery adds the provided object to the request header or url query
 // supporting deep object syntax
 func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix string, obj interface{}, collectionType string) {
-	var v = reflect.ValueOf(obj)
-	var value = ""
+	v := reflect.ValueOf(obj)
+	value := ""
 	if v == reflect.ValueOf(nil) {
 		value = "null"
 	} else {
@@ -237,8 +236,8 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 			value = "invalid"
 
 		case reflect.Struct:
-			if t,ok := obj.(MappedNullable); ok {
-				dataMap,err := t.ToMap()
+			if t, ok := obj.(MappedNullable); ok {
+				dataMap, err := t.ToMap()
 				if err != nil {
 					return
 				}
@@ -251,25 +250,25 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 			}
 			value = v.Type().String() + " value"
 		case reflect.Slice:
-			var indValue = reflect.ValueOf(obj)
+			indValue := reflect.ValueOf(obj)
 			if indValue == reflect.ValueOf(nil) {
 				return
 			}
-			var lenIndValue = indValue.Len()
-			for i:=0;i<lenIndValue;i++ {
-				var arrayValue = indValue.Index(i)
+			lenIndValue := indValue.Len()
+			for i := 0; i < lenIndValue; i++ {
+				arrayValue := indValue.Index(i)
 				parameterAddToHeaderOrQuery(headerOrQueryParams, keyPrefix, arrayValue.Interface(), collectionType)
 			}
 			return
 
 		case reflect.Map:
-			var indValue = reflect.ValueOf(obj)
+			indValue := reflect.ValueOf(obj)
 			if indValue == reflect.ValueOf(nil) {
 				return
 			}
 			iter := indValue.MapRange()
 			for iter.Next() {
-				k,v := iter.Key(), iter.Value()
+				k, v := iter.Key(), iter.Value()
 				parameterAddToHeaderOrQuery(headerOrQueryParams, fmt.Sprintf("%s[%s]", keyPrefix, k.String()), v.Interface(), collectionType)
 			}
 			return
@@ -300,7 +299,7 @@ func parameterAddToHeaderOrQuery(headerOrQueryParams interface{}, keyPrefix stri
 	switch valuesMap := headerOrQueryParams.(type) {
 	case url.Values:
 		if collectionType == "csv" && valuesMap.Get(keyPrefix) != "" {
-			valuesMap.Set(keyPrefix, valuesMap.Get(keyPrefix) + "," + value)
+			valuesMap.Set(keyPrefix, valuesMap.Get(keyPrefix)+","+value)
 		} else {
 			valuesMap.Add(keyPrefix, value)
 		}
@@ -352,8 +351,8 @@ func (c *APIClient) GetConfig() *Configuration {
 }
 
 type formFile struct {
-	fileBytes []byte
-	fileName string
+	fileBytes    []byte
+	fileName     string
 	formFileName string
 }
 
@@ -365,8 +364,8 @@ func (c *APIClient) prepareRequest(
 	headerParams map[string]string,
 	queryParams url.Values,
 	formParams url.Values,
-	formFiles []formFile) (localVarRequest *http.Request, err error) {
-
+	formFiles []formFile,
+) (localVarRequest *http.Request, err error) {
 	var body *bytes.Buffer
 
 	// Detect postBody type and post.
@@ -493,7 +492,6 @@ func (c *APIClient) prepareRequest(
 		localVarRequest = localVarRequest.WithContext(ctx)
 
 		// Walk through any authentication.
-
 	}
 
 	for header, value := range c.cfg.DefaultHeader {

@@ -19,10 +19,10 @@ var _ MappedNullable = &HealthCheckResult{}
 
 // HealthCheckResult struct for HealthCheckResult
 type HealthCheckResult struct {
-	Cause NullableString `json:"cause,omitempty"`
-	ComponentName *string `json:"componentName,omitempty"`
-	EscapedComponentName *string `json:"escapedComponentName,omitempty"`
-	Status *string `json:"status,omitempty"`
+	Cause                NullableString `json:"cause,omitempty"`
+	ComponentName        *string        `json:"componentName,omitempty"`
+	EscapedComponentName *string        `json:"escapedComponentName,omitempty"`
+	Status               *string        `json:"status,omitempty"`
 }
 
 // NewHealthCheckResult instantiates a new HealthCheckResult object
@@ -74,6 +74,7 @@ func (o *HealthCheckResult) HasCause() bool {
 func (o *HealthCheckResult) SetCause(v string) {
 	o.Cause.Set(&v)
 }
+
 // SetCauseNil sets the value for Cause to be an explicit nil
 func (o *HealthCheckResult) SetCauseNil() {
 	o.Cause.Set(nil)
@@ -181,7 +182,7 @@ func (o *HealthCheckResult) SetStatus(v string) {
 }
 
 func (o HealthCheckResult) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -240,5 +241,3 @@ func (v *NullableHealthCheckResult) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -18,14 +18,13 @@ import (
 	"net/url"
 )
 
-
 // JmapUploadsAPIService JmapUploadsAPI service
 type JmapUploadsAPIService service
 
 type ApiCleanUploadRepositoryRequest struct {
-	ctx context.Context
-	ApiService *JmapUploadsAPIService
-	scope *string
+	ctx                          context.Context
+	ApiService                   *JmapUploadsAPIService
+	scope                        *string
 	cleanUploadRepositoryRequest *CleanUploadRepositoryRequest
 }
 
@@ -48,24 +47,25 @@ func (r ApiCleanUploadRepositoryRequest) Execute() (*CleanUploadRepository201Res
 /*
 CleanUploadRepository Clean upload repository
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCleanUploadRepositoryRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCleanUploadRepositoryRequest
 */
 func (a *JmapUploadsAPIService) CleanUploadRepository(ctx context.Context) ApiCleanUploadRepositoryRequest {
 	return ApiCleanUploadRepositoryRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CleanUploadRepository201Response
+//
+//	@return CleanUploadRepository201Response
 func (a *JmapUploadsAPIService) CleanUploadRepositoryExecute(r ApiCleanUploadRepositoryRequest) (*CleanUploadRepository201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CleanUploadRepository201Response
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CleanUploadRepository201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "JmapUploadsAPIService.CleanUploadRepository")

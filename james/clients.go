@@ -3,15 +3,16 @@ package james
 import (
 	"context"
 	"fmt"
-	"git.sr.ht/~rockorager/go-jmap"
-	"git.sr.ht/~rockorager/go-jmap/mail"
-	"git.sr.ht/~rockorager/go-jmap/mail/email"
-	openapi "github.com/ops-center/james-go-client"
-	"github.com/pkg/errors"
-	"k8s.io/apimachinery/pkg/util/wait"
 	"strings"
 	"sync"
 	"time"
+
+	"git.sr.ht/~rockorager/go-jmap"
+	"git.sr.ht/~rockorager/go-jmap/mail"
+	"git.sr.ht/~rockorager/go-jmap/mail/email"
+	"github.com/pkg/errors"
+	openapi "go.opscenter.dev/james-go-client"
+	"k8s.io/apimachinery/pkg/util/wait"
 )
 
 type Service struct {
@@ -132,7 +133,6 @@ func (w *WebAdminClient) renew() error {
 			return true, nil
 		},
 	)
-
 	if err != nil {
 		return errors.Wrap(lastErr, err.Error())
 	}
@@ -212,7 +212,6 @@ func (j *JMAPClient) renew() error {
 		3*time.Second,
 		true,
 		func(ctx context.Context) (bool, error) {
-
 			if j.forceBasicAuth {
 				j.WithBasicAuth(j.basicAuthCreds.Username, j.basicAuthCreds.Password)
 			} else {
@@ -250,7 +249,6 @@ func (j *JMAPClient) renew() error {
 
 			return true, nil
 		})
-
 	if err != nil {
 		return errors.Wrap(lastErr, err.Error())
 	}
@@ -280,7 +278,7 @@ func (j *JMAPClient) getMailboxId(mailboxName MailboxName) (jmap.ID, error) {
 type JmapSortProperty string
 
 const (
-	//Sort Properties supported by james distributed 3.9
+	// Sort Properties supported by james distributed 3.9
 	ReceivedAt JmapSortProperty = "receivedAt"
 	SentAt     JmapSortProperty = "sentAt"
 	Size       JmapSortProperty = "size"

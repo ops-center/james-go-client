@@ -19,15 +19,14 @@ import (
 	"strings"
 )
 
-
 // DeletedMessageVaultAPIService DeletedMessageVaultAPI service
 type DeletedMessageVaultAPIService service
 
 type ApiExportDeletedMessagesRequest struct {
-	ctx context.Context
-	ApiService *DeletedMessageVaultAPIService
-	user string
-	exportTo *string
+	ctx                          context.Context
+	ApiService                   *DeletedMessageVaultAPIService
+	user                         string
+	exportTo                     *string
 	exportDeletedMessagesRequest *ExportDeletedMessagesRequest
 }
 
@@ -49,24 +48,24 @@ func (r ApiExportDeletedMessagesRequest) Execute() (*http.Response, error) {
 /*
 ExportDeletedMessages Export deleted messages for a specific user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param user The user to export deleted messages from
- @return ApiExportDeletedMessagesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param user The user to export deleted messages from
+	@return ApiExportDeletedMessagesRequest
 */
 func (a *DeletedMessageVaultAPIService) ExportDeletedMessages(ctx context.Context, user string) ApiExportDeletedMessagesRequest {
 	return ApiExportDeletedMessagesRequest{
 		ApiService: a,
-		ctx: ctx,
-		user: user,
+		ctx:        ctx,
+		user:       user,
 	}
 }
 
 // Execute executes the request
 func (a *DeletedMessageVaultAPIService) ExportDeletedMessagesExecute(r ApiExportDeletedMessagesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeletedMessageVaultAPIService.ExportDeletedMessages")
@@ -136,10 +135,10 @@ func (a *DeletedMessageVaultAPIService) ExportDeletedMessagesExecute(r ApiExport
 }
 
 type ApiPurgeMessageRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DeletedMessageVaultAPIService
-	user string
-	messageId string
+	user       string
+	messageId  string
 }
 
 func (r ApiPurgeMessageRequest) Execute() (*http.Response, error) {
@@ -149,26 +148,26 @@ func (r ApiPurgeMessageRequest) Execute() (*http.Response, error) {
 /*
 PurgeMessage Permanently remove a deleted message
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param user The user of the deleted message
- @param messageId The ID of the deleted message
- @return ApiPurgeMessageRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param user The user of the deleted message
+	@param messageId The ID of the deleted message
+	@return ApiPurgeMessageRequest
 */
 func (a *DeletedMessageVaultAPIService) PurgeMessage(ctx context.Context, user string, messageId string) ApiPurgeMessageRequest {
 	return ApiPurgeMessageRequest{
 		ApiService: a,
-		ctx: ctx,
-		user: user,
-		messageId: messageId,
+		ctx:        ctx,
+		user:       user,
+		messageId:  messageId,
 	}
 }
 
 // Execute executes the request
 func (a *DeletedMessageVaultAPIService) PurgeMessageExecute(r ApiPurgeMessageRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeletedMessageVaultAPIService.PurgeMessage")
@@ -230,9 +229,9 @@ func (a *DeletedMessageVaultAPIService) PurgeMessageExecute(r ApiPurgeMessageReq
 }
 
 type ApiPurgeMessagesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DeletedMessageVaultAPIService
-	scope *string
+	scope      *string
 }
 
 // The scope of messages to purge
@@ -248,22 +247,22 @@ func (r ApiPurgeMessagesRequest) Execute() (*http.Response, error) {
 /*
 PurgeMessages Purge all expired deleted messages
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiPurgeMessagesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiPurgeMessagesRequest
 */
 func (a *DeletedMessageVaultAPIService) PurgeMessages(ctx context.Context) ApiPurgeMessagesRequest {
 	return ApiPurgeMessagesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *DeletedMessageVaultAPIService) PurgeMessagesExecute(r ApiPurgeMessagesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeletedMessageVaultAPIService.PurgeMessages")
@@ -327,9 +326,9 @@ func (a *DeletedMessageVaultAPIService) PurgeMessagesExecute(r ApiPurgeMessagesR
 }
 
 type ApiRestoreDeletedMessagesRequest struct {
-	ctx context.Context
-	ApiService *DeletedMessageVaultAPIService
-	user string
+	ctx                          context.Context
+	ApiService                   *DeletedMessageVaultAPIService
+	user                         string
 	exportDeletedMessagesRequest *ExportDeletedMessagesRequest
 }
 
@@ -345,24 +344,24 @@ func (r ApiRestoreDeletedMessagesRequest) Execute() (*http.Response, error) {
 /*
 RestoreDeletedMessages Restore deleted messages for a specific user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param user The user to restore deleted messages for
- @return ApiRestoreDeletedMessagesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param user The user to restore deleted messages for
+	@return ApiRestoreDeletedMessagesRequest
 */
 func (a *DeletedMessageVaultAPIService) RestoreDeletedMessages(ctx context.Context, user string) ApiRestoreDeletedMessagesRequest {
 	return ApiRestoreDeletedMessagesRequest{
 		ApiService: a,
-		ctx: ctx,
-		user: user,
+		ctx:        ctx,
+		user:       user,
 	}
 }
 
 // Execute executes the request
 func (a *DeletedMessageVaultAPIService) RestoreDeletedMessagesExecute(r ApiRestoreDeletedMessagesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DeletedMessageVaultAPIService.RestoreDeletedMessages")

@@ -18,14 +18,13 @@ import (
 	"net/url"
 )
 
-
 // SendMailAPIService SendMailAPI service
 type SendMailAPIService service
 
 type ApiSendEmailRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *SendMailAPIService
-	body *string
+	body       *string
 }
 
 func (r ApiSendEmailRequest) Body(body string) ApiSendEmailRequest {
@@ -40,22 +39,22 @@ func (r ApiSendEmailRequest) Execute() (*http.Response, error) {
 /*
 SendEmail Send email
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiSendEmailRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiSendEmailRequest
 */
 func (a *SendMailAPIService) SendEmail(ctx context.Context) ApiSendEmailRequest {
 	return ApiSendEmailRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *SendMailAPIService) SendEmailExecute(r ApiSendEmailRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SendMailAPIService.SendEmail")

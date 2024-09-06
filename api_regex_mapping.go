@@ -19,15 +19,14 @@ import (
 	"strings"
 )
 
-
 // RegexMappingAPIService RegexMappingAPI service
 type RegexMappingAPIService service
 
 type ApiAddRegexMappingRequest struct {
-	ctx context.Context
-	ApiService *RegexMappingAPIService
+	ctx           context.Context
+	ApiService    *RegexMappingAPIService
 	mappingSource string
-	regex string
+	regex         string
 }
 
 func (r ApiAddRegexMappingRequest) Execute() (*http.Response, error) {
@@ -37,26 +36,26 @@ func (r ApiAddRegexMappingRequest) Execute() (*http.Response, error) {
 /*
 AddRegexMapping Add a regex mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mappingSource Mapping source (recipient address)
- @param regex Java Regular Expression (regex)
- @return ApiAddRegexMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mappingSource Mapping source (recipient address)
+	@param regex Java Regular Expression (regex)
+	@return ApiAddRegexMappingRequest
 */
 func (a *RegexMappingAPIService) AddRegexMapping(ctx context.Context, mappingSource string, regex string) ApiAddRegexMappingRequest {
 	return ApiAddRegexMappingRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		mappingSource: mappingSource,
-		regex: regex,
+		regex:         regex,
 	}
 }
 
 // Execute executes the request
 func (a *RegexMappingAPIService) AddRegexMappingExecute(r ApiAddRegexMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RegexMappingAPIService.AddRegexMapping")
@@ -118,10 +117,10 @@ func (a *RegexMappingAPIService) AddRegexMappingExecute(r ApiAddRegexMappingRequ
 }
 
 type ApiRemoveRegexMappingRequest struct {
-	ctx context.Context
-	ApiService *RegexMappingAPIService
+	ctx           context.Context
+	ApiService    *RegexMappingAPIService
 	mappingSource string
-	regex string
+	regex         string
 }
 
 func (r ApiRemoveRegexMappingRequest) Execute() (*http.Response, error) {
@@ -131,26 +130,26 @@ func (r ApiRemoveRegexMappingRequest) Execute() (*http.Response, error) {
 /*
 RemoveRegexMapping Remove a regex mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mappingSource Mapping source (recipient address)
- @param regex Java Regular Expression (regex)
- @return ApiRemoveRegexMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mappingSource Mapping source (recipient address)
+	@param regex Java Regular Expression (regex)
+	@return ApiRemoveRegexMappingRequest
 */
 func (a *RegexMappingAPIService) RemoveRegexMapping(ctx context.Context, mappingSource string, regex string) ApiRemoveRegexMappingRequest {
 	return ApiRemoveRegexMappingRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		mappingSource: mappingSource,
-		regex: regex,
+		regex:         regex,
 	}
 }
 
 // Execute executes the request
 func (a *RegexMappingAPIService) RemoveRegexMappingExecute(r ApiRemoveRegexMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "RegexMappingAPIService.RemoveRegexMapping")

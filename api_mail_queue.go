@@ -19,17 +19,16 @@ import (
 	"strings"
 )
 
-
 // MailQueueAPIService MailQueueAPI service
 type MailQueueAPIService service
 
 type ApiDeleteMailsOfMailQueueRequest struct {
-	ctx context.Context
-	ApiService *MailQueueAPIService
+	ctx           context.Context
+	ApiService    *MailQueueAPIService
 	mailQueueName string
-	sender *string
-	name *string
-	recipient *string
+	sender        *string
+	name          *string
+	recipient     *string
 }
 
 // Sender mail address
@@ -57,14 +56,14 @@ func (r ApiDeleteMailsOfMailQueueRequest) Execute() (*http.Response, error) {
 /*
 DeleteMailsOfMailQueue Delete mails from a mail queue
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mailQueueName Name of the mail queue
- @return ApiDeleteMailsOfMailQueueRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mailQueueName Name of the mail queue
+	@return ApiDeleteMailsOfMailQueueRequest
 */
 func (a *MailQueueAPIService) DeleteMailsOfMailQueue(ctx context.Context, mailQueueName string) ApiDeleteMailsOfMailQueueRequest {
 	return ApiDeleteMailsOfMailQueueRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		mailQueueName: mailQueueName,
 	}
 }
@@ -72,9 +71,9 @@ func (a *MailQueueAPIService) DeleteMailsOfMailQueue(ctx context.Context, mailQu
 // Execute executes the request
 func (a *MailQueueAPIService) DeleteMailsOfMailQueueExecute(r ApiDeleteMailsOfMailQueueRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailQueueAPIService.DeleteMailsOfMailQueue")
@@ -144,9 +143,9 @@ func (a *MailQueueAPIService) DeleteMailsOfMailQueueExecute(r ApiDeleteMailsOfMa
 }
 
 type ApiFlushMailsOfMailQueueRequest struct {
-	ctx context.Context
-	ApiService *MailQueueAPIService
-	mailQueueName string
+	ctx                          context.Context
+	ApiService                   *MailQueueAPIService
+	mailQueueName                string
 	flushMailsOfMailQueueRequest *FlushMailsOfMailQueueRequest
 }
 
@@ -162,14 +161,14 @@ func (r ApiFlushMailsOfMailQueueRequest) Execute() (*http.Response, error) {
 /*
 FlushMailsOfMailQueue Flush mails from a mail queue
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mailQueueName Name of the mail queue
- @return ApiFlushMailsOfMailQueueRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mailQueueName Name of the mail queue
+	@return ApiFlushMailsOfMailQueueRequest
 */
 func (a *MailQueueAPIService) FlushMailsOfMailQueue(ctx context.Context, mailQueueName string) ApiFlushMailsOfMailQueueRequest {
 	return ApiFlushMailsOfMailQueueRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		mailQueueName: mailQueueName,
 	}
 }
@@ -177,9 +176,9 @@ func (a *MailQueueAPIService) FlushMailsOfMailQueue(ctx context.Context, mailQue
 // Execute executes the request
 func (a *MailQueueAPIService) FlushMailsOfMailQueueExecute(r ApiFlushMailsOfMailQueueRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPatch
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPatch
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailQueueAPIService.FlushMailsOfMailQueue")
@@ -245,7 +244,7 @@ func (a *MailQueueAPIService) FlushMailsOfMailQueueExecute(r ApiFlushMailsOfMail
 }
 
 type ApiListMailQueuesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *MailQueueAPIService
 }
 
@@ -256,22 +255,22 @@ func (r ApiListMailQueuesRequest) Execute() (*http.Response, error) {
 /*
 ListMailQueues List mail queues
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListMailQueuesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListMailQueuesRequest
 */
 func (a *MailQueueAPIService) ListMailQueues(ctx context.Context) ApiListMailQueuesRequest {
 	return ApiListMailQueuesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *MailQueueAPIService) ListMailQueuesExecute(r ApiListMailQueuesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailQueueAPIService.ListMailQueues")
@@ -331,10 +330,10 @@ func (a *MailQueueAPIService) ListMailQueuesExecute(r ApiListMailQueuesRequest) 
 }
 
 type ApiListMailsOfMailQueueRequest struct {
-	ctx context.Context
-	ApiService *MailQueueAPIService
+	ctx           context.Context
+	ApiService    *MailQueueAPIService
 	mailQueueName string
-	limit *int32
+	limit         *int32
 }
 
 // Maximum number of mails returned in a single call
@@ -350,26 +349,27 @@ func (r ApiListMailsOfMailQueueRequest) Execute() ([]ListMailsOfMailQueue200Resp
 /*
 ListMailsOfMailQueue List mails of a mail queue
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mailQueueName Name of the mail queue
- @return ApiListMailsOfMailQueueRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mailQueueName Name of the mail queue
+	@return ApiListMailsOfMailQueueRequest
 */
 func (a *MailQueueAPIService) ListMailsOfMailQueue(ctx context.Context, mailQueueName string) ApiListMailsOfMailQueueRequest {
 	return ApiListMailsOfMailQueueRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		mailQueueName: mailQueueName,
 	}
 }
 
 // Execute executes the request
-//  @return []ListMailsOfMailQueue200ResponseInner
+//
+//	@return []ListMailsOfMailQueue200ResponseInner
 func (a *MailQueueAPIService) ListMailsOfMailQueueExecute(r ApiListMailsOfMailQueueRequest) ([]ListMailsOfMailQueue200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListMailsOfMailQueue200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListMailsOfMailQueue200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailQueueAPIService.ListMailsOfMailQueue")
@@ -442,10 +442,10 @@ func (a *MailQueueAPIService) ListMailsOfMailQueueExecute(r ApiListMailsOfMailQu
 }
 
 type ApiRepublishMailQueueRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *MailQueueAPIService
-	action *string
-	olderThan *string
+	action     *string
+	olderThan  *string
 }
 
 // Republish action (RepublishNotProcessedMails)
@@ -467,22 +467,22 @@ func (r ApiRepublishMailQueueRequest) Execute() (*http.Response, error) {
 /*
 RepublishMailQueue RabbitMQ republishing a mail queue from Cassandra
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRepublishMailQueueRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRepublishMailQueueRequest
 */
 func (a *MailQueueAPIService) RepublishMailQueue(ctx context.Context) ApiRepublishMailQueueRequest {
 	return ApiRepublishMailQueueRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *MailQueueAPIService) RepublishMailQueueExecute(r ApiRepublishMailQueueRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailQueueAPIService.RepublishMailQueue")

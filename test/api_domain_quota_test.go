@@ -11,20 +11,19 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/searchlight/james-go-client"
+	openapiclient "go.opscenter.dev/james-go-client"
 )
 
 func Test_openapi_DomainQuotaAPIService(t *testing.T) {
-
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test DomainQuotaAPIService DeleteDomainQuotaCount", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -32,12 +31,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService DeleteDomainQuotaSize", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -45,12 +42,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService GetDomainQuota", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -58,12 +53,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService GetDomainQuotaCount", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -71,12 +64,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService GetDomainQuotaSize", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -84,12 +75,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService UpdateDomainQuota", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -97,12 +86,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService UpdateDomainQuotaCount", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -110,12 +97,10 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test DomainQuotaAPIService UpdateDomainQuotaSize", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var domainToBeUsed string
 
@@ -123,7 +108,5 @@ func Test_openapi_DomainQuotaAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
-
 }

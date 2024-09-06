@@ -19,15 +19,14 @@ import (
 	"strings"
 )
 
-
 // MailRepositoryAPIService MailRepositoryAPI service
 type MailRepositoryAPIService service
 
 type ApiCreateMailRepositoryRequest struct {
-	ctx context.Context
-	ApiService *MailRepositoryAPIService
+	ctx                        context.Context
+	ApiService                 *MailRepositoryAPIService
 	encodedPathOfTheRepository string
-	protocol *string
+	protocol                   *string
 }
 
 // Protocol of the mail repository
@@ -43,14 +42,14 @@ func (r ApiCreateMailRepositoryRequest) Execute() (*http.Response, error) {
 /*
 CreateMailRepository Create a mail repository
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param encodedPathOfTheRepository Encoded resource path of the created mail repository
- @return ApiCreateMailRepositoryRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param encodedPathOfTheRepository Encoded resource path of the created mail repository
+	@return ApiCreateMailRepositoryRequest
 */
 func (a *MailRepositoryAPIService) CreateMailRepository(ctx context.Context, encodedPathOfTheRepository string) ApiCreateMailRepositoryRequest {
 	return ApiCreateMailRepositoryRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:                 a,
+		ctx:                        ctx,
 		encodedPathOfTheRepository: encodedPathOfTheRepository,
 	}
 }
@@ -58,9 +57,9 @@ func (a *MailRepositoryAPIService) CreateMailRepository(ctx context.Context, enc
 // Execute executes the request
 func (a *MailRepositoryAPIService) CreateMailRepositoryExecute(r ApiCreateMailRepositoryRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailRepositoryAPIService.CreateMailRepository")
@@ -125,8 +124,8 @@ func (a *MailRepositoryAPIService) CreateMailRepositoryExecute(r ApiCreateMailRe
 }
 
 type ApiGetMailRepositoryRequest struct {
-	ctx context.Context
-	ApiService *MailRepositoryAPIService
+	ctx                        context.Context
+	ApiService                 *MailRepositoryAPIService
 	encodedPathOfTheRepository string
 }
 
@@ -137,26 +136,27 @@ func (r ApiGetMailRepositoryRequest) Execute() (*GetMailRepository200Response, *
 /*
 GetMailRepository Getting additional information for a mail repository
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param encodedPathOfTheRepository Encoded resource path of an existing mail repository
- @return ApiGetMailRepositoryRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param encodedPathOfTheRepository Encoded resource path of an existing mail repository
+	@return ApiGetMailRepositoryRequest
 */
 func (a *MailRepositoryAPIService) GetMailRepository(ctx context.Context, encodedPathOfTheRepository string) ApiGetMailRepositoryRequest {
 	return ApiGetMailRepositoryRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:                 a,
+		ctx:                        ctx,
 		encodedPathOfTheRepository: encodedPathOfTheRepository,
 	}
 }
 
 // Execute executes the request
-//  @return GetMailRepository200Response
+//
+//	@return GetMailRepository200Response
 func (a *MailRepositoryAPIService) GetMailRepositoryExecute(r ApiGetMailRepositoryRequest) (*GetMailRepository200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetMailRepository200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetMailRepository200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailRepositoryAPIService.GetMailRepository")
@@ -226,7 +226,7 @@ func (a *MailRepositoryAPIService) GetMailRepositoryExecute(r ApiGetMailReposito
 }
 
 type ApiListMailRepositoriesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *MailRepositoryAPIService
 }
 
@@ -237,24 +237,25 @@ func (r ApiListMailRepositoriesRequest) Execute() ([]ListMailRepositories200Resp
 /*
 ListMailRepositories Listing mail repositories
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListMailRepositoriesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListMailRepositoriesRequest
 */
 func (a *MailRepositoryAPIService) ListMailRepositories(ctx context.Context) ApiListMailRepositoriesRequest {
 	return ApiListMailRepositoriesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []ListMailRepositories200ResponseInner
+//
+//	@return []ListMailRepositories200ResponseInner
 func (a *MailRepositoryAPIService) ListMailRepositoriesExecute(r ApiListMailRepositoriesRequest) ([]ListMailRepositories200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListMailRepositories200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListMailRepositories200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailRepositoryAPIService.ListMailRepositories")
@@ -323,11 +324,11 @@ func (a *MailRepositoryAPIService) ListMailRepositoriesExecute(r ApiListMailRepo
 }
 
 type ApiListMailsInMailRepositoryRequest struct {
-	ctx context.Context
-	ApiService *MailRepositoryAPIService
+	ctx                        context.Context
+	ApiService                 *MailRepositoryAPIService
 	encodedPathOfTheRepository string
-	limit *int32
-	offset *int32
+	limit                      *int32
+	offset                     *int32
 }
 
 // Limit the number of returned elements
@@ -349,26 +350,27 @@ func (r ApiListMailsInMailRepositoryRequest) Execute() ([]string, *http.Response
 /*
 ListMailsInMailRepository Listing mails contained in a mail repository
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param encodedPathOfTheRepository Encoded resource path of an existing mail repository
- @return ApiListMailsInMailRepositoryRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param encodedPathOfTheRepository Encoded resource path of an existing mail repository
+	@return ApiListMailsInMailRepositoryRequest
 */
 func (a *MailRepositoryAPIService) ListMailsInMailRepository(ctx context.Context, encodedPathOfTheRepository string) ApiListMailsInMailRepositoryRequest {
 	return ApiListMailsInMailRepositoryRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:                 a,
+		ctx:                        ctx,
 		encodedPathOfTheRepository: encodedPathOfTheRepository,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *MailRepositoryAPIService) ListMailsInMailRepositoryExecute(r ApiListMailsInMailRepositoryRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailRepositoryAPIService.ListMailsInMailRepository")

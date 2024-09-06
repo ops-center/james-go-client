@@ -11,20 +11,19 @@ package openapi
 
 import (
 	"context"
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"testing"
-	openapiclient "github.com/searchlight/james-go-client"
+	openapiclient "go.opscenter.dev/james-go-client"
 )
 
 func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
-
 	configuration := openapiclient.NewConfiguration()
 	apiClient := openapiclient.NewAPIClient(configuration)
 
 	t.Run("Test EventDeadLetterAPIService DeleteAllEvents", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 
@@ -32,12 +31,10 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService DeleteEvent", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 		var insertionId string
@@ -46,12 +43,10 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService GetEvent", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 		var insertionId string
@@ -60,12 +55,10 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService ListFailedEvents", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 
@@ -74,35 +67,29 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService ListMailboxListenerGroups", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		resp, httpRes, err := apiClient.EventDeadLetterAPI.ListMailboxListenerGroups(context.Background()).Execute()
 
 		require.Nil(t, err)
 		require.NotNil(t, resp)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService RedeliverAllEvents", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		httpRes, err := apiClient.EventDeadLetterAPI.RedeliverAllEvents(context.Background()).Execute()
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService RedeliverEvent", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 		var insertionId string
@@ -111,12 +98,10 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
 
 	t.Run("Test EventDeadLetterAPIService RedeliverGroupEvents", func(t *testing.T) {
-
-		t.Skip("skip test")  // remove to run test
+		t.Skip("skip test") // remove to run test
 
 		var groupName string
 
@@ -124,7 +109,5 @@ func Test_openapi_EventDeadLetterAPIService(t *testing.T) {
 
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
-
 	})
-
 }

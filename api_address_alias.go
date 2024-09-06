@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // AddressAliasAPIService AddressAliasAPI service
 type AddressAliasAPIService service
 
 type ApiCreateAliasRequest struct {
-	ctx context.Context
-	ApiService *AddressAliasAPIService
-	userAddress string
+	ctx           context.Context
+	ApiService    *AddressAliasAPIService
+	userAddress   string
 	sourceAddress *string
 }
 
@@ -43,14 +42,14 @@ func (r ApiCreateAliasRequest) Execute() (*http.Response, error) {
 /*
 CreateAlias Add a new alias to a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiCreateAliasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiCreateAliasRequest
 */
 func (a *AddressAliasAPIService) CreateAlias(ctx context.Context, userAddress string) ApiCreateAliasRequest {
 	return ApiCreateAliasRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
@@ -58,9 +57,9 @@ func (a *AddressAliasAPIService) CreateAlias(ctx context.Context, userAddress st
 // Execute executes the request
 func (a *AddressAliasAPIService) CreateAliasExecute(r ApiCreateAliasRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressAliasAPIService.CreateAlias")
@@ -125,9 +124,9 @@ func (a *AddressAliasAPIService) CreateAliasExecute(r ApiCreateAliasRequest) (*h
 }
 
 type ApiDeleteAliasRequest struct {
-	ctx context.Context
-	ApiService *AddressAliasAPIService
-	userAddress string
+	ctx           context.Context
+	ApiService    *AddressAliasAPIService
+	userAddress   string
 	sourceAddress *string
 }
 
@@ -144,14 +143,14 @@ func (r ApiDeleteAliasRequest) Execute() (*http.Response, error) {
 /*
 DeleteAlias Remove an alias from a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiDeleteAliasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiDeleteAliasRequest
 */
 func (a *AddressAliasAPIService) DeleteAlias(ctx context.Context, userAddress string) ApiDeleteAliasRequest {
 	return ApiDeleteAliasRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
@@ -159,9 +158,9 @@ func (a *AddressAliasAPIService) DeleteAlias(ctx context.Context, userAddress st
 // Execute executes the request
 func (a *AddressAliasAPIService) DeleteAliasExecute(r ApiDeleteAliasRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressAliasAPIService.DeleteAlias")
@@ -226,8 +225,8 @@ func (a *AddressAliasAPIService) DeleteAliasExecute(r ApiDeleteAliasRequest) (*h
 }
 
 type ApiGetAliasRequest struct {
-	ctx context.Context
-	ApiService *AddressAliasAPIService
+	ctx         context.Context
+	ApiService  *AddressAliasAPIService
 	userAddress string
 }
 
@@ -238,26 +237,27 @@ func (r ApiGetAliasRequest) Execute() ([]GetAlias200ResponseInner, *http.Respons
 /*
 GetAlias List alias sources of a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiGetAliasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiGetAliasRequest
 */
 func (a *AddressAliasAPIService) GetAlias(ctx context.Context, userAddress string) ApiGetAliasRequest {
 	return ApiGetAliasRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
 
 // Execute executes the request
-//  @return []GetAlias200ResponseInner
+//
+//	@return []GetAlias200ResponseInner
 func (a *AddressAliasAPIService) GetAliasExecute(r ApiGetAliasRequest) ([]GetAlias200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []GetAlias200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []GetAlias200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressAliasAPIService.GetAlias")
@@ -327,7 +327,7 @@ func (a *AddressAliasAPIService) GetAliasExecute(r ApiGetAliasRequest) ([]GetAli
 }
 
 type ApiListAliasesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *AddressAliasAPIService
 }
 
@@ -338,24 +338,25 @@ func (r ApiListAliasesRequest) Execute() ([]string, *http.Response, error) {
 /*
 ListAliases List users with aliases
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListAliasesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAliasesRequest
 */
 func (a *AddressAliasAPIService) ListAliases(ctx context.Context) ApiListAliasesRequest {
 	return ApiListAliasesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *AddressAliasAPIService) ListAliasesExecute(r ApiListAliasesRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressAliasAPIService.ListAliases")

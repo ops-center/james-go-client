@@ -73,7 +73,7 @@ func (o *PerformActionOnCassandraMappings201Response) SetTaskId(v string) {
 }
 
 func (o PerformActionOnCassandraMappings201Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,5 +123,3 @@ func (v *NullablePerformActionOnCassandraMappings201Response) UnmarshalJSON(src 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

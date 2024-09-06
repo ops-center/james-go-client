@@ -19,13 +19,12 @@ import (
 	"strings"
 )
 
-
 // UserMappingAPIService UserMappingAPI service
 type UserMappingAPIService service
 
 type ApiListUserMappingsRequest struct {
-	ctx context.Context
-	ApiService *UserMappingAPIService
+	ctx         context.Context
+	ApiService  *UserMappingAPIService
 	userAddress string
 }
 
@@ -36,26 +35,27 @@ func (r ApiListUserMappingsRequest) Execute() ([]ListUserMappings200ResponseInne
 /*
 ListUserMappings Listing User Mappings
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User address
- @return ApiListUserMappingsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User address
+	@return ApiListUserMappingsRequest
 */
 func (a *UserMappingAPIService) ListUserMappings(ctx context.Context, userAddress string) ApiListUserMappingsRequest {
 	return ApiListUserMappingsRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
 
 // Execute executes the request
-//  @return []ListUserMappings200ResponseInner
+//
+//	@return []ListUserMappings200ResponseInner
 func (a *UserMappingAPIService) ListUserMappingsExecute(r ApiListUserMappingsRequest) ([]ListUserMappings200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListUserMappings200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListUserMappings200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMappingAPIService.ListUserMappings")

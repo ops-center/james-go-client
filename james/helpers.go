@@ -2,8 +2,9 @@ package james
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 func generateObjectAddr(object Object) (string, error) {

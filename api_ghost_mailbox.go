@@ -18,13 +18,12 @@ import (
 	"net/url"
 )
 
-
 // GhostMailboxAPIService GhostMailboxAPI service
 type GhostMailboxAPIService service
 
 type ApiCorrectGhostMailboxRequest struct {
-	ctx context.Context
-	ApiService *GhostMailboxAPIService
+	ctx                        context.Context
+	ApiService                 *GhostMailboxAPIService
 	correctGhostMailboxRequest *CorrectGhostMailboxRequest
 }
 
@@ -41,24 +40,25 @@ func (r ApiCorrectGhostMailboxRequest) Execute() (*CorrectGhostMailbox201Respons
 /*
 CorrectGhostMailbox Correct ghost mailbox by merging
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCorrectGhostMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCorrectGhostMailboxRequest
 */
 func (a *GhostMailboxAPIService) CorrectGhostMailbox(ctx context.Context) ApiCorrectGhostMailboxRequest {
 	return ApiCorrectGhostMailboxRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CorrectGhostMailbox201Response
+//
+//	@return CorrectGhostMailbox201Response
 func (a *GhostMailboxAPIService) CorrectGhostMailboxExecute(r ApiCorrectGhostMailboxRequest) (*CorrectGhostMailbox201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CorrectGhostMailbox201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CorrectGhostMailbox201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GhostMailboxAPIService.CorrectGhostMailbox")

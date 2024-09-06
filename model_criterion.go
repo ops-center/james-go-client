@@ -20,8 +20,8 @@ var _ MappedNullable = &Criterion{}
 // Criterion struct for Criterion
 type Criterion struct {
 	FieldName *string `json:"fieldName,omitempty"`
-	Operator *string `json:"operator,omitempty"`
-	Value *string `json:"value,omitempty"`
+	Operator  *string `json:"operator,omitempty"`
+	Value     *string `json:"value,omitempty"`
 }
 
 // NewCriterion instantiates a new Criterion object
@@ -138,7 +138,7 @@ func (o *Criterion) SetValue(v string) {
 }
 
 func (o Criterion) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -194,5 +194,3 @@ func (v *NullableCriterion) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

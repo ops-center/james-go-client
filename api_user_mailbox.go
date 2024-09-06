@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // UserMailboxAPIService UserMailboxAPI service
 type UserMailboxAPIService service
 
 type ApiClearMailboxRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx         context.Context
+	ApiService  *UserMailboxAPIService
+	username    string
 	mailboxName string
 }
 
@@ -37,16 +36,16 @@ func (r ApiClearMailboxRequest) Execute() (*http.Response, error) {
 /*
 ClearMailbox Clear mailbox content
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxName
- @return ApiClearMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxName
+	@return ApiClearMailboxRequest
 */
 func (a *UserMailboxAPIService) ClearMailbox(ctx context.Context, username string, mailboxName string) ApiClearMailboxRequest {
 	return ApiClearMailboxRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:  a,
+		ctx:         ctx,
+		username:    username,
 		mailboxName: mailboxName,
 	}
 }
@@ -54,9 +53,9 @@ func (a *UserMailboxAPIService) ClearMailbox(ctx context.Context, username strin
 // Execute executes the request
 func (a *UserMailboxAPIService) ClearMailboxExecute(r ApiClearMailboxRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.ClearMailbox")
@@ -118,9 +117,9 @@ func (a *UserMailboxAPIService) ClearMailboxExecute(r ApiClearMailboxRequest) (*
 }
 
 type ApiCountEmailsRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx         context.Context
+	ApiService  *UserMailboxAPIService
+	username    string
 	mailboxName string
 }
 
@@ -131,16 +130,16 @@ func (r ApiCountEmailsRequest) Execute() (*http.Response, error) {
 /*
 CountEmails Count emails in a mailbox
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxName
- @return ApiCountEmailsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxName
+	@return ApiCountEmailsRequest
 */
 func (a *UserMailboxAPIService) CountEmails(ctx context.Context, username string, mailboxName string) ApiCountEmailsRequest {
 	return ApiCountEmailsRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:  a,
+		ctx:         ctx,
+		username:    username,
 		mailboxName: mailboxName,
 	}
 }
@@ -148,9 +147,9 @@ func (a *UserMailboxAPIService) CountEmails(ctx context.Context, username string
 // Execute executes the request
 func (a *UserMailboxAPIService) CountEmailsExecute(r ApiCountEmailsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.CountEmails")
@@ -212,9 +211,9 @@ func (a *UserMailboxAPIService) CountEmailsExecute(r ApiCountEmailsRequest) (*ht
 }
 
 type ApiCountUnseenEmailsRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx         context.Context
+	ApiService  *UserMailboxAPIService
+	username    string
 	mailboxName string
 }
 
@@ -225,16 +224,16 @@ func (r ApiCountUnseenEmailsRequest) Execute() (*http.Response, error) {
 /*
 CountUnseenEmails Count unseen emails in a mailbox
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxName
- @return ApiCountUnseenEmailsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxName
+	@return ApiCountUnseenEmailsRequest
 */
 func (a *UserMailboxAPIService) CountUnseenEmails(ctx context.Context, username string, mailboxName string) ApiCountUnseenEmailsRequest {
 	return ApiCountUnseenEmailsRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:  a,
+		ctx:         ctx,
+		username:    username,
 		mailboxName: mailboxName,
 	}
 }
@@ -242,9 +241,9 @@ func (a *UserMailboxAPIService) CountUnseenEmails(ctx context.Context, username 
 // Execute executes the request
 func (a *UserMailboxAPIService) CountUnseenEmailsExecute(r ApiCountUnseenEmailsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.CountUnseenEmails")
@@ -306,9 +305,9 @@ func (a *UserMailboxAPIService) CountUnseenEmailsExecute(r ApiCountUnseenEmailsR
 }
 
 type ApiCreateMailboxRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx                    context.Context
+	ApiService             *UserMailboxAPIService
+	username               string
 	mailboxNameToBeCreated string
 }
 
@@ -319,16 +318,16 @@ func (r ApiCreateMailboxRequest) Execute() (*http.Response, error) {
 /*
 CreateMailbox Create a mailbox
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxNameToBeCreated
- @return ApiCreateMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxNameToBeCreated
+	@return ApiCreateMailboxRequest
 */
 func (a *UserMailboxAPIService) CreateMailbox(ctx context.Context, username string, mailboxNameToBeCreated string) ApiCreateMailboxRequest {
 	return ApiCreateMailboxRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:             a,
+		ctx:                    ctx,
+		username:               username,
 		mailboxNameToBeCreated: mailboxNameToBeCreated,
 	}
 }
@@ -336,9 +335,9 @@ func (a *UserMailboxAPIService) CreateMailbox(ctx context.Context, username stri
 // Execute executes the request
 func (a *UserMailboxAPIService) CreateMailboxExecute(r ApiCreateMailboxRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.CreateMailbox")
@@ -400,9 +399,9 @@ func (a *UserMailboxAPIService) CreateMailboxExecute(r ApiCreateMailboxRequest) 
 }
 
 type ApiDeleteMailboxRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx                    context.Context
+	ApiService             *UserMailboxAPIService
+	username               string
 	mailboxNameToBeDeleted string
 }
 
@@ -413,16 +412,16 @@ func (r ApiDeleteMailboxRequest) Execute() (*http.Response, error) {
 /*
 DeleteMailbox Delete a mailbox and its children
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxNameToBeDeleted
- @return ApiDeleteMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxNameToBeDeleted
+	@return ApiDeleteMailboxRequest
 */
 func (a *UserMailboxAPIService) DeleteMailbox(ctx context.Context, username string, mailboxNameToBeDeleted string) ApiDeleteMailboxRequest {
 	return ApiDeleteMailboxRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:             a,
+		ctx:                    ctx,
+		username:               username,
 		mailboxNameToBeDeleted: mailboxNameToBeDeleted,
 	}
 }
@@ -430,9 +429,9 @@ func (a *UserMailboxAPIService) DeleteMailbox(ctx context.Context, username stri
 // Execute executes the request
 func (a *UserMailboxAPIService) DeleteMailboxExecute(r ApiDeleteMailboxRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.DeleteMailbox")
@@ -494,9 +493,9 @@ func (a *UserMailboxAPIService) DeleteMailboxExecute(r ApiDeleteMailboxRequest) 
 }
 
 type ApiDeleteMailboxesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserMailboxAPIService
-	username string
+	username   string
 }
 
 func (r ApiDeleteMailboxesRequest) Execute() (*http.Response, error) {
@@ -506,24 +505,24 @@ func (r ApiDeleteMailboxesRequest) Execute() (*http.Response, error) {
 /*
 DeleteMailboxes Delete user mailboxes
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiDeleteMailboxesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiDeleteMailboxesRequest
 */
 func (a *UserMailboxAPIService) DeleteMailboxes(ctx context.Context, username string) ApiDeleteMailboxesRequest {
 	return ApiDeleteMailboxesRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) DeleteMailboxesExecute(r ApiDeleteMailboxesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.DeleteMailboxes")
@@ -584,9 +583,9 @@ func (a *UserMailboxAPIService) DeleteMailboxesExecute(r ApiDeleteMailboxesReque
 }
 
 type ApiExistsMailboxRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx                   context.Context
+	ApiService            *UserMailboxAPIService
+	username              string
 	mailboxNameToBeTested string
 }
 
@@ -597,16 +596,16 @@ func (r ApiExistsMailboxRequest) Execute() (*http.Response, error) {
 /*
 ExistsMailbox Test existence of a mailbox
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param mailboxNameToBeTested
- @return ApiExistsMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param mailboxNameToBeTested
+	@return ApiExistsMailboxRequest
 */
 func (a *UserMailboxAPIService) ExistsMailbox(ctx context.Context, username string, mailboxNameToBeTested string) ApiExistsMailboxRequest {
 	return ApiExistsMailboxRequest{
-		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ApiService:            a,
+		ctx:                   ctx,
+		username:              username,
 		mailboxNameToBeTested: mailboxNameToBeTested,
 	}
 }
@@ -614,9 +613,9 @@ func (a *UserMailboxAPIService) ExistsMailbox(ctx context.Context, username stri
 // Execute executes the request
 func (a *UserMailboxAPIService) ExistsMailboxExecute(r ApiExistsMailboxRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.ExistsMailbox")
@@ -678,9 +677,9 @@ func (a *UserMailboxAPIService) ExistsMailboxExecute(r ApiExistsMailboxRequest) 
 }
 
 type ApiExportMailboxesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserMailboxAPIService
-	username string
+	username   string
 }
 
 func (r ApiExportMailboxesRequest) Execute() (*http.Response, error) {
@@ -690,24 +689,24 @@ func (r ApiExportMailboxesRequest) Execute() (*http.Response, error) {
 /*
 ExportMailboxes Export user mailboxes
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiExportMailboxesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiExportMailboxesRequest
 */
 func (a *UserMailboxAPIService) ExportMailboxes(ctx context.Context, username string) ApiExportMailboxesRequest {
 	return ApiExportMailboxesRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) ExportMailboxesExecute(r ApiExportMailboxesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.ExportMailboxes")
@@ -768,9 +767,9 @@ func (a *UserMailboxAPIService) ExportMailboxesExecute(r ApiExportMailboxesReque
 }
 
 type ApiListMailboxesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserMailboxAPIService
-	username string
+	username   string
 }
 
 func (r ApiListMailboxesRequest) Execute() ([]ListMailboxes200ResponseInner, *http.Response, error) {
@@ -780,26 +779,27 @@ func (r ApiListMailboxesRequest) Execute() ([]ListMailboxes200ResponseInner, *ht
 /*
 ListMailboxes List user mailboxes
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiListMailboxesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiListMailboxesRequest
 */
 func (a *UserMailboxAPIService) ListMailboxes(ctx context.Context, username string) ApiListMailboxesRequest {
 	return ApiListMailboxesRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
-//  @return []ListMailboxes200ResponseInner
+//
+//	@return []ListMailboxes200ResponseInner
 func (a *UserMailboxAPIService) ListMailboxesExecute(r ApiListMailboxesRequest) ([]ListMailboxes200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListMailboxes200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListMailboxes200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.ListMailboxes")
@@ -869,7 +869,7 @@ func (a *UserMailboxAPIService) ListMailboxesExecute(r ApiListMailboxesRequest) 
 }
 
 type ApiRecomputeCassandraFilteringProjectionRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserMailboxAPIService
 }
 
@@ -880,22 +880,22 @@ func (r ApiRecomputeCassandraFilteringProjectionRequest) Execute() (*http.Respon
 /*
 RecomputeCassandraFilteringProjection Recompute Cassandra filtering projection
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRecomputeCassandraFilteringProjectionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRecomputeCassandraFilteringProjectionRequest
 */
 func (a *UserMailboxAPIService) RecomputeCassandraFilteringProjection(ctx context.Context) ApiRecomputeCassandraFilteringProjectionRequest {
 	return ApiRecomputeCassandraFilteringProjectionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) RecomputeCassandraFilteringProjectionExecute(r ApiRecomputeCassandraFilteringProjectionRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.RecomputeCassandraFilteringProjection")
@@ -955,9 +955,9 @@ func (a *UserMailboxAPIService) RecomputeCassandraFilteringProjectionExecute(r A
 }
 
 type ApiRecomputeMessageViewProjectionRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx               context.Context
+	ApiService        *UserMailboxAPIService
+	username          string
 	messagesPerSecond *int32
 }
 
@@ -973,24 +973,24 @@ func (r ApiRecomputeMessageViewProjectionRequest) Execute() (*http.Response, err
 /*
 RecomputeMessageViewProjection Recompute User JMAP fast message view projection
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiRecomputeMessageViewProjectionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiRecomputeMessageViewProjectionRequest
 */
 func (a *UserMailboxAPIService) RecomputeMessageViewProjection(ctx context.Context, username string) ApiRecomputeMessageViewProjectionRequest {
 	return ApiRecomputeMessageViewProjectionRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) RecomputeMessageViewProjectionExecute(r ApiRecomputeMessageViewProjectionRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.RecomputeMessageViewProjection")
@@ -1057,11 +1057,11 @@ func (a *UserMailboxAPIService) RecomputeMessageViewProjectionExecute(r ApiRecom
 }
 
 type ApiReindexEmailsRequest struct {
-	ctx context.Context
-	ApiService *UserMailboxAPIService
-	username string
+	ctx               context.Context
+	ApiService        *UserMailboxAPIService
+	username          string
 	messagesPerSecond *int32
-	mode *string
+	mode              *string
 }
 
 func (r ApiReindexEmailsRequest) MessagesPerSecond(messagesPerSecond int32) ApiReindexEmailsRequest {
@@ -1081,24 +1081,24 @@ func (r ApiReindexEmailsRequest) Execute() (*http.Response, error) {
 /*
 ReindexEmails Reindex a user's mails
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiReindexEmailsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiReindexEmailsRequest
 */
 func (a *UserMailboxAPIService) ReindexEmails(ctx context.Context, username string) ApiReindexEmailsRequest {
 	return ApiReindexEmailsRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) ReindexEmailsExecute(r ApiReindexEmailsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.ReindexEmails")
@@ -1171,9 +1171,9 @@ func (a *UserMailboxAPIService) ReindexEmailsExecute(r ApiReindexEmailsRequest) 
 }
 
 type ApiSubscribeAllMailboxesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UserMailboxAPIService
-	username string
+	username   string
 }
 
 func (r ApiSubscribeAllMailboxesRequest) Execute() (*http.Response, error) {
@@ -1183,24 +1183,24 @@ func (r ApiSubscribeAllMailboxesRequest) Execute() (*http.Response, error) {
 /*
 SubscribeAllMailboxes Subscribe a user to all of their mailboxes
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiSubscribeAllMailboxesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiSubscribeAllMailboxesRequest
 */
 func (a *UserMailboxAPIService) SubscribeAllMailboxes(ctx context.Context, username string) ApiSubscribeAllMailboxesRequest {
 	return ApiSubscribeAllMailboxesRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UserMailboxAPIService) SubscribeAllMailboxesExecute(r ApiSubscribeAllMailboxesRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UserMailboxAPIService.SubscribeAllMailboxes")

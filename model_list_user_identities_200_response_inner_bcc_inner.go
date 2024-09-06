@@ -20,7 +20,7 @@ var _ MappedNullable = &ListUserIdentities200ResponseInnerBccInner{}
 // ListUserIdentities200ResponseInnerBccInner struct for ListUserIdentities200ResponseInnerBccInner
 type ListUserIdentities200ResponseInnerBccInner struct {
 	Email *string `json:"email,omitempty"`
-	Name *string `json:"name,omitempty"`
+	Name  *string `json:"name,omitempty"`
 }
 
 // NewListUserIdentities200ResponseInnerBccInner instantiates a new ListUserIdentities200ResponseInnerBccInner object
@@ -105,7 +105,7 @@ func (o *ListUserIdentities200ResponseInnerBccInner) SetName(v string) {
 }
 
 func (o ListUserIdentities200ResponseInnerBccInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableListUserIdentities200ResponseInnerBccInner) UnmarshalJSON(src [
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

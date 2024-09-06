@@ -19,14 +19,14 @@ var _ MappedNullable = &CreateUserIdentityRequest{}
 
 // CreateUserIdentityRequest struct for CreateUserIdentityRequest
 type CreateUserIdentityRequest struct {
-	Bcc []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
-	Email *string `json:"email,omitempty"`
-	HtmlSignature *string `json:"htmlSignature,omitempty"`
-	MayDelete *bool `json:"mayDelete,omitempty"`
-	Name *string `json:"name,omitempty"`
-	ReplyTo []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
-	SortOrder *int32 `json:"sortOrder,omitempty"`
-	TextSignature *string `json:"textSignature,omitempty"`
+	Bcc           []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
+	Email         *string                                      `json:"email,omitempty"`
+	HtmlSignature *string                                      `json:"htmlSignature,omitempty"`
+	MayDelete     *bool                                        `json:"mayDelete,omitempty"`
+	Name          *string                                      `json:"name,omitempty"`
+	ReplyTo       []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
+	SortOrder     *int32                                       `json:"sortOrder,omitempty"`
+	TextSignature *string                                      `json:"textSignature,omitempty"`
 }
 
 // NewCreateUserIdentityRequest instantiates a new CreateUserIdentityRequest object
@@ -303,7 +303,7 @@ func (o *CreateUserIdentityRequest) SetTextSignature(v string) {
 }
 
 func (o CreateUserIdentityRequest) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -374,5 +374,3 @@ func (v *NullableCreateUserIdentityRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

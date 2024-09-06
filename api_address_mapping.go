@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // AddressMappingAPIService AddressMappingAPI service
 type AddressMappingAPIService service
 
 type ApiAddAddressMappingRequest struct {
-	ctx context.Context
-	ApiService *AddressMappingAPIService
-	mappingSource string
+	ctx                context.Context
+	ApiService         *AddressMappingAPIService
+	mappingSource      string
 	destinationAddress string
 }
 
@@ -37,16 +36,16 @@ func (r ApiAddAddressMappingRequest) Execute() (*http.Response, error) {
 /*
 AddAddressMapping Add an address mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mappingSource Mapping source (recipient address)
- @param destinationAddress Mapping destination (address)
- @return ApiAddAddressMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mappingSource Mapping source (recipient address)
+	@param destinationAddress Mapping destination (address)
+	@return ApiAddAddressMappingRequest
 */
 func (a *AddressMappingAPIService) AddAddressMapping(ctx context.Context, mappingSource string, destinationAddress string) ApiAddAddressMappingRequest {
 	return ApiAddAddressMappingRequest{
-		ApiService: a,
-		ctx: ctx,
-		mappingSource: mappingSource,
+		ApiService:         a,
+		ctx:                ctx,
+		mappingSource:      mappingSource,
 		destinationAddress: destinationAddress,
 	}
 }
@@ -54,9 +53,9 @@ func (a *AddressMappingAPIService) AddAddressMapping(ctx context.Context, mappin
 // Execute executes the request
 func (a *AddressMappingAPIService) AddAddressMappingExecute(r ApiAddAddressMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressMappingAPIService.AddAddressMapping")
@@ -118,7 +117,7 @@ func (a *AddressMappingAPIService) AddAddressMappingExecute(r ApiAddAddressMappi
 }
 
 type ApiListAddressMappingsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *AddressMappingAPIService
 }
 
@@ -129,24 +128,25 @@ func (r ApiListAddressMappingsRequest) Execute() (*ListAddressMappings200Respons
 /*
 ListAddressMappings List all address mappings
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListAddressMappingsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAddressMappingsRequest
 */
 func (a *AddressMappingAPIService) ListAddressMappings(ctx context.Context) ApiListAddressMappingsRequest {
 	return ApiListAddressMappingsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return ListAddressMappings200Response
+//
+//	@return ListAddressMappings200Response
 func (a *AddressMappingAPIService) ListAddressMappingsExecute(r ApiListAddressMappingsRequest) (*ListAddressMappings200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ListAddressMappings200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ListAddressMappings200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressMappingAPIService.ListAddressMappings")
@@ -215,9 +215,9 @@ func (a *AddressMappingAPIService) ListAddressMappingsExecute(r ApiListAddressMa
 }
 
 type ApiRemoveAddressMappingRequest struct {
-	ctx context.Context
-	ApiService *AddressMappingAPIService
-	mappingSource string
+	ctx                context.Context
+	ApiService         *AddressMappingAPIService
+	mappingSource      string
 	destinationAddress string
 }
 
@@ -228,16 +228,16 @@ func (r ApiRemoveAddressMappingRequest) Execute() (*http.Response, error) {
 /*
 RemoveAddressMapping Remove an address mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mappingSource Mapping source (recipient address)
- @param destinationAddress Mapping destination (address)
- @return ApiRemoveAddressMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mappingSource Mapping source (recipient address)
+	@param destinationAddress Mapping destination (address)
+	@return ApiRemoveAddressMappingRequest
 */
 func (a *AddressMappingAPIService) RemoveAddressMapping(ctx context.Context, mappingSource string, destinationAddress string) ApiRemoveAddressMappingRequest {
 	return ApiRemoveAddressMappingRequest{
-		ApiService: a,
-		ctx: ctx,
-		mappingSource: mappingSource,
+		ApiService:         a,
+		ctx:                ctx,
+		mappingSource:      mappingSource,
 		destinationAddress: destinationAddress,
 	}
 }
@@ -245,9 +245,9 @@ func (a *AddressMappingAPIService) RemoveAddressMapping(ctx context.Context, map
 // Execute executes the request
 func (a *AddressMappingAPIService) RemoveAddressMappingExecute(r ApiRemoveAddressMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressMappingAPIService.RemoveAddressMapping")

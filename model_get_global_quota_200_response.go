@@ -20,7 +20,7 @@ var _ MappedNullable = &GetGlobalQuota200Response{}
 // GetGlobalQuota200Response struct for GetGlobalQuota200Response
 type GetGlobalQuota200Response struct {
 	Count *int32 `json:"count,omitempty"`
-	Size *int32 `json:"size,omitempty"`
+	Size  *int32 `json:"size,omitempty"`
 }
 
 // NewGetGlobalQuota200Response instantiates a new GetGlobalQuota200Response object
@@ -105,7 +105,7 @@ func (o *GetGlobalQuota200Response) SetSize(v int32) {
 }
 
 func (o GetGlobalQuota200Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableGetGlobalQuota200Response) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

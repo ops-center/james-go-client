@@ -19,13 +19,12 @@ import (
 	"strings"
 )
 
-
 // DomainsAPIService DomainsAPI service
 type DomainsAPIService service
 
 type ApiCreateDomainRequest struct {
-	ctx context.Context
-	ApiService *DomainsAPIService
+	ctx               context.Context
+	ApiService        *DomainsAPIService
 	domainToBeCreated string
 }
 
@@ -36,14 +35,14 @@ func (r ApiCreateDomainRequest) Execute() (*http.Response, error) {
 /*
 CreateDomain Create a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeCreated Name of the domain to be created
- @return ApiCreateDomainRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeCreated Name of the domain to be created
+	@return ApiCreateDomainRequest
 */
 func (a *DomainsAPIService) CreateDomain(ctx context.Context, domainToBeCreated string) ApiCreateDomainRequest {
 	return ApiCreateDomainRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		domainToBeCreated: domainToBeCreated,
 	}
 }
@@ -51,9 +50,9 @@ func (a *DomainsAPIService) CreateDomain(ctx context.Context, domainToBeCreated 
 // Execute executes the request
 func (a *DomainsAPIService) CreateDomainExecute(r ApiCreateDomainRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.CreateDomain")
@@ -114,9 +113,9 @@ func (a *DomainsAPIService) CreateDomainExecute(r ApiCreateDomainRequest) (*http
 }
 
 type ApiCreateDomainAliasRequest struct {
-	ctx context.Context
-	ApiService *DomainsAPIService
-	domainName string
+	ctx              context.Context
+	ApiService       *DomainsAPIService
+	domainName       string
 	sourceDomainName *string
 }
 
@@ -133,14 +132,14 @@ func (r ApiCreateDomainAliasRequest) Execute() (*http.Response, error) {
 /*
 CreateDomainAlias Create an alias for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainName Name of the destination domain for the alias
- @return ApiCreateDomainAliasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainName Name of the destination domain for the alias
+	@return ApiCreateDomainAliasRequest
 */
 func (a *DomainsAPIService) CreateDomainAlias(ctx context.Context, domainName string) ApiCreateDomainAliasRequest {
 	return ApiCreateDomainAliasRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		domainName: domainName,
 	}
 }
@@ -148,9 +147,9 @@ func (a *DomainsAPIService) CreateDomainAlias(ctx context.Context, domainName st
 // Execute executes the request
 func (a *DomainsAPIService) CreateDomainAliasExecute(r ApiCreateDomainAliasRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.CreateDomainAlias")
@@ -215,8 +214,8 @@ func (a *DomainsAPIService) CreateDomainAliasExecute(r ApiCreateDomainAliasReque
 }
 
 type ApiDeleteDomainRequest struct {
-	ctx context.Context
-	ApiService *DomainsAPIService
+	ctx               context.Context
+	ApiService        *DomainsAPIService
 	domainToBeDeleted string
 }
 
@@ -227,14 +226,14 @@ func (r ApiDeleteDomainRequest) Execute() (*http.Response, error) {
 /*
 DeleteDomain Delete a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeDeleted Name of the domain to be deleted
- @return ApiDeleteDomainRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeDeleted Name of the domain to be deleted
+	@return ApiDeleteDomainRequest
 */
 func (a *DomainsAPIService) DeleteDomain(ctx context.Context, domainToBeDeleted string) ApiDeleteDomainRequest {
 	return ApiDeleteDomainRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:        a,
+		ctx:               ctx,
 		domainToBeDeleted: domainToBeDeleted,
 	}
 }
@@ -242,9 +241,9 @@ func (a *DomainsAPIService) DeleteDomain(ctx context.Context, domainToBeDeleted 
 // Execute executes the request
 func (a *DomainsAPIService) DeleteDomainExecute(r ApiDeleteDomainRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.DeleteDomain")
@@ -305,9 +304,9 @@ func (a *DomainsAPIService) DeleteDomainExecute(r ApiDeleteDomainRequest) (*http
 }
 
 type ApiDeleteDomainAliasRequest struct {
-	ctx context.Context
-	ApiService *DomainsAPIService
-	domainName string
+	ctx              context.Context
+	ApiService       *DomainsAPIService
+	domainName       string
 	sourceDomainName *string
 }
 
@@ -324,14 +323,14 @@ func (r ApiDeleteDomainAliasRequest) Execute() (*http.Response, error) {
 /*
 DeleteDomainAlias Delete an alias for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainName Name of the destination domain for the alias
- @return ApiDeleteDomainAliasRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainName Name of the destination domain for the alias
+	@return ApiDeleteDomainAliasRequest
 */
 func (a *DomainsAPIService) DeleteDomainAlias(ctx context.Context, domainName string) ApiDeleteDomainAliasRequest {
 	return ApiDeleteDomainAliasRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		domainName: domainName,
 	}
 }
@@ -339,9 +338,9 @@ func (a *DomainsAPIService) DeleteDomainAlias(ctx context.Context, domainName st
 // Execute executes the request
 func (a *DomainsAPIService) DeleteDomainAliasExecute(r ApiDeleteDomainAliasRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.DeleteDomainAlias")
@@ -406,10 +405,10 @@ func (a *DomainsAPIService) DeleteDomainAliasExecute(r ApiDeleteDomainAliasReque
 }
 
 type ApiDeleteUserDataOfDomainRequest struct {
-	ctx context.Context
-	ApiService *DomainsAPIService
+	ctx            context.Context
+	ApiService     *DomainsAPIService
 	domainToBeUsed string
-	action *string
+	action         *string
 }
 
 func (r ApiDeleteUserDataOfDomainRequest) Action(action string) ApiDeleteUserDataOfDomainRequest {
@@ -424,14 +423,14 @@ func (r ApiDeleteUserDataOfDomainRequest) Execute() (*http.Response, error) {
 /*
 DeleteUserDataOfDomain Delete all users data of a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed Name of the domain to delete user data from
- @return ApiDeleteUserDataOfDomainRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed Name of the domain to delete user data from
+	@return ApiDeleteUserDataOfDomainRequest
 */
 func (a *DomainsAPIService) DeleteUserDataOfDomain(ctx context.Context, domainToBeUsed string) ApiDeleteUserDataOfDomainRequest {
 	return ApiDeleteUserDataOfDomainRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -439,9 +438,9 @@ func (a *DomainsAPIService) DeleteUserDataOfDomain(ctx context.Context, domainTo
 // Execute executes the request
 func (a *DomainsAPIService) DeleteUserDataOfDomainExecute(r ApiDeleteUserDataOfDomainRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.DeleteUserDataOfDomain")
@@ -506,7 +505,7 @@ func (a *DomainsAPIService) DeleteUserDataOfDomainExecute(r ApiDeleteUserDataOfD
 }
 
 type ApiExistsDomainRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainsAPIService
 	domainName string
 }
@@ -518,14 +517,14 @@ func (r ApiExistsDomainRequest) Execute() (*http.Response, error) {
 /*
 ExistsDomain Test if a domain exists
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainName Name of the domain to be tested
- @return ApiExistsDomainRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainName Name of the domain to be tested
+	@return ApiExistsDomainRequest
 */
 func (a *DomainsAPIService) ExistsDomain(ctx context.Context, domainName string) ApiExistsDomainRequest {
 	return ApiExistsDomainRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		domainName: domainName,
 	}
 }
@@ -533,9 +532,9 @@ func (a *DomainsAPIService) ExistsDomain(ctx context.Context, domainName string)
 // Execute executes the request
 func (a *DomainsAPIService) ExistsDomainExecute(r ApiExistsDomainRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.ExistsDomain")
@@ -596,7 +595,7 @@ func (a *DomainsAPIService) ExistsDomainExecute(r ApiExistsDomainRequest) (*http
 }
 
 type ApiListDomainAliasesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainsAPIService
 	domainName string
 }
@@ -608,26 +607,27 @@ func (r ApiListDomainAliasesRequest) Execute() ([]DomainAlias, *http.Response, e
 /*
 ListDomainAliases Get the list of aliases for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainName Name of the domain to retrieve aliases for
- @return ApiListDomainAliasesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainName Name of the domain to retrieve aliases for
+	@return ApiListDomainAliasesRequest
 */
 func (a *DomainsAPIService) ListDomainAliases(ctx context.Context, domainName string) ApiListDomainAliasesRequest {
 	return ApiListDomainAliasesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		domainName: domainName,
 	}
 }
 
 // Execute executes the request
-//  @return []DomainAlias
+//
+//	@return []DomainAlias
 func (a *DomainsAPIService) ListDomainAliasesExecute(r ApiListDomainAliasesRequest) ([]DomainAlias, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []DomainAlias
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []DomainAlias
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.ListDomainAliases")
@@ -697,7 +697,7 @@ func (a *DomainsAPIService) ListDomainAliasesExecute(r ApiListDomainAliasesReque
 }
 
 type ApiListDomainsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainsAPIService
 }
 
@@ -708,24 +708,25 @@ func (r ApiListDomainsRequest) Execute() ([]string, *http.Response, error) {
 /*
 ListDomains Get the list of domains
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListDomainsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListDomainsRequest
 */
 func (a *DomainsAPIService) ListDomains(ctx context.Context) ApiListDomainsRequest {
 	return ApiListDomainsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *DomainsAPIService) ListDomainsExecute(r ApiListDomainsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainsAPIService.ListDomains")

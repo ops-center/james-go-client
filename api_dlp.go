@@ -19,15 +19,14 @@ import (
 	"strings"
 )
 
-
 // DlpAPIService DlpAPI service
 type DlpAPIService service
 
 type ApiFetchDLPConfigurationRequest struct {
-	ctx context.Context
-	ApiService *DlpAPIService
+	ctx          context.Context
+	ApiService   *DlpAPIService
 	senderDomain string
-	ruleId string
+	ruleId       string
 }
 
 func (r ApiFetchDLPConfigurationRequest) Execute() (*http.Response, error) {
@@ -37,26 +36,26 @@ func (r ApiFetchDLPConfigurationRequest) Execute() (*http.Response, error) {
 /*
 FetchDLPConfiguration Fetch a DLP configuration item by sender domain and rule id
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param senderDomain
- @param ruleId
- @return ApiFetchDLPConfigurationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param senderDomain
+	@param ruleId
+	@return ApiFetchDLPConfigurationRequest
 */
 func (a *DlpAPIService) FetchDLPConfiguration(ctx context.Context, senderDomain string, ruleId string) ApiFetchDLPConfigurationRequest {
 	return ApiFetchDLPConfigurationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:   a,
+		ctx:          ctx,
 		senderDomain: senderDomain,
-		ruleId: ruleId,
+		ruleId:       ruleId,
 	}
 }
 
 // Execute executes the request
 func (a *DlpAPIService) FetchDLPConfigurationExecute(r ApiFetchDLPConfigurationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DlpAPIService.FetchDLPConfiguration")
@@ -118,8 +117,8 @@ func (a *DlpAPIService) FetchDLPConfigurationExecute(r ApiFetchDLPConfigurationR
 }
 
 type ApiListDLPConfigurationRequest struct {
-	ctx context.Context
-	ApiService *DlpAPIService
+	ctx          context.Context
+	ApiService   *DlpAPIService
 	senderDomain string
 }
 
@@ -130,14 +129,14 @@ func (r ApiListDLPConfigurationRequest) Execute() (*http.Response, error) {
 /*
 ListDLPConfiguration List DLP configuration by sender domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param senderDomain
- @return ApiListDLPConfigurationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param senderDomain
+	@return ApiListDLPConfigurationRequest
 */
 func (a *DlpAPIService) ListDLPConfiguration(ctx context.Context, senderDomain string) ApiListDLPConfigurationRequest {
 	return ApiListDLPConfigurationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:   a,
+		ctx:          ctx,
 		senderDomain: senderDomain,
 	}
 }
@@ -145,9 +144,9 @@ func (a *DlpAPIService) ListDLPConfiguration(ctx context.Context, senderDomain s
 // Execute executes the request
 func (a *DlpAPIService) ListDLPConfigurationExecute(r ApiListDLPConfigurationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DlpAPIService.ListDLPConfiguration")
@@ -208,8 +207,8 @@ func (a *DlpAPIService) ListDLPConfigurationExecute(r ApiListDLPConfigurationReq
 }
 
 type ApiRemoveDLPConfigurationRequest struct {
-	ctx context.Context
-	ApiService *DlpAPIService
+	ctx          context.Context
+	ApiService   *DlpAPIService
 	senderDomain string
 }
 
@@ -220,14 +219,14 @@ func (r ApiRemoveDLPConfigurationRequest) Execute() (*http.Response, error) {
 /*
 RemoveDLPConfiguration Remove DLP configuration by sender domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param senderDomain
- @return ApiRemoveDLPConfigurationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param senderDomain
+	@return ApiRemoveDLPConfigurationRequest
 */
 func (a *DlpAPIService) RemoveDLPConfiguration(ctx context.Context, senderDomain string) ApiRemoveDLPConfigurationRequest {
 	return ApiRemoveDLPConfigurationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:   a,
+		ctx:          ctx,
 		senderDomain: senderDomain,
 	}
 }
@@ -235,9 +234,9 @@ func (a *DlpAPIService) RemoveDLPConfiguration(ctx context.Context, senderDomain
 // Execute executes the request
 func (a *DlpAPIService) RemoveDLPConfigurationExecute(r ApiRemoveDLPConfigurationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DlpAPIService.RemoveDLPConfiguration")
@@ -298,9 +297,9 @@ func (a *DlpAPIService) RemoveDLPConfigurationExecute(r ApiRemoveDLPConfiguratio
 }
 
 type ApiStoreDLPConfigurationRequest struct {
-	ctx context.Context
-	ApiService *DlpAPIService
-	senderDomain string
+	ctx                          context.Context
+	ApiService                   *DlpAPIService
+	senderDomain                 string
 	storeDLPConfigurationRequest *StoreDLPConfigurationRequest
 }
 
@@ -316,14 +315,14 @@ func (r ApiStoreDLPConfigurationRequest) Execute() (*http.Response, error) {
 /*
 StoreDLPConfiguration Store DLP configuration by sender domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param senderDomain
- @return ApiStoreDLPConfigurationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param senderDomain
+	@return ApiStoreDLPConfigurationRequest
 */
 func (a *DlpAPIService) StoreDLPConfiguration(ctx context.Context, senderDomain string) ApiStoreDLPConfigurationRequest {
 	return ApiStoreDLPConfigurationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:   a,
+		ctx:          ctx,
 		senderDomain: senderDomain,
 	}
 }
@@ -331,9 +330,9 @@ func (a *DlpAPIService) StoreDLPConfiguration(ctx context.Context, senderDomain 
 // Execute executes the request
 func (a *DlpAPIService) StoreDLPConfigurationExecute(r ApiStoreDLPConfigurationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DlpAPIService.StoreDLPConfiguration")

@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // EventDeadLetterAPIService EventDeadLetterAPI service
 type EventDeadLetterAPIService service
 
 type ApiDeleteAllEventsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *EventDeadLetterAPIService
-	groupName string
+	groupName  string
 }
 
 func (r ApiDeleteAllEventsRequest) Execute() (*http.Response, error) {
@@ -36,24 +35,24 @@ func (r ApiDeleteAllEventsRequest) Execute() (*http.Response, error) {
 /*
 DeleteAllEvents Delete all events of a group
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @return ApiDeleteAllEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@return ApiDeleteAllEventsRequest
 */
 func (a *EventDeadLetterAPIService) DeleteAllEvents(ctx context.Context, groupName string) ApiDeleteAllEventsRequest {
 	return ApiDeleteAllEventsRequest{
 		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ctx:        ctx,
+		groupName:  groupName,
 	}
 }
 
 // Execute executes the request
 func (a *EventDeadLetterAPIService) DeleteAllEventsExecute(r ApiDeleteAllEventsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.DeleteAllEvents")
@@ -114,9 +113,9 @@ func (a *EventDeadLetterAPIService) DeleteAllEventsExecute(r ApiDeleteAllEventsR
 }
 
 type ApiDeleteEventRequest struct {
-	ctx context.Context
-	ApiService *EventDeadLetterAPIService
-	groupName string
+	ctx         context.Context
+	ApiService  *EventDeadLetterAPIService
+	groupName   string
 	insertionId string
 }
 
@@ -127,16 +126,16 @@ func (r ApiDeleteEventRequest) Execute() (*http.Response, error) {
 /*
 DeleteEvent Delete an event
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @param insertionId The insertion ID of the event
- @return ApiDeleteEventRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@param insertionId The insertion ID of the event
+	@return ApiDeleteEventRequest
 */
 func (a *EventDeadLetterAPIService) DeleteEvent(ctx context.Context, groupName string, insertionId string) ApiDeleteEventRequest {
 	return ApiDeleteEventRequest{
-		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ApiService:  a,
+		ctx:         ctx,
+		groupName:   groupName,
 		insertionId: insertionId,
 	}
 }
@@ -144,9 +143,9 @@ func (a *EventDeadLetterAPIService) DeleteEvent(ctx context.Context, groupName s
 // Execute executes the request
 func (a *EventDeadLetterAPIService) DeleteEventExecute(r ApiDeleteEventRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.DeleteEvent")
@@ -208,9 +207,9 @@ func (a *EventDeadLetterAPIService) DeleteEventExecute(r ApiDeleteEventRequest) 
 }
 
 type ApiGetEventRequest struct {
-	ctx context.Context
-	ApiService *EventDeadLetterAPIService
-	groupName string
+	ctx         context.Context
+	ApiService  *EventDeadLetterAPIService
+	groupName   string
 	insertionId string
 }
 
@@ -221,16 +220,16 @@ func (r ApiGetEventRequest) Execute() (*http.Response, error) {
 /*
 GetEvent Get event details
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @param insertionId The insertion ID of the event
- @return ApiGetEventRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@param insertionId The insertion ID of the event
+	@return ApiGetEventRequest
 */
 func (a *EventDeadLetterAPIService) GetEvent(ctx context.Context, groupName string, insertionId string) ApiGetEventRequest {
 	return ApiGetEventRequest{
-		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ApiService:  a,
+		ctx:         ctx,
+		groupName:   groupName,
 		insertionId: insertionId,
 	}
 }
@@ -238,9 +237,9 @@ func (a *EventDeadLetterAPIService) GetEvent(ctx context.Context, groupName stri
 // Execute executes the request
 func (a *EventDeadLetterAPIService) GetEventExecute(r ApiGetEventRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.GetEvent")
@@ -302,9 +301,9 @@ func (a *EventDeadLetterAPIService) GetEventExecute(r ApiGetEventRequest) (*http
 }
 
 type ApiListFailedEventsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *EventDeadLetterAPIService
-	groupName string
+	groupName  string
 }
 
 func (r ApiListFailedEventsRequest) Execute() ([]string, *http.Response, error) {
@@ -314,26 +313,27 @@ func (r ApiListFailedEventsRequest) Execute() ([]string, *http.Response, error) 
 /*
 ListFailedEvents List failed events for a given group
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @return ApiListFailedEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@return ApiListFailedEventsRequest
 */
 func (a *EventDeadLetterAPIService) ListFailedEvents(ctx context.Context, groupName string) ApiListFailedEventsRequest {
 	return ApiListFailedEventsRequest{
 		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ctx:        ctx,
+		groupName:  groupName,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *EventDeadLetterAPIService) ListFailedEventsExecute(r ApiListFailedEventsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.ListFailedEvents")
@@ -403,7 +403,7 @@ func (a *EventDeadLetterAPIService) ListFailedEventsExecute(r ApiListFailedEvent
 }
 
 type ApiListMailboxListenerGroupsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *EventDeadLetterAPIService
 }
 
@@ -414,24 +414,25 @@ func (r ApiListMailboxListenerGroupsRequest) Execute() ([]string, *http.Response
 /*
 ListMailboxListenerGroups List Mailbox Listener Groups
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListMailboxListenerGroupsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListMailboxListenerGroupsRequest
 */
 func (a *EventDeadLetterAPIService) ListMailboxListenerGroups(ctx context.Context) ApiListMailboxListenerGroupsRequest {
 	return ApiListMailboxListenerGroupsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *EventDeadLetterAPIService) ListMailboxListenerGroupsExecute(r ApiListMailboxListenerGroupsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.ListMailboxListenerGroups")
@@ -500,7 +501,7 @@ func (a *EventDeadLetterAPIService) ListMailboxListenerGroupsExecute(r ApiListMa
 }
 
 type ApiRedeliverAllEventsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *EventDeadLetterAPIService
 }
 
@@ -511,22 +512,22 @@ func (r ApiRedeliverAllEventsRequest) Execute() (*http.Response, error) {
 /*
 RedeliverAllEvents Redeliver all events
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRedeliverAllEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRedeliverAllEventsRequest
 */
 func (a *EventDeadLetterAPIService) RedeliverAllEvents(ctx context.Context) ApiRedeliverAllEventsRequest {
 	return ApiRedeliverAllEventsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *EventDeadLetterAPIService) RedeliverAllEventsExecute(r ApiRedeliverAllEventsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.RedeliverAllEvents")
@@ -586,9 +587,9 @@ func (a *EventDeadLetterAPIService) RedeliverAllEventsExecute(r ApiRedeliverAllE
 }
 
 type ApiRedeliverEventRequest struct {
-	ctx context.Context
-	ApiService *EventDeadLetterAPIService
-	groupName string
+	ctx         context.Context
+	ApiService  *EventDeadLetterAPIService
+	groupName   string
 	insertionId string
 }
 
@@ -599,16 +600,16 @@ func (r ApiRedeliverEventRequest) Execute() (*http.Response, error) {
 /*
 RedeliverEvent Redeliver a single event
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @param insertionId The insertion ID of the event
- @return ApiRedeliverEventRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@param insertionId The insertion ID of the event
+	@return ApiRedeliverEventRequest
 */
 func (a *EventDeadLetterAPIService) RedeliverEvent(ctx context.Context, groupName string, insertionId string) ApiRedeliverEventRequest {
 	return ApiRedeliverEventRequest{
-		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ApiService:  a,
+		ctx:         ctx,
+		groupName:   groupName,
 		insertionId: insertionId,
 	}
 }
@@ -616,9 +617,9 @@ func (a *EventDeadLetterAPIService) RedeliverEvent(ctx context.Context, groupNam
 // Execute executes the request
 func (a *EventDeadLetterAPIService) RedeliverEventExecute(r ApiRedeliverEventRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.RedeliverEvent")
@@ -680,9 +681,9 @@ func (a *EventDeadLetterAPIService) RedeliverEventExecute(r ApiRedeliverEventReq
 }
 
 type ApiRedeliverGroupEventsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *EventDeadLetterAPIService
-	groupName string
+	groupName  string
 }
 
 func (r ApiRedeliverGroupEventsRequest) Execute() (*http.Response, error) {
@@ -692,24 +693,24 @@ func (r ApiRedeliverGroupEventsRequest) Execute() (*http.Response, error) {
 /*
 RedeliverGroupEvents Redeliver group events
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param groupName The name of the mailbox listener group
- @return ApiRedeliverGroupEventsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param groupName The name of the mailbox listener group
+	@return ApiRedeliverGroupEventsRequest
 */
 func (a *EventDeadLetterAPIService) RedeliverGroupEvents(ctx context.Context, groupName string) ApiRedeliverGroupEventsRequest {
 	return ApiRedeliverGroupEventsRequest{
 		ApiService: a,
-		ctx: ctx,
-		groupName: groupName,
+		ctx:        ctx,
+		groupName:  groupName,
 	}
 }
 
 // Execute executes the request
 func (a *EventDeadLetterAPIService) RedeliverGroupEventsExecute(r ApiRedeliverGroupEventsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EventDeadLetterAPIService.RedeliverGroupEvents")

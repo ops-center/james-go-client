@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // AddressForwardAPIService AddressForwardAPI service
 type AddressForwardAPIService service
 
 type ApiAddDestinationRequest struct {
-	ctx context.Context
-	ApiService *AddressForwardAPIService
-	userAddress string
+	ctx                context.Context
+	ApiService         *AddressForwardAPIService
+	userAddress        string
 	destinationAddress *string
 }
 
@@ -43,14 +42,14 @@ func (r ApiAddDestinationRequest) Execute() (*http.Response, error) {
 /*
 AddDestination Add a new destination to a forward
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiAddDestinationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiAddDestinationRequest
 */
 func (a *AddressForwardAPIService) AddDestination(ctx context.Context, userAddress string) ApiAddDestinationRequest {
 	return ApiAddDestinationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
@@ -58,9 +57,9 @@ func (a *AddressForwardAPIService) AddDestination(ctx context.Context, userAddre
 // Execute executes the request
 func (a *AddressForwardAPIService) AddDestinationExecute(r ApiAddDestinationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressForwardAPIService.AddDestination")
@@ -125,9 +124,9 @@ func (a *AddressForwardAPIService) AddDestinationExecute(r ApiAddDestinationRequ
 }
 
 type ApiDeleteDestinationRequest struct {
-	ctx context.Context
-	ApiService *AddressForwardAPIService
-	userAddress string
+	ctx                context.Context
+	ApiService         *AddressForwardAPIService
+	userAddress        string
 	destinationAddress *string
 }
 
@@ -144,14 +143,14 @@ func (r ApiDeleteDestinationRequest) Execute() (*http.Response, error) {
 /*
 DeleteDestination Remove a destination from a forward
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiDeleteDestinationRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiDeleteDestinationRequest
 */
 func (a *AddressForwardAPIService) DeleteDestination(ctx context.Context, userAddress string) ApiDeleteDestinationRequest {
 	return ApiDeleteDestinationRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
@@ -159,9 +158,9 @@ func (a *AddressForwardAPIService) DeleteDestination(ctx context.Context, userAd
 // Execute executes the request
 func (a *AddressForwardAPIService) DeleteDestinationExecute(r ApiDeleteDestinationRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressForwardAPIService.DeleteDestination")
@@ -226,8 +225,8 @@ func (a *AddressForwardAPIService) DeleteDestinationExecute(r ApiDeleteDestinati
 }
 
 type ApiListDestinationsRequest struct {
-	ctx context.Context
-	ApiService *AddressForwardAPIService
+	ctx         context.Context
+	ApiService  *AddressForwardAPIService
 	userAddress string
 }
 
@@ -238,26 +237,27 @@ func (r ApiListDestinationsRequest) Execute() ([]ListDestinations200ResponseInne
 /*
 ListDestinations List destinations in a forward
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param userAddress User mail address
- @return ApiListDestinationsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param userAddress User mail address
+	@return ApiListDestinationsRequest
 */
 func (a *AddressForwardAPIService) ListDestinations(ctx context.Context, userAddress string) ApiListDestinationsRequest {
 	return ApiListDestinationsRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:  a,
+		ctx:         ctx,
 		userAddress: userAddress,
 	}
 }
 
 // Execute executes the request
-//  @return []ListDestinations200ResponseInner
+//
+//	@return []ListDestinations200ResponseInner
 func (a *AddressForwardAPIService) ListDestinationsExecute(r ApiListDestinationsRequest) ([]ListDestinations200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListDestinations200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListDestinations200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressForwardAPIService.ListDestinations")
@@ -327,7 +327,7 @@ func (a *AddressForwardAPIService) ListDestinationsExecute(r ApiListDestinations
 }
 
 type ApiListForwardsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *AddressForwardAPIService
 }
 
@@ -338,24 +338,25 @@ func (r ApiListForwardsRequest) Execute() ([]string, *http.Response, error) {
 /*
 ListForwards List address forwards
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListForwardsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListForwardsRequest
 */
 func (a *AddressForwardAPIService) ListForwards(ctx context.Context) ApiListForwardsRequest {
 	return ApiListForwardsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *AddressForwardAPIService) ListForwardsExecute(r ApiListForwardsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressForwardAPIService.ListForwards")

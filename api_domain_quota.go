@@ -19,13 +19,12 @@ import (
 	"strings"
 )
 
-
 // DomainQuotaAPIService DomainQuotaAPI service
 type DomainQuotaAPIService service
 
 type ApiDeleteDomainQuotaCountRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
 }
 
@@ -36,14 +35,14 @@ func (r ApiDeleteDomainQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 DeleteDomainQuotaCount Delete the quota count for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiDeleteDomainQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiDeleteDomainQuotaCountRequest
 */
 func (a *DomainQuotaAPIService) DeleteDomainQuotaCount(ctx context.Context, domainToBeUsed string) ApiDeleteDomainQuotaCountRequest {
 	return ApiDeleteDomainQuotaCountRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -51,9 +50,9 @@ func (a *DomainQuotaAPIService) DeleteDomainQuotaCount(ctx context.Context, doma
 // Execute executes the request
 func (a *DomainQuotaAPIService) DeleteDomainQuotaCountExecute(r ApiDeleteDomainQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.DeleteDomainQuotaCount")
@@ -114,8 +113,8 @@ func (a *DomainQuotaAPIService) DeleteDomainQuotaCountExecute(r ApiDeleteDomainQ
 }
 
 type ApiDeleteDomainQuotaSizeRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
 }
 
@@ -126,14 +125,14 @@ func (r ApiDeleteDomainQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 DeleteDomainQuotaSize Delete the quota size for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiDeleteDomainQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiDeleteDomainQuotaSizeRequest
 */
 func (a *DomainQuotaAPIService) DeleteDomainQuotaSize(ctx context.Context, domainToBeUsed string) ApiDeleteDomainQuotaSizeRequest {
 	return ApiDeleteDomainQuotaSizeRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -141,9 +140,9 @@ func (a *DomainQuotaAPIService) DeleteDomainQuotaSize(ctx context.Context, domai
 // Execute executes the request
 func (a *DomainQuotaAPIService) DeleteDomainQuotaSizeExecute(r ApiDeleteDomainQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.DeleteDomainQuotaSize")
@@ -204,8 +203,8 @@ func (a *DomainQuotaAPIService) DeleteDomainQuotaSizeExecute(r ApiDeleteDomainQu
 }
 
 type ApiGetDomainQuotaRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
 }
 
@@ -216,14 +215,14 @@ func (r ApiGetDomainQuotaRequest) Execute() (*http.Response, error) {
 /*
 GetDomainQuota Get the quota for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiGetDomainQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiGetDomainQuotaRequest
 */
 func (a *DomainQuotaAPIService) GetDomainQuota(ctx context.Context, domainToBeUsed string) ApiGetDomainQuotaRequest {
 	return ApiGetDomainQuotaRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -231,9 +230,9 @@ func (a *DomainQuotaAPIService) GetDomainQuota(ctx context.Context, domainToBeUs
 // Execute executes the request
 func (a *DomainQuotaAPIService) GetDomainQuotaExecute(r ApiGetDomainQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.GetDomainQuota")
@@ -294,8 +293,8 @@ func (a *DomainQuotaAPIService) GetDomainQuotaExecute(r ApiGetDomainQuotaRequest
 }
 
 type ApiGetDomainQuotaCountRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
 }
 
@@ -306,14 +305,14 @@ func (r ApiGetDomainQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 GetDomainQuotaCount Get the quota count for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiGetDomainQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiGetDomainQuotaCountRequest
 */
 func (a *DomainQuotaAPIService) GetDomainQuotaCount(ctx context.Context, domainToBeUsed string) ApiGetDomainQuotaCountRequest {
 	return ApiGetDomainQuotaCountRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -321,9 +320,9 @@ func (a *DomainQuotaAPIService) GetDomainQuotaCount(ctx context.Context, domainT
 // Execute executes the request
 func (a *DomainQuotaAPIService) GetDomainQuotaCountExecute(r ApiGetDomainQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.GetDomainQuotaCount")
@@ -384,8 +383,8 @@ func (a *DomainQuotaAPIService) GetDomainQuotaCountExecute(r ApiGetDomainQuotaCo
 }
 
 type ApiGetDomainQuotaSizeRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
 }
 
@@ -396,14 +395,14 @@ func (r ApiGetDomainQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 GetDomainQuotaSize Get the quota size for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiGetDomainQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiGetDomainQuotaSizeRequest
 */
 func (a *DomainQuotaAPIService) GetDomainQuotaSize(ctx context.Context, domainToBeUsed string) ApiGetDomainQuotaSizeRequest {
 	return ApiGetDomainQuotaSizeRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -411,9 +410,9 @@ func (a *DomainQuotaAPIService) GetDomainQuotaSize(ctx context.Context, domainTo
 // Execute executes the request
 func (a *DomainQuotaAPIService) GetDomainQuotaSizeExecute(r ApiGetDomainQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.GetDomainQuotaSize")
@@ -474,9 +473,9 @@ func (a *DomainQuotaAPIService) GetDomainQuotaSizeExecute(r ApiGetDomainQuotaSiz
 }
 
 type ApiUpdateDomainQuotaRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
-	domainToBeUsed string
+	ctx                      context.Context
+	ApiService               *DomainQuotaAPIService
+	domainToBeUsed           string
 	updateGlobalQuotaRequest *UpdateGlobalQuotaRequest
 }
 
@@ -493,14 +492,14 @@ func (r ApiUpdateDomainQuotaRequest) Execute() (*http.Response, error) {
 /*
 UpdateDomainQuota Update the quota for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiUpdateDomainQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiUpdateDomainQuotaRequest
 */
 func (a *DomainQuotaAPIService) UpdateDomainQuota(ctx context.Context, domainToBeUsed string) ApiUpdateDomainQuotaRequest {
 	return ApiUpdateDomainQuotaRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -508,9 +507,9 @@ func (a *DomainQuotaAPIService) UpdateDomainQuota(ctx context.Context, domainToB
 // Execute executes the request
 func (a *DomainQuotaAPIService) UpdateDomainQuotaExecute(r ApiUpdateDomainQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.UpdateDomainQuota")
@@ -576,10 +575,10 @@ func (a *DomainQuotaAPIService) UpdateDomainQuotaExecute(r ApiUpdateDomainQuotaR
 }
 
 type ApiUpdateDomainQuotaCountRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
-	body *int32
+	body           *int32
 }
 
 // The new quota count for the domain
@@ -595,14 +594,14 @@ func (r ApiUpdateDomainQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 UpdateDomainQuotaCount Update the quota count for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiUpdateDomainQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiUpdateDomainQuotaCountRequest
 */
 func (a *DomainQuotaAPIService) UpdateDomainQuotaCount(ctx context.Context, domainToBeUsed string) ApiUpdateDomainQuotaCountRequest {
 	return ApiUpdateDomainQuotaCountRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -610,9 +609,9 @@ func (a *DomainQuotaAPIService) UpdateDomainQuotaCount(ctx context.Context, doma
 // Execute executes the request
 func (a *DomainQuotaAPIService) UpdateDomainQuotaCountExecute(r ApiUpdateDomainQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.UpdateDomainQuotaCount")
@@ -681,10 +680,10 @@ func (a *DomainQuotaAPIService) UpdateDomainQuotaCountExecute(r ApiUpdateDomainQ
 }
 
 type ApiUpdateDomainQuotaSizeRequest struct {
-	ctx context.Context
-	ApiService *DomainQuotaAPIService
+	ctx            context.Context
+	ApiService     *DomainQuotaAPIService
 	domainToBeUsed string
-	body *int32
+	body           *int32
 }
 
 // The new quota size for the domain
@@ -700,14 +699,14 @@ func (r ApiUpdateDomainQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 UpdateDomainQuotaSize Update the quota size for a domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param domainToBeUsed
- @return ApiUpdateDomainQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param domainToBeUsed
+	@return ApiUpdateDomainQuotaSizeRequest
 */
 func (a *DomainQuotaAPIService) UpdateDomainQuotaSize(ctx context.Context, domainToBeUsed string) ApiUpdateDomainQuotaSizeRequest {
 	return ApiUpdateDomainQuotaSizeRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:     a,
+		ctx:            ctx,
 		domainToBeUsed: domainToBeUsed,
 	}
 }
@@ -715,9 +714,9 @@ func (a *DomainQuotaAPIService) UpdateDomainQuotaSize(ctx context.Context, domai
 // Execute executes the request
 func (a *DomainQuotaAPIService) UpdateDomainQuotaSizeExecute(r ApiUpdateDomainQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainQuotaAPIService.UpdateDomainQuotaSize")

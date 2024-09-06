@@ -20,16 +20,16 @@ var _ MappedNullable = &Task{}
 
 // Task struct for Task
 type Task struct {
-	AddedMessageIdEntries *int32 `json:"addedMessageIdEntries,omitempty"`
-	Errors []TaskErrorsInner `json:"errors,omitempty"`
-	FixedInconsistencies []TaskErrorsInner `json:"fixedInconsistencies,omitempty"`
-	ProcessedImapUidEntries *int32 `json:"processedImapUidEntries,omitempty"`
-	ProcessedMessageIdEntries *int32 `json:"processedMessageIdEntries,omitempty"`
-	RemovedMessageIdEntries *int32 `json:"removedMessageIdEntries,omitempty"`
-	RunningOptions *TaskRunningOptions `json:"runningOptions,omitempty"`
-	Timestamp *time.Time `json:"timestamp,omitempty"`
-	Type *string `json:"type,omitempty"`
-	UpdatedMessageIdEntries *int32 `json:"updatedMessageIdEntries,omitempty"`
+	AddedMessageIdEntries     *int32              `json:"addedMessageIdEntries,omitempty"`
+	Errors                    []TaskErrorsInner   `json:"errors,omitempty"`
+	FixedInconsistencies      []TaskErrorsInner   `json:"fixedInconsistencies,omitempty"`
+	ProcessedImapUidEntries   *int32              `json:"processedImapUidEntries,omitempty"`
+	ProcessedMessageIdEntries *int32              `json:"processedMessageIdEntries,omitempty"`
+	RemovedMessageIdEntries   *int32              `json:"removedMessageIdEntries,omitempty"`
+	RunningOptions            *TaskRunningOptions `json:"runningOptions,omitempty"`
+	Timestamp                 *time.Time          `json:"timestamp,omitempty"`
+	Type                      *string             `json:"type,omitempty"`
+	UpdatedMessageIdEntries   *int32              `json:"updatedMessageIdEntries,omitempty"`
 }
 
 // NewTask instantiates a new Task object
@@ -370,7 +370,7 @@ func (o *Task) SetUpdatedMessageIdEntries(v int32) {
 }
 
 func (o Task) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -447,5 +447,3 @@ func (v *NullableTask) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

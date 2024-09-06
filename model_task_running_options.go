@@ -19,8 +19,8 @@ var _ MappedNullable = &TaskRunningOptions{}
 
 // TaskRunningOptions struct for TaskRunningOptions
 type TaskRunningOptions struct {
-	MessagesPerSecond *int32 `json:"messagesPerSecond,omitempty"`
-	Mode *string `json:"mode,omitempty"`
+	MessagesPerSecond *int32  `json:"messagesPerSecond,omitempty"`
+	Mode              *string `json:"mode,omitempty"`
 }
 
 // NewTaskRunningOptions instantiates a new TaskRunningOptions object
@@ -105,7 +105,7 @@ func (o *TaskRunningOptions) SetMode(v string) {
 }
 
 func (o TaskRunningOptions) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableTaskRunningOptions) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

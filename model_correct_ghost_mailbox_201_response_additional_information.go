@@ -19,11 +19,11 @@ var _ MappedNullable = &CorrectGhostMailbox201ResponseAdditionalInformation{}
 
 // CorrectGhostMailbox201ResponseAdditionalInformation struct for CorrectGhostMailbox201ResponseAdditionalInformation
 type CorrectGhostMailbox201ResponseAdditionalInformation struct {
-	MessageFailedCount *int32 `json:"messageFailedCount,omitempty"`
-	MessageMovedCount *int32 `json:"messageMovedCount,omitempty"`
-	NewMailboxId *string `json:"newMailboxId,omitempty"`
-	OldMailboxId *string `json:"oldMailboxId,omitempty"`
-	TotalMessageCount *int32 `json:"totalMessageCount,omitempty"`
+	MessageFailedCount *int32  `json:"messageFailedCount,omitempty"`
+	MessageMovedCount  *int32  `json:"messageMovedCount,omitempty"`
+	NewMailboxId       *string `json:"newMailboxId,omitempty"`
+	OldMailboxId       *string `json:"oldMailboxId,omitempty"`
+	TotalMessageCount  *int32  `json:"totalMessageCount,omitempty"`
 }
 
 // NewCorrectGhostMailbox201ResponseAdditionalInformation instantiates a new CorrectGhostMailbox201ResponseAdditionalInformation object
@@ -204,7 +204,7 @@ func (o *CorrectGhostMailbox201ResponseAdditionalInformation) SetTotalMessageCou
 }
 
 func (o CorrectGhostMailbox201ResponseAdditionalInformation) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -266,5 +266,3 @@ func (v *NullableCorrectGhostMailbox201ResponseAdditionalInformation) UnmarshalJ
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

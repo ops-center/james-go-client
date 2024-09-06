@@ -19,7 +19,7 @@ var _ MappedNullable = &ListMailRepositories200ResponseInner{}
 
 // ListMailRepositories200ResponseInner struct for ListMailRepositories200ResponseInner
 type ListMailRepositories200ResponseInner struct {
-	Path *string `json:"path,omitempty"`
+	Path       *string `json:"path,omitempty"`
 	Repository *string `json:"repository,omitempty"`
 }
 
@@ -105,7 +105,7 @@ func (o *ListMailRepositories200ResponseInner) SetRepository(v string) {
 }
 
 func (o ListMailRepositories200ResponseInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableListMailRepositories200ResponseInner) UnmarshalJSON(src []byte)
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

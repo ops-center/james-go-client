@@ -20,7 +20,7 @@ var _ MappedNullable = &ListAddressMappings200ResponseMappingSourceInner{}
 // ListAddressMappings200ResponseMappingSourceInner struct for ListAddressMappings200ResponseMappingSourceInner
 type ListAddressMappings200ResponseMappingSourceInner struct {
 	Mapping *string `json:"mapping,omitempty"`
-	Type *string `json:"type,omitempty"`
+	Type    *string `json:"type,omitempty"`
 }
 
 // NewListAddressMappings200ResponseMappingSourceInner instantiates a new ListAddressMappings200ResponseMappingSourceInner object
@@ -105,7 +105,7 @@ func (o *ListAddressMappings200ResponseMappingSourceInner) SetType(v string) {
 }
 
 func (o ListAddressMappings200ResponseMappingSourceInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableListAddressMappings200ResponseMappingSourceInner) UnmarshalJSON
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

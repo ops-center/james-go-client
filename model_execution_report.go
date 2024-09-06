@@ -121,6 +121,7 @@ func (o *ExecutionReport) HasCancelledDate() bool {
 func (o *ExecutionReport) SetCancelledDate(v time.Time) {
 	o.CancelledDate.Set(&v)
 }
+
 // SetCancelledDateNil sets the value for CancelledDate to be an explicit nil
 func (o *ExecutionReport) SetCancelledDateNil() {
 	o.CancelledDate.Set(nil)
@@ -195,6 +196,7 @@ func (o *ExecutionReport) HasFailedDate() bool {
 func (o *ExecutionReport) SetFailedDate(v time.Time) {
 	o.FailedDate.Set(&v)
 }
+
 // SetFailedDateNil sets the value for FailedDate to be an explicit nil
 func (o *ExecutionReport) SetFailedDateNil() {
 	o.FailedDate.Set(nil)
@@ -366,7 +368,7 @@ func (o *ExecutionReport) SetType(v string) {
 }
 
 func (o ExecutionReport) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -440,5 +442,3 @@ func (v *NullableExecutionReport) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

@@ -2,10 +2,10 @@ package james
 
 import (
 	"fmt"
-	"git.sr.ht/~rockorager/go-jmap"
 	"io"
 	"net/http"
 
+	"git.sr.ht/~rockorager/go-jmap"
 	"github.com/pkg/errors"
 )
 

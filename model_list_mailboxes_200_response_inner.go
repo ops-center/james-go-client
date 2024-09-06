@@ -72,7 +72,7 @@ func (o *ListMailboxes200ResponseInner) SetMailboxName(v string) {
 }
 
 func (o ListMailboxes200ResponseInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -122,5 +122,3 @@ func (v *NullableListMailboxes200ResponseInner) UnmarshalJSON(src []byte) error 
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

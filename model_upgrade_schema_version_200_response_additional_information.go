@@ -72,7 +72,7 @@ func (o *UpgradeSchemaVersion200ResponseAdditionalInformation) SetTargetVersion(
 }
 
 func (o UpgradeSchemaVersion200ResponseAdditionalInformation) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -122,5 +122,3 @@ func (v *NullableUpgradeSchemaVersion200ResponseAdditionalInformation) Unmarshal
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

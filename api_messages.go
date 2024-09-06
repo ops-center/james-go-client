@@ -19,15 +19,14 @@ import (
 	"strings"
 )
 
-
 // MessagesAPIService MessagesAPI service
 type MessagesAPIService service
 
 type ApiReindexEmailRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *MessagesAPIService
-	messageId string
-	task *string
+	messageId  string
+	task       *string
 }
 
 // Task type for reindexing
@@ -43,26 +42,27 @@ func (r ApiReindexEmailRequest) Execute() (*PerformActionsOnMailboxes201Response
 /*
 ReindexEmail Reindex a single mail by messageId
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param messageId Implementation-dependent valid messageId
- @return ApiReindexEmailRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param messageId Implementation-dependent valid messageId
+	@return ApiReindexEmailRequest
 */
 func (a *MessagesAPIService) ReindexEmail(ctx context.Context, messageId string) ApiReindexEmailRequest {
 	return ApiReindexEmailRequest{
 		ApiService: a,
-		ctx: ctx,
-		messageId: messageId,
+		ctx:        ctx,
+		messageId:  messageId,
 	}
 }
 
 // Execute executes the request
-//  @return PerformActionsOnMailboxes201Response
+//
+//	@return PerformActionsOnMailboxes201Response
 func (a *MessagesAPIService) ReindexEmailExecute(r ApiReindexEmailRequest) (*PerformActionsOnMailboxes201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *PerformActionsOnMailboxes201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *PerformActionsOnMailboxes201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MessagesAPIService.ReindexEmail")
@@ -127,8 +127,8 @@ func (a *MessagesAPIService) ReindexEmailExecute(r ApiReindexEmailRequest) (*Per
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -146,11 +146,11 @@ func (a *MessagesAPIService) ReindexEmailExecute(r ApiReindexEmailRequest) (*Per
 }
 
 type ApiScheduleTaskRequest struct {
-	ctx context.Context
-	ApiService *MessagesAPIService
-	task *string
+	ctx               context.Context
+	ApiService        *MessagesAPIService
+	task              *string
 	messagesPerSecond *int32
-	mode *string
+	mode              *string
 }
 
 // Task type for fixing message inconsistencies
@@ -178,24 +178,25 @@ func (r ApiScheduleTaskRequest) Execute() (*PerformActionsOnMailboxes201Response
 /*
 ScheduleTask Schedule a task for fixing message inconsistencies
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiScheduleTaskRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiScheduleTaskRequest
 */
 func (a *MessagesAPIService) ScheduleTask(ctx context.Context) ApiScheduleTaskRequest {
 	return ApiScheduleTaskRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return PerformActionsOnMailboxes201Response
+//
+//	@return PerformActionsOnMailboxes201Response
 func (a *MessagesAPIService) ScheduleTaskExecute(r ApiScheduleTaskRequest) (*PerformActionsOnMailboxes201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *PerformActionsOnMailboxes201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *PerformActionsOnMailboxes201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MessagesAPIService.ScheduleTask")
@@ -265,8 +266,8 @@ func (a *MessagesAPIService) ScheduleTaskExecute(r ApiScheduleTaskRequest) (*Per
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // MailboxAPIService MailboxAPI service
 type MailboxAPIService service
 
 type ApiPerformActionsOnMailboxesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *MailboxAPIService
-	action *string
+	action     *string
 }
 
 // Comma-separated list of actions to perform on mailboxes
@@ -42,24 +41,25 @@ func (r ApiPerformActionsOnMailboxesRequest) Execute() (*PerformActionsOnMailbox
 /*
 PerformActionsOnMailboxes Perform actions on mailboxes
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiPerformActionsOnMailboxesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiPerformActionsOnMailboxesRequest
 */
 func (a *MailboxAPIService) PerformActionsOnMailboxes(ctx context.Context) ApiPerformActionsOnMailboxesRequest {
 	return ApiPerformActionsOnMailboxesRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return PerformActionsOnMailboxes201Response
+//
+//	@return PerformActionsOnMailboxes201Response
 func (a *MailboxAPIService) PerformActionsOnMailboxesExecute(r ApiPerformActionsOnMailboxesRequest) (*PerformActionsOnMailboxes201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *PerformActionsOnMailboxes201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *PerformActionsOnMailboxes201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailboxAPIService.PerformActionsOnMailboxes")
@@ -123,8 +123,8 @@ func (a *MailboxAPIService) PerformActionsOnMailboxesExecute(r ApiPerformActions
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
@@ -142,12 +142,12 @@ func (a *MailboxAPIService) PerformActionsOnMailboxesExecute(r ApiPerformActions
 }
 
 type ApiReindexMailboxRequest struct {
-	ctx context.Context
-	ApiService *MailboxAPIService
-	mailboxId string
-	task *string
+	ctx               context.Context
+	ApiService        *MailboxAPIService
+	mailboxId         string
+	task              *string
 	messagesPerSecond *int32
-	mode *string
+	mode              *string
 }
 
 // The reindexing task to perform
@@ -175,26 +175,27 @@ func (r ApiReindexMailboxRequest) Execute() (*PerformActionsOnMailboxes201Respon
 /*
 ReindexMailbox Reindex a mailbox
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param mailboxId ID of the mailbox to reindex
- @return ApiReindexMailboxRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param mailboxId ID of the mailbox to reindex
+	@return ApiReindexMailboxRequest
 */
 func (a *MailboxAPIService) ReindexMailbox(ctx context.Context, mailboxId string) ApiReindexMailboxRequest {
 	return ApiReindexMailboxRequest{
 		ApiService: a,
-		ctx: ctx,
-		mailboxId: mailboxId,
+		ctx:        ctx,
+		mailboxId:  mailboxId,
 	}
 }
 
 // Execute executes the request
-//  @return PerformActionsOnMailboxes201Response
+//
+//	@return PerformActionsOnMailboxes201Response
 func (a *MailboxAPIService) ReindexMailboxExecute(r ApiReindexMailboxRequest) (*PerformActionsOnMailboxes201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *PerformActionsOnMailboxes201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *PerformActionsOnMailboxes201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "MailboxAPIService.ReindexMailbox")
@@ -265,8 +266,8 @@ func (a *MailboxAPIService) ReindexMailboxExecute(r ApiReindexMailboxRequest) (*
 				newErr.error = err.Error()
 				return localVarReturnValue, localVarHTTPResponse, newErr
 			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
+			newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+			newErr.model = v
 		}
 		return localVarReturnValue, localVarHTTPResponse, newErr
 	}

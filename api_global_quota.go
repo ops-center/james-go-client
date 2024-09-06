@@ -18,12 +18,11 @@ import (
 	"net/url"
 )
 
-
 // GlobalQuotaAPIService GlobalQuotaAPI service
 type GlobalQuotaAPIService service
 
 type ApiDeleteGlobalQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
 }
 
@@ -34,22 +33,22 @@ func (r ApiDeleteGlobalQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 DeleteGlobalQuotaCount Delete the global quota count
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiDeleteGlobalQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDeleteGlobalQuotaCountRequest
 */
 func (a *GlobalQuotaAPIService) DeleteGlobalQuotaCount(ctx context.Context) ApiDeleteGlobalQuotaCountRequest {
 	return ApiDeleteGlobalQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *GlobalQuotaAPIService) DeleteGlobalQuotaCountExecute(r ApiDeleteGlobalQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.DeleteGlobalQuotaCount")
@@ -109,7 +108,7 @@ func (a *GlobalQuotaAPIService) DeleteGlobalQuotaCountExecute(r ApiDeleteGlobalQ
 }
 
 type ApiDeleteGlobalQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
 }
 
@@ -120,22 +119,22 @@ func (r ApiDeleteGlobalQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 DeleteGlobalQuotaSize Delete the global quota size
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiDeleteGlobalQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiDeleteGlobalQuotaSizeRequest
 */
 func (a *GlobalQuotaAPIService) DeleteGlobalQuotaSize(ctx context.Context) ApiDeleteGlobalQuotaSizeRequest {
 	return ApiDeleteGlobalQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *GlobalQuotaAPIService) DeleteGlobalQuotaSizeExecute(r ApiDeleteGlobalQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.DeleteGlobalQuotaSize")
@@ -195,7 +194,7 @@ func (a *GlobalQuotaAPIService) DeleteGlobalQuotaSizeExecute(r ApiDeleteGlobalQu
 }
 
 type ApiGetGlobalQuotaRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
 }
 
@@ -206,24 +205,25 @@ func (r ApiGetGlobalQuotaRequest) Execute() (*GetGlobalQuota200Response, *http.R
 /*
 GetGlobalQuota Get the global quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetGlobalQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetGlobalQuotaRequest
 */
 func (a *GlobalQuotaAPIService) GetGlobalQuota(ctx context.Context) ApiGetGlobalQuotaRequest {
 	return ApiGetGlobalQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetGlobalQuota200Response
+//
+//	@return GetGlobalQuota200Response
 func (a *GlobalQuotaAPIService) GetGlobalQuotaExecute(r ApiGetGlobalQuotaRequest) (*GetGlobalQuota200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetGlobalQuota200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetGlobalQuota200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.GetGlobalQuota")
@@ -292,7 +292,7 @@ func (a *GlobalQuotaAPIService) GetGlobalQuotaExecute(r ApiGetGlobalQuotaRequest
 }
 
 type ApiGetGlobalQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
 }
 
@@ -303,24 +303,25 @@ func (r ApiGetGlobalQuotaCountRequest) Execute() (int32, *http.Response, error) 
 /*
 GetGlobalQuotaCount Get the global quota count
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetGlobalQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetGlobalQuotaCountRequest
 */
 func (a *GlobalQuotaAPIService) GetGlobalQuotaCount(ctx context.Context) ApiGetGlobalQuotaCountRequest {
 	return ApiGetGlobalQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return int32
+//
+//	@return int32
 func (a *GlobalQuotaAPIService) GetGlobalQuotaCountExecute(r ApiGetGlobalQuotaCountRequest) (int32, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  int32
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue int32
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.GetGlobalQuotaCount")
@@ -389,7 +390,7 @@ func (a *GlobalQuotaAPIService) GetGlobalQuotaCountExecute(r ApiGetGlobalQuotaCo
 }
 
 type ApiGetGlobalQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
 }
 
@@ -400,24 +401,25 @@ func (r ApiGetGlobalQuotaSizeRequest) Execute() (int32, *http.Response, error) {
 /*
 GetGlobalQuotaSize Get the global quota size
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetGlobalQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetGlobalQuotaSizeRequest
 */
 func (a *GlobalQuotaAPIService) GetGlobalQuotaSize(ctx context.Context) ApiGetGlobalQuotaSizeRequest {
 	return ApiGetGlobalQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return int32
+//
+//	@return int32
 func (a *GlobalQuotaAPIService) GetGlobalQuotaSizeExecute(r ApiGetGlobalQuotaSizeRequest) (int32, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  int32
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue int32
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.GetGlobalQuotaSize")
@@ -486,8 +488,8 @@ func (a *GlobalQuotaAPIService) GetGlobalQuotaSizeExecute(r ApiGetGlobalQuotaSiz
 }
 
 type ApiUpdateGlobalQuotaRequest struct {
-	ctx context.Context
-	ApiService *GlobalQuotaAPIService
+	ctx                      context.Context
+	ApiService               *GlobalQuotaAPIService
 	updateGlobalQuotaRequest *UpdateGlobalQuotaRequest
 }
 
@@ -504,22 +506,22 @@ func (r ApiUpdateGlobalQuotaRequest) Execute() (*http.Response, error) {
 /*
 UpdateGlobalQuota Update the global quota
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpdateGlobalQuotaRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpdateGlobalQuotaRequest
 */
 func (a *GlobalQuotaAPIService) UpdateGlobalQuota(ctx context.Context) ApiUpdateGlobalQuotaRequest {
 	return ApiUpdateGlobalQuotaRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *GlobalQuotaAPIService) UpdateGlobalQuotaExecute(r ApiUpdateGlobalQuotaRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.UpdateGlobalQuota")
@@ -584,9 +586,9 @@ func (a *GlobalQuotaAPIService) UpdateGlobalQuotaExecute(r ApiUpdateGlobalQuotaR
 }
 
 type ApiUpdateGlobalQuotaCountRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
-	body *int32
+	body       *int32
 }
 
 // The new global quota count
@@ -602,22 +604,22 @@ func (r ApiUpdateGlobalQuotaCountRequest) Execute() (*http.Response, error) {
 /*
 UpdateGlobalQuotaCount Update the global quota count
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpdateGlobalQuotaCountRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpdateGlobalQuotaCountRequest
 */
 func (a *GlobalQuotaAPIService) UpdateGlobalQuotaCount(ctx context.Context) ApiUpdateGlobalQuotaCountRequest {
 	return ApiUpdateGlobalQuotaCountRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *GlobalQuotaAPIService) UpdateGlobalQuotaCountExecute(r ApiUpdateGlobalQuotaCountRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.UpdateGlobalQuotaCount")
@@ -685,9 +687,9 @@ func (a *GlobalQuotaAPIService) UpdateGlobalQuotaCountExecute(r ApiUpdateGlobalQ
 }
 
 type ApiUpdateGlobalQuotaSizeRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *GlobalQuotaAPIService
-	body *int32
+	body       *int32
 }
 
 // The new global quota size
@@ -703,22 +705,22 @@ func (r ApiUpdateGlobalQuotaSizeRequest) Execute() (*http.Response, error) {
 /*
 UpdateGlobalQuotaSize Update the global quota size
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpdateGlobalQuotaSizeRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpdateGlobalQuotaSizeRequest
 */
 func (a *GlobalQuotaAPIService) UpdateGlobalQuotaSize(ctx context.Context) ApiUpdateGlobalQuotaSizeRequest {
 	return ApiUpdateGlobalQuotaSizeRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *GlobalQuotaAPIService) UpdateGlobalQuotaSizeExecute(r ApiUpdateGlobalQuotaSizeRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GlobalQuotaAPIService.UpdateGlobalQuotaSize")

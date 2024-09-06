@@ -73,7 +73,7 @@ func (o *CleanUploadRepository201Response) SetTaskId(v string) {
 }
 
 func (o CleanUploadRepository201Response) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -123,5 +123,3 @@ func (v *NullableCleanUploadRepository201Response) UnmarshalJSON(src []byte) err
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

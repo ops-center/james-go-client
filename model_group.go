@@ -10,7 +10,6 @@ API version: 3.8.0
 
 package openapi
 
-
 // checks if the Group type satisfies the MappedNullable interface at compile time
 
 // Group struct for Group

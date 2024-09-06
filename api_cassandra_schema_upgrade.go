@@ -18,12 +18,11 @@ import (
 	"net/url"
 )
 
-
 // CassandraSchemaUpgradeAPIService CassandraSchemaUpgradeAPI service
 type CassandraSchemaUpgradeAPIService service
 
 type ApiGetLatestAvailableSchemaVersionRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *CassandraSchemaUpgradeAPIService
 }
 
@@ -34,24 +33,25 @@ func (r ApiGetLatestAvailableSchemaVersionRequest) Execute() (*GetLatestAvailabl
 /*
 GetLatestAvailableSchemaVersion Retrieve latest available Cassandra schema version
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetLatestAvailableSchemaVersionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetLatestAvailableSchemaVersionRequest
 */
 func (a *CassandraSchemaUpgradeAPIService) GetLatestAvailableSchemaVersion(ctx context.Context) ApiGetLatestAvailableSchemaVersionRequest {
 	return ApiGetLatestAvailableSchemaVersionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetLatestAvailableSchemaVersion200Response
+//
+//	@return GetLatestAvailableSchemaVersion200Response
 func (a *CassandraSchemaUpgradeAPIService) GetLatestAvailableSchemaVersionExecute(r ApiGetLatestAvailableSchemaVersionRequest) (*GetLatestAvailableSchemaVersion200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetLatestAvailableSchemaVersion200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetLatestAvailableSchemaVersion200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CassandraSchemaUpgradeAPIService.GetLatestAvailableSchemaVersion")
@@ -120,7 +120,7 @@ func (a *CassandraSchemaUpgradeAPIService) GetLatestAvailableSchemaVersionExecut
 }
 
 type ApiGetSchemaVersionRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *CassandraSchemaUpgradeAPIService
 }
 
@@ -131,24 +131,25 @@ func (r ApiGetSchemaVersionRequest) Execute() (*GetSchemaVersion200Response, *ht
 /*
 GetSchemaVersion Retrieve current Cassandra schema version
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetSchemaVersionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiGetSchemaVersionRequest
 */
 func (a *CassandraSchemaUpgradeAPIService) GetSchemaVersion(ctx context.Context) ApiGetSchemaVersionRequest {
 	return ApiGetSchemaVersionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return GetSchemaVersion200Response
+//
+//	@return GetSchemaVersion200Response
 func (a *CassandraSchemaUpgradeAPIService) GetSchemaVersionExecute(r ApiGetSchemaVersionRequest) (*GetSchemaVersion200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *GetSchemaVersion200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *GetSchemaVersion200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CassandraSchemaUpgradeAPIService.GetSchemaVersion")
@@ -217,8 +218,8 @@ func (a *CassandraSchemaUpgradeAPIService) GetSchemaVersionExecute(r ApiGetSchem
 }
 
 type ApiUpgradeSchemaVersionRequest struct {
-	ctx context.Context
-	ApiService *CassandraSchemaUpgradeAPIService
+	ctx                                        context.Context
+	ApiService                                 *CassandraSchemaUpgradeAPIService
 	getLatestAvailableSchemaVersion200Response *GetLatestAvailableSchemaVersion200Response
 }
 
@@ -235,24 +236,25 @@ func (r ApiUpgradeSchemaVersionRequest) Execute() (*UpgradeSchemaVersion200Respo
 /*
 UpgradeSchemaVersion Upgrade to a specific Cassandra schema version
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpgradeSchemaVersionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpgradeSchemaVersionRequest
 */
 func (a *CassandraSchemaUpgradeAPIService) UpgradeSchemaVersion(ctx context.Context) ApiUpgradeSchemaVersionRequest {
 	return ApiUpgradeSchemaVersionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpgradeSchemaVersion200Response
+//
+//	@return UpgradeSchemaVersion200Response
 func (a *CassandraSchemaUpgradeAPIService) UpgradeSchemaVersionExecute(r ApiUpgradeSchemaVersionRequest) (*UpgradeSchemaVersion200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpgradeSchemaVersion200Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpgradeSchemaVersion200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CassandraSchemaUpgradeAPIService.UpgradeSchemaVersion")
@@ -326,7 +328,7 @@ func (a *CassandraSchemaUpgradeAPIService) UpgradeSchemaVersionExecute(r ApiUpgr
 }
 
 type ApiUpgradeToLatestSchemaVersionRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *CassandraSchemaUpgradeAPIService
 }
 
@@ -337,24 +339,25 @@ func (r ApiUpgradeToLatestSchemaVersionRequest) Execute() (*UpgradeToLatestSchem
 /*
 UpgradeToLatestSchemaVersion Upgrade to the latest Cassandra schema version
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpgradeToLatestSchemaVersionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiUpgradeToLatestSchemaVersionRequest
 */
 func (a *CassandraSchemaUpgradeAPIService) UpgradeToLatestSchemaVersion(ctx context.Context) ApiUpgradeToLatestSchemaVersionRequest {
 	return ApiUpgradeToLatestSchemaVersionRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return UpgradeToLatestSchemaVersion200Response
+//
+//	@return UpgradeToLatestSchemaVersion200Response
 func (a *CassandraSchemaUpgradeAPIService) UpgradeToLatestSchemaVersionExecute(r ApiUpgradeToLatestSchemaVersionRequest) (*UpgradeToLatestSchemaVersion200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *UpgradeToLatestSchemaVersion200Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *UpgradeToLatestSchemaVersion200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CassandraSchemaUpgradeAPIService.UpgradeToLatestSchemaVersion")

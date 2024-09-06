@@ -19,8 +19,8 @@ var _ MappedNullable = &ExportDeletedMessagesRequest{}
 
 // ExportDeletedMessagesRequest struct for ExportDeletedMessagesRequest
 type ExportDeletedMessagesRequest struct {
-	Combinator *string `json:"combinator,omitempty"`
-	Criteria []Criterion `json:"criteria,omitempty"`
+	Combinator *string     `json:"combinator,omitempty"`
+	Criteria   []Criterion `json:"criteria,omitempty"`
 }
 
 // NewExportDeletedMessagesRequest instantiates a new ExportDeletedMessagesRequest object
@@ -105,7 +105,7 @@ func (o *ExportDeletedMessagesRequest) SetCriteria(v []Criterion) {
 }
 
 func (o ExportDeletedMessagesRequest) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -158,5 +158,3 @@ func (v *NullableExportDeletedMessagesRequest) UnmarshalJSON(src []byte) error {
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

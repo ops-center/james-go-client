@@ -18,14 +18,13 @@ import (
 	"net/url"
 )
 
-
 // CassandraExtraAPIService CassandraExtraAPI service
 type CassandraExtraAPIService service
 
 type ApiPerformActionOnCassandraMappingsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *CassandraExtraAPIService
-	action *string
+	action     *string
 }
 
 // The action to perform on mappings_sources table
@@ -41,24 +40,25 @@ func (r ApiPerformActionOnCassandraMappingsRequest) Execute() (*PerformActionOnC
 /*
 PerformActionOnCassandraMappings Perform an action on mappings_sources table
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiPerformActionOnCassandraMappingsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiPerformActionOnCassandraMappingsRequest
 */
 func (a *CassandraExtraAPIService) PerformActionOnCassandraMappings(ctx context.Context) ApiPerformActionOnCassandraMappingsRequest {
 	return ApiPerformActionOnCassandraMappingsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return PerformActionOnCassandraMappings201Response
+//
+//	@return PerformActionOnCassandraMappings201Response
 func (a *CassandraExtraAPIService) PerformActionOnCassandraMappingsExecute(r ApiPerformActionOnCassandraMappingsRequest) (*PerformActionOnCassandraMappings201Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *PerformActionOnCassandraMappings201Response
+		localVarHTTPMethod  = http.MethodPost
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *PerformActionOnCassandraMappings201Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CassandraExtraAPIService.PerformActionOnCassandraMappings")

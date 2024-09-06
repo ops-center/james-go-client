@@ -20,15 +20,14 @@ import (
 	"time"
 )
 
-
 // TaskAPIService TaskAPI service
 type TaskAPIService service
 
 type ApiAwaitTaskCompletionRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *TaskAPIService
-	taskId string
-	timeout *string
+	taskId     string
+	timeout    *string
 }
 
 // The timeout duration in the format Nunit (e.g., 30s, 5m, 7d, 1y)
@@ -44,26 +43,27 @@ func (r ApiAwaitTaskCompletionRequest) Execute() (*ExecutionReport, *http.Respon
 /*
 AwaitTaskCompletion Await the completion of a task
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param taskId The ID of the task
- @return ApiAwaitTaskCompletionRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param taskId The ID of the task
+	@return ApiAwaitTaskCompletionRequest
 */
 func (a *TaskAPIService) AwaitTaskCompletion(ctx context.Context, taskId string) ApiAwaitTaskCompletionRequest {
 	return ApiAwaitTaskCompletionRequest{
 		ApiService: a,
-		ctx: ctx,
-		taskId: taskId,
+		ctx:        ctx,
+		taskId:     taskId,
 	}
 }
 
 // Execute executes the request
-//  @return ExecutionReport
+//
+//	@return ExecutionReport
 func (a *TaskAPIService) AwaitTaskCompletionExecute(r ApiAwaitTaskCompletionRequest) (*ExecutionReport, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ExecutionReport
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ExecutionReport
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TaskAPIService.AwaitTaskCompletion")
@@ -136,9 +136,9 @@ func (a *TaskAPIService) AwaitTaskCompletionExecute(r ApiAwaitTaskCompletionRequ
 }
 
 type ApiCancelTaskRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *TaskAPIService
-	taskId string
+	taskId     string
 }
 
 func (r ApiCancelTaskRequest) Execute() (*http.Response, error) {
@@ -148,24 +148,24 @@ func (r ApiCancelTaskRequest) Execute() (*http.Response, error) {
 /*
 CancelTask Cancel a task
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param taskId The ID of the task
- @return ApiCancelTaskRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param taskId The ID of the task
+	@return ApiCancelTaskRequest
 */
 func (a *TaskAPIService) CancelTask(ctx context.Context, taskId string) ApiCancelTaskRequest {
 	return ApiCancelTaskRequest{
 		ApiService: a,
-		ctx: ctx,
-		taskId: taskId,
+		ctx:        ctx,
+		taskId:     taskId,
 	}
 }
 
 // Execute executes the request
 func (a *TaskAPIService) CancelTaskExecute(r ApiCancelTaskRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TaskAPIService.CancelTask")
@@ -226,9 +226,9 @@ func (a *TaskAPIService) CancelTaskExecute(r ApiCancelTaskRequest) (*http.Respon
 }
 
 type ApiGetTaskRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *TaskAPIService
-	taskId string
+	taskId     string
 }
 
 func (r ApiGetTaskRequest) Execute() (*ExecutionReport, *http.Response, error) {
@@ -238,26 +238,27 @@ func (r ApiGetTaskRequest) Execute() (*ExecutionReport, *http.Response, error) {
 /*
 GetTask Get a task's details
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param taskId The ID of the task
- @return ApiGetTaskRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param taskId The ID of the task
+	@return ApiGetTaskRequest
 */
 func (a *TaskAPIService) GetTask(ctx context.Context, taskId string) ApiGetTaskRequest {
 	return ApiGetTaskRequest{
 		ApiService: a,
-		ctx: ctx,
-		taskId: taskId,
+		ctx:        ctx,
+		taskId:     taskId,
 	}
 }
 
 // Execute executes the request
-//  @return ExecutionReport
+//
+//	@return ExecutionReport
 func (a *TaskAPIService) GetTaskExecute(r ApiGetTaskRequest) (*ExecutionReport, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *ExecutionReport
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *ExecutionReport
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TaskAPIService.GetTask")
@@ -327,20 +328,20 @@ func (a *TaskAPIService) GetTaskExecute(r ApiGetTaskRequest) (*ExecutionReport, 
 }
 
 type ApiListTasksRequest struct {
-	ctx context.Context
-	ApiService *TaskAPIService
-	status *string
-	type_ *string
+	ctx             context.Context
+	ApiService      *TaskAPIService
+	status          *string
+	type_           *string
 	submittedBefore *time.Time
-	submittedAfter *time.Time
-	startedBefore *time.Time
-	startedAfter *time.Time
+	submittedAfter  *time.Time
+	startedBefore   *time.Time
+	startedAfter    *time.Time
 	completedBefore *time.Time
-	completedAfter *time.Time
-	failedBefore *time.Time
-	failedAfter *time.Time
-	offset *int32
-	limit *int32
+	completedAfter  *time.Time
+	failedBefore    *time.Time
+	failedAfter     *time.Time
+	offset          *int32
+	limit           *int32
 }
 
 // The status of the tasks (waiting, inProgress, canceledRequested, completed, canceled, failed)
@@ -422,24 +423,25 @@ func (r ApiListTasksRequest) Execute() ([]ExecutionReport, *http.Response, error
 /*
 ListTasks List tasks
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListTasksRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListTasksRequest
 */
 func (a *TaskAPIService) ListTasks(ctx context.Context) ApiListTasksRequest {
 	return ApiListTasksRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []ExecutionReport
+//
+//	@return []ExecutionReport
 func (a *TaskAPIService) ListTasksExecute(r ApiListTasksRequest) ([]ExecutionReport, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ExecutionReport
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ExecutionReport
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "TaskAPIService.ListTasks")

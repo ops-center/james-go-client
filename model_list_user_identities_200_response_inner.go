@@ -19,15 +19,15 @@ var _ MappedNullable = &ListUserIdentities200ResponseInner{}
 
 // ListUserIdentities200ResponseInner struct for ListUserIdentities200ResponseInner
 type ListUserIdentities200ResponseInner struct {
-	Bcc []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
-	Email *string `json:"email,omitempty"`
-	HtmlSignature *string `json:"htmlSignature,omitempty"`
-	Id *string `json:"id,omitempty"`
-	MayDelete *bool `json:"mayDelete,omitempty"`
-	Name *string `json:"name,omitempty"`
-	ReplyTo []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
-	SortOrder *int32 `json:"sortOrder,omitempty"`
-	TextSignature *string `json:"textSignature,omitempty"`
+	Bcc           []ListUserIdentities200ResponseInnerBccInner `json:"bcc,omitempty"`
+	Email         *string                                      `json:"email,omitempty"`
+	HtmlSignature *string                                      `json:"htmlSignature,omitempty"`
+	Id            *string                                      `json:"id,omitempty"`
+	MayDelete     *bool                                        `json:"mayDelete,omitempty"`
+	Name          *string                                      `json:"name,omitempty"`
+	ReplyTo       []ListUserIdentities200ResponseInnerBccInner `json:"replyTo,omitempty"`
+	SortOrder     *int32                                       `json:"sortOrder,omitempty"`
+	TextSignature *string                                      `json:"textSignature,omitempty"`
 }
 
 // NewListUserIdentities200ResponseInner instantiates a new ListUserIdentities200ResponseInner object
@@ -336,7 +336,7 @@ func (o *ListUserIdentities200ResponseInner) SetTextSignature(v string) {
 }
 
 func (o ListUserIdentities200ResponseInner) MarshalJSON() ([]byte, error) {
-	toSerialize,err := o.ToMap()
+	toSerialize, err := o.ToMap()
 	if err != nil {
 		return []byte{}, err
 	}
@@ -410,5 +410,3 @@ func (v *NullableListUserIdentities200ResponseInner) UnmarshalJSON(src []byte) e
 	v.isSet = true
 	return json.Unmarshal(src, &v.value)
 }
-
-

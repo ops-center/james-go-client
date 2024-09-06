@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // DomainMappingAPIService DomainMappingAPI service
 type DomainMappingAPIService service
 
 type ApiAddDomainMappingRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainMappingAPIService
-	body *string
+	body       *string
 }
 
 func (r ApiAddDomainMappingRequest) Body(body string) ApiAddDomainMappingRequest {
@@ -41,22 +40,22 @@ func (r ApiAddDomainMappingRequest) Execute() (*http.Response, error) {
 /*
 AddDomainMapping Add a domain mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiAddDomainMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiAddDomainMappingRequest
 */
 func (a *DomainMappingAPIService) AddDomainMapping(ctx context.Context) ApiAddDomainMappingRequest {
 	return ApiAddDomainMappingRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *DomainMappingAPIService) AddDomainMappingExecute(r ApiAddDomainMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainMappingAPIService.AddDomainMapping")
@@ -121,7 +120,7 @@ func (a *DomainMappingAPIService) AddDomainMappingExecute(r ApiAddDomainMappingR
 }
 
 type ApiListDestinationDomainsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainMappingAPIService
 	fromDomain string
 }
@@ -133,26 +132,27 @@ func (r ApiListDestinationDomainsRequest) Execute() ([]string, *http.Response, e
 /*
 ListDestinationDomains List all destination domains for a source domain
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param fromDomain Source domain name
- @return ApiListDestinationDomainsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param fromDomain Source domain name
+	@return ApiListDestinationDomainsRequest
 */
 func (a *DomainMappingAPIService) ListDestinationDomains(ctx context.Context, fromDomain string) ApiListDestinationDomainsRequest {
 	return ApiListDestinationDomainsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 		fromDomain: fromDomain,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *DomainMappingAPIService) ListDestinationDomainsExecute(r ApiListDestinationDomainsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainMappingAPIService.ListDestinationDomains")
@@ -222,7 +222,7 @@ func (a *DomainMappingAPIService) ListDestinationDomainsExecute(r ApiListDestina
 }
 
 type ApiListDomainMappingsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainMappingAPIService
 }
 
@@ -233,24 +233,25 @@ func (r ApiListDomainMappingsRequest) Execute() (*map[string][]string, *http.Res
 /*
 ListDomainMappings List all domain mappings
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListDomainMappingsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListDomainMappingsRequest
 */
 func (a *DomainMappingAPIService) ListDomainMappings(ctx context.Context) ApiListDomainMappingsRequest {
 	return ApiListDomainMappingsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return map[string][]string
+//
+//	@return map[string][]string
 func (a *DomainMappingAPIService) ListDomainMappingsExecute(r ApiListDomainMappingsRequest) (*map[string][]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *map[string][]string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *map[string][]string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainMappingAPIService.ListDomainMappings")
@@ -319,9 +320,9 @@ func (a *DomainMappingAPIService) ListDomainMappingsExecute(r ApiListDomainMappi
 }
 
 type ApiRemoveDomainMappingRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *DomainMappingAPIService
-	body *string
+	body       *string
 }
 
 func (r ApiRemoveDomainMappingRequest) Body(body string) ApiRemoveDomainMappingRequest {
@@ -336,22 +337,22 @@ func (r ApiRemoveDomainMappingRequest) Execute() (*http.Response, error) {
 /*
 RemoveDomainMapping Remove a domain mapping
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRemoveDomainMappingRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRemoveDomainMappingRequest
 */
 func (a *DomainMappingAPIService) RemoveDomainMapping(ctx context.Context) ApiRemoveDomainMappingRequest {
 	return ApiRemoveDomainMappingRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
 func (a *DomainMappingAPIService) RemoveDomainMappingExecute(r ApiRemoveDomainMappingRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "DomainMappingAPIService.RemoveDomainMapping")

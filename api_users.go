@@ -19,14 +19,13 @@ import (
 	"strings"
 )
 
-
 // UsersAPIService UsersAPI service
 type UsersAPIService service
 
 type ApiAddDelegatedUserRequest struct {
-	ctx context.Context
-	ApiService *UsersAPIService
-	baseUser string
+	ctx           context.Context
+	ApiService    *UsersAPIService
+	baseUser      string
 	delegatedUser string
 }
 
@@ -37,16 +36,16 @@ func (r ApiAddDelegatedUserRequest) Execute() (*http.Response, error) {
 /*
 AddDelegatedUser Add a delegated user to a base user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param baseUser
- @param delegatedUser
- @return ApiAddDelegatedUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param baseUser
+	@param delegatedUser
+	@return ApiAddDelegatedUserRequest
 */
 func (a *UsersAPIService) AddDelegatedUser(ctx context.Context, baseUser string, delegatedUser string) ApiAddDelegatedUserRequest {
 	return ApiAddDelegatedUserRequest{
-		ApiService: a,
-		ctx: ctx,
-		baseUser: baseUser,
+		ApiService:    a,
+		ctx:           ctx,
+		baseUser:      baseUser,
 		delegatedUser: delegatedUser,
 	}
 }
@@ -54,9 +53,9 @@ func (a *UsersAPIService) AddDelegatedUser(ctx context.Context, baseUser string,
 // Execute executes the request
 func (a *UsersAPIService) AddDelegatedUserExecute(r ApiAddDelegatedUserRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.AddDelegatedUser")
@@ -118,11 +117,11 @@ func (a *UsersAPIService) AddDelegatedUserExecute(r ApiAddDelegatedUserRequest) 
 }
 
 type ApiChangeUsernameRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	oldUser string
-	newUser string
-	action *string
+	oldUser    string
+	newUser    string
+	action     *string
 }
 
 func (r ApiChangeUsernameRequest) Action(action string) ApiChangeUsernameRequest {
@@ -137,26 +136,26 @@ func (r ApiChangeUsernameRequest) Execute() (*http.Response, error) {
 /*
 ChangeUsername Change a username
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param oldUser
- @param newUser
- @return ApiChangeUsernameRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param oldUser
+	@param newUser
+	@return ApiChangeUsernameRequest
 */
 func (a *UsersAPIService) ChangeUsername(ctx context.Context, oldUser string, newUser string) ApiChangeUsernameRequest {
 	return ApiChangeUsernameRequest{
 		ApiService: a,
-		ctx: ctx,
-		oldUser: oldUser,
-		newUser: newUser,
+		ctx:        ctx,
+		oldUser:    oldUser,
+		newUser:    newUser,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) ChangeUsernameExecute(r ApiChangeUsernameRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ChangeUsername")
@@ -222,9 +221,9 @@ func (a *UsersAPIService) ChangeUsernameExecute(r ApiChangeUsernameRequest) (*ht
 }
 
 type ApiCreateUserIdentityRequest struct {
-	ctx context.Context
-	ApiService *UsersAPIService
-	username string
+	ctx                       context.Context
+	ApiService                *UsersAPIService
+	username                  string
 	createUserIdentityRequest *CreateUserIdentityRequest
 }
 
@@ -240,24 +239,24 @@ func (r ApiCreateUserIdentityRequest) Execute() (*http.Response, error) {
 /*
 CreateUserIdentity Create a JMAP user identity
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiCreateUserIdentityRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiCreateUserIdentityRequest
 */
 func (a *UsersAPIService) CreateUserIdentity(ctx context.Context, username string) ApiCreateUserIdentityRequest {
 	return ApiCreateUserIdentityRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) CreateUserIdentityExecute(r ApiCreateUserIdentityRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPost
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPost
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.CreateUserIdentity")
@@ -323,9 +322,9 @@ func (a *UsersAPIService) CreateUserIdentityExecute(r ApiCreateUserIdentityReque
 }
 
 type ApiDeleteUserRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	username string
+	username   string
 }
 
 func (r ApiDeleteUserRequest) Execute() (*http.Response, error) {
@@ -335,24 +334,24 @@ func (r ApiDeleteUserRequest) Execute() (*http.Response, error) {
 /*
 DeleteUser Delete a user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username The username to be deleted
- @return ApiDeleteUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username The username to be deleted
+	@return ApiDeleteUserRequest
 */
 func (a *UsersAPIService) DeleteUser(ctx context.Context, username string) ApiDeleteUserRequest {
 	return ApiDeleteUserRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.DeleteUser")
@@ -413,9 +412,9 @@ func (a *UsersAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*http.Respo
 }
 
 type ApiExistsUserRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	username string
+	username   string
 }
 
 func (r ApiExistsUserRequest) Execute() (*http.Response, error) {
@@ -425,24 +424,24 @@ func (r ApiExistsUserRequest) Execute() (*http.Response, error) {
 /*
 ExistsUser Test user existence
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username The username to be tested
- @return ApiExistsUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username The username to be tested
+	@return ApiExistsUserRequest
 */
 func (a *UsersAPIService) ExistsUser(ctx context.Context, username string) ApiExistsUserRequest {
 	return ApiExistsUserRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) ExistsUserExecute(r ApiExistsUserRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodHead
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodHead
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ExistsUser")
@@ -503,9 +502,9 @@ func (a *UsersAPIService) ExistsUserExecute(r ApiExistsUserRequest) (*http.Respo
 }
 
 type ApiListAllowedFromHeadersRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	givenUser string
+	givenUser  string
 }
 
 func (r ApiListAllowedFromHeadersRequest) Execute() ([]string, *http.Response, error) {
@@ -515,26 +514,27 @@ func (r ApiListAllowedFromHeadersRequest) Execute() ([]string, *http.Response, e
 /*
 ListAllowedFromHeaders Retrieve the list of allowed From headers for a given user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param givenUser
- @return ApiListAllowedFromHeadersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param givenUser
+	@return ApiListAllowedFromHeadersRequest
 */
 func (a *UsersAPIService) ListAllowedFromHeaders(ctx context.Context, givenUser string) ApiListAllowedFromHeadersRequest {
 	return ApiListAllowedFromHeadersRequest{
 		ApiService: a,
-		ctx: ctx,
-		givenUser: givenUser,
+		ctx:        ctx,
+		givenUser:  givenUser,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *UsersAPIService) ListAllowedFromHeadersExecute(r ApiListAllowedFromHeadersRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ListAllowedFromHeaders")
@@ -604,9 +604,9 @@ func (a *UsersAPIService) ListAllowedFromHeadersExecute(r ApiListAllowedFromHead
 }
 
 type ApiListDelegatedUsersRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	baseUser string
+	baseUser   string
 }
 
 func (r ApiListDelegatedUsersRequest) Execute() ([]string, *http.Response, error) {
@@ -616,26 +616,27 @@ func (r ApiListDelegatedUsersRequest) Execute() ([]string, *http.Response, error
 /*
 ListDelegatedUsers Retrieve the list of delegated users of a base user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param baseUser
- @return ApiListDelegatedUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param baseUser
+	@return ApiListDelegatedUsersRequest
 */
 func (a *UsersAPIService) ListDelegatedUsers(ctx context.Context, baseUser string) ApiListDelegatedUsersRequest {
 	return ApiListDelegatedUsersRequest{
 		ApiService: a,
-		ctx: ctx,
-		baseUser: baseUser,
+		ctx:        ctx,
+		baseUser:   baseUser,
 	}
 }
 
 // Execute executes the request
-//  @return []string
+//
+//	@return []string
 func (a *UsersAPIService) ListDelegatedUsersExecute(r ApiListDelegatedUsersRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []string
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ListDelegatedUsers")
@@ -705,10 +706,10 @@ func (a *UsersAPIService) ListDelegatedUsersExecute(r ApiListDelegatedUsersReque
 }
 
 type ApiListUserIdentitiesRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	username string
-	default_ *bool
+	username   string
+	default_   *bool
 }
 
 func (r ApiListUserIdentitiesRequest) Default_(default_ bool) ApiListUserIdentitiesRequest {
@@ -723,26 +724,27 @@ func (r ApiListUserIdentitiesRequest) Execute() ([]ListUserIdentities200Response
 /*
 ListUserIdentities Retrieve the user identities
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @return ApiListUserIdentitiesRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@return ApiListUserIdentitiesRequest
 */
 func (a *UsersAPIService) ListUserIdentities(ctx context.Context, username string) ApiListUserIdentitiesRequest {
 	return ApiListUserIdentitiesRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
-//  @return []ListUserIdentities200ResponseInner
+//
+//	@return []ListUserIdentities200ResponseInner
 func (a *UsersAPIService) ListUserIdentitiesExecute(r ApiListUserIdentitiesRequest) ([]ListUserIdentities200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListUserIdentities200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListUserIdentities200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ListUserIdentities")
@@ -815,7 +817,7 @@ func (a *UsersAPIService) ListUserIdentitiesExecute(r ApiListUserIdentitiesReque
 }
 
 type ApiListUsersRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
 }
 
@@ -826,24 +828,25 @@ func (r ApiListUsersRequest) Execute() ([]ListUsers200ResponseInner, *http.Respo
 /*
 ListUsers Retrieve the user list
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListUsersRequest
 */
 func (a *UsersAPIService) ListUsers(ctx context.Context) ApiListUsersRequest {
 	return ApiListUsersRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []ListUsers200ResponseInner
+//
+//	@return []ListUsers200ResponseInner
 func (a *UsersAPIService) ListUsersExecute(r ApiListUsersRequest) ([]ListUsers200ResponseInner, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []ListUsers200ResponseInner
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []ListUsers200ResponseInner
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.ListUsers")
@@ -912,9 +915,9 @@ func (a *UsersAPIService) ListUsersExecute(r ApiListUsersRequest) ([]ListUsers20
 }
 
 type ApiRemoveAllDelegatedUsersRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *UsersAPIService
-	baseUser string
+	baseUser   string
 }
 
 func (r ApiRemoveAllDelegatedUsersRequest) Execute() (*http.Response, error) {
@@ -924,24 +927,24 @@ func (r ApiRemoveAllDelegatedUsersRequest) Execute() (*http.Response, error) {
 /*
 RemoveAllDelegatedUsers Remove all delegated users of a base user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param baseUser
- @return ApiRemoveAllDelegatedUsersRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param baseUser
+	@return ApiRemoveAllDelegatedUsersRequest
 */
 func (a *UsersAPIService) RemoveAllDelegatedUsers(ctx context.Context, baseUser string) ApiRemoveAllDelegatedUsersRequest {
 	return ApiRemoveAllDelegatedUsersRequest{
 		ApiService: a,
-		ctx: ctx,
-		baseUser: baseUser,
+		ctx:        ctx,
+		baseUser:   baseUser,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) RemoveAllDelegatedUsersExecute(r ApiRemoveAllDelegatedUsersRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.RemoveAllDelegatedUsers")
@@ -1002,9 +1005,9 @@ func (a *UsersAPIService) RemoveAllDelegatedUsersExecute(r ApiRemoveAllDelegated
 }
 
 type ApiRemoveDelegatedUserRequest struct {
-	ctx context.Context
-	ApiService *UsersAPIService
-	baseUser string
+	ctx           context.Context
+	ApiService    *UsersAPIService
+	baseUser      string
 	delegatedUser string
 }
 
@@ -1015,16 +1018,16 @@ func (r ApiRemoveDelegatedUserRequest) Execute() (*http.Response, error) {
 /*
 RemoveDelegatedUser Remove a delegated user from a base user
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param baseUser
- @param delegatedUser
- @return ApiRemoveDelegatedUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param baseUser
+	@param delegatedUser
+	@return ApiRemoveDelegatedUserRequest
 */
 func (a *UsersAPIService) RemoveDelegatedUser(ctx context.Context, baseUser string, delegatedUser string) ApiRemoveDelegatedUserRequest {
 	return ApiRemoveDelegatedUserRequest{
-		ApiService: a,
-		ctx: ctx,
-		baseUser: baseUser,
+		ApiService:    a,
+		ctx:           ctx,
+		baseUser:      baseUser,
 		delegatedUser: delegatedUser,
 	}
 }
@@ -1032,9 +1035,9 @@ func (a *UsersAPIService) RemoveDelegatedUser(ctx context.Context, baseUser stri
 // Execute executes the request
 func (a *UsersAPIService) RemoveDelegatedUserExecute(r ApiRemoveDelegatedUserRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.RemoveDelegatedUser")
@@ -1096,10 +1099,10 @@ func (a *UsersAPIService) RemoveDelegatedUserExecute(r ApiRemoveDelegatedUserReq
 }
 
 type ApiUpdateUserIdentityRequest struct {
-	ctx context.Context
-	ApiService *UsersAPIService
-	username string
-	identityId string
+	ctx                       context.Context
+	ApiService                *UsersAPIService
+	username                  string
+	identityId                string
 	updateUserIdentityRequest *UpdateUserIdentityRequest
 }
 
@@ -1115,16 +1118,16 @@ func (r ApiUpdateUserIdentityRequest) Execute() (*http.Response, error) {
 /*
 UpdateUserIdentity Update a JMAP user identity
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username
- @param identityId
- @return ApiUpdateUserIdentityRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username
+	@param identityId
+	@return ApiUpdateUserIdentityRequest
 */
 func (a *UsersAPIService) UpdateUserIdentity(ctx context.Context, username string, identityId string) ApiUpdateUserIdentityRequest {
 	return ApiUpdateUserIdentityRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 		identityId: identityId,
 	}
 }
@@ -1132,9 +1135,9 @@ func (a *UsersAPIService) UpdateUserIdentity(ctx context.Context, username strin
 // Execute executes the request
 func (a *UsersAPIService) UpdateUserIdentityExecute(r ApiUpdateUserIdentityRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.UpdateUserIdentity")
@@ -1201,11 +1204,11 @@ func (a *UsersAPIService) UpdateUserIdentityExecute(r ApiUpdateUserIdentityReque
 }
 
 type ApiUpsertUserRequest struct {
-	ctx context.Context
-	ApiService *UsersAPIService
-	username string
+	ctx               context.Context
+	ApiService        *UsersAPIService
+	username          string
 	upsertUserRequest *UpsertUserRequest
-	force *bool
+	force             *bool
 }
 
 func (r ApiUpsertUserRequest) UpsertUserRequest(upsertUserRequest UpsertUserRequest) ApiUpsertUserRequest {
@@ -1226,24 +1229,24 @@ func (r ApiUpsertUserRequest) Execute() (*http.Response, error) {
 /*
 UpsertUser Create or Update User
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param username The username of the user to be created or updated
- @return ApiUpsertUserRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param username The username of the user to be created or updated
+	@return ApiUpsertUserRequest
 */
 func (a *UsersAPIService) UpsertUser(ctx context.Context, username string) ApiUpsertUserRequest {
 	return ApiUpsertUserRequest{
 		ApiService: a,
-		ctx: ctx,
-		username: username,
+		ctx:        ctx,
+		username:   username,
 	}
 }
 
 // Execute executes the request
 func (a *UsersAPIService) UpsertUserExecute(r ApiUpsertUserRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodPut
-		localVarPostBody     interface{}
-		formFiles            []formFile
+		localVarHTTPMethod = http.MethodPut
+		localVarPostBody   interface{}
+		formFiles          []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.UpsertUser")

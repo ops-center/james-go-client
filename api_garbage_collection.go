@@ -18,16 +18,15 @@ import (
 	"net/url"
 )
 
-
 // GarbageCollectionAPIService GarbageCollectionAPI service
 type GarbageCollectionAPIService service
 
 type ApiRunBlobGarbageCollectorRequest struct {
-	ctx context.Context
-	ApiService *GarbageCollectionAPIService
-	scope *string
+	ctx                   context.Context
+	ApiService            *GarbageCollectionAPIService
+	scope                 *string
 	associatedProbability *float64
-	expectedBlobCount *int32
+	expectedBlobCount     *int32
 }
 
 // Specifies the scope of garbage collection (e.g., \&quot;unreferenced\&quot; blobs)
@@ -53,24 +52,25 @@ func (r ApiRunBlobGarbageCollectorRequest) Execute() (*RunBlobGarbageCollector20
 /*
 RunBlobGarbageCollector Run blob garbage collection
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiRunBlobGarbageCollectorRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiRunBlobGarbageCollectorRequest
 */
 func (a *GarbageCollectionAPIService) RunBlobGarbageCollector(ctx context.Context) ApiRunBlobGarbageCollectorRequest {
 	return ApiRunBlobGarbageCollectorRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return RunBlobGarbageCollector200Response
+//
+//	@return RunBlobGarbageCollector200Response
 func (a *GarbageCollectionAPIService) RunBlobGarbageCollectorExecute(r ApiRunBlobGarbageCollectorRequest) (*RunBlobGarbageCollector200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodDelete
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *RunBlobGarbageCollector200Response
+		localVarHTTPMethod  = http.MethodDelete
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *RunBlobGarbageCollector200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "GarbageCollectionAPIService.RunBlobGarbageCollector")

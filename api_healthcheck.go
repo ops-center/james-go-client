@@ -19,12 +19,11 @@ import (
 	"strings"
 )
 
-
 // HealthcheckAPIService HealthcheckAPI service
 type HealthcheckAPIService service
 
 type ApiCheckAllComponentsRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *HealthcheckAPIService
 }
 
@@ -35,24 +34,25 @@ func (r ApiCheckAllComponentsRequest) Execute() (*CheckAllComponents200Response,
 /*
 CheckAllComponents Check all components
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiCheckAllComponentsRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiCheckAllComponentsRequest
 */
 func (a *HealthcheckAPIService) CheckAllComponents(ctx context.Context) ApiCheckAllComponentsRequest {
 	return ApiCheckAllComponentsRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return CheckAllComponents200Response
+//
+//	@return CheckAllComponents200Response
 func (a *HealthcheckAPIService) CheckAllComponentsExecute(r ApiCheckAllComponentsRequest) (*CheckAllComponents200Response, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *CheckAllComponents200Response
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *CheckAllComponents200Response
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "HealthcheckAPIService.CheckAllComponents")
@@ -121,8 +121,8 @@ func (a *HealthcheckAPIService) CheckAllComponentsExecute(r ApiCheckAllComponent
 }
 
 type ApiCheckComponentRequest struct {
-	ctx context.Context
-	ApiService *HealthcheckAPIService
+	ctx           context.Context
+	ApiService    *HealthcheckAPIService
 	componentName string
 }
 
@@ -133,26 +133,27 @@ func (r ApiCheckComponentRequest) Execute() (*HealthCheckResult, *http.Response,
 /*
 CheckComponent Check single component
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @param componentName URL encoded name of the component
- @return ApiCheckComponentRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param componentName URL encoded name of the component
+	@return ApiCheckComponentRequest
 */
 func (a *HealthcheckAPIService) CheckComponent(ctx context.Context, componentName string) ApiCheckComponentRequest {
 	return ApiCheckComponentRequest{
-		ApiService: a,
-		ctx: ctx,
+		ApiService:    a,
+		ctx:           ctx,
 		componentName: componentName,
 	}
 }
 
 // Execute executes the request
-//  @return HealthCheckResult
+//
+//	@return HealthCheckResult
 func (a *HealthcheckAPIService) CheckComponentExecute(r ApiCheckComponentRequest) (*HealthCheckResult, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  *HealthCheckResult
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue *HealthCheckResult
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "HealthcheckAPIService.CheckComponent")
@@ -222,7 +223,7 @@ func (a *HealthcheckAPIService) CheckComponentExecute(r ApiCheckComponentRequest
 }
 
 type ApiListAllHealthChecksRequest struct {
-	ctx context.Context
+	ctx        context.Context
 	ApiService *HealthcheckAPIService
 }
 
@@ -233,24 +234,25 @@ func (r ApiListAllHealthChecksRequest) Execute() ([]HealthCheckInfo, *http.Respo
 /*
 ListAllHealthChecks List all health checks
 
- @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiListAllHealthChecksRequest
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@return ApiListAllHealthChecksRequest
 */
 func (a *HealthcheckAPIService) ListAllHealthChecks(ctx context.Context) ApiListAllHealthChecksRequest {
 	return ApiListAllHealthChecksRequest{
 		ApiService: a,
-		ctx: ctx,
+		ctx:        ctx,
 	}
 }
 
 // Execute executes the request
-//  @return []HealthCheckInfo
+//
+//	@return []HealthCheckInfo
 func (a *HealthcheckAPIService) ListAllHealthChecksExecute(r ApiListAllHealthChecksRequest) ([]HealthCheckInfo, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
-		localVarPostBody     interface{}
-		formFiles            []formFile
-		localVarReturnValue  []HealthCheckInfo
+		localVarHTTPMethod  = http.MethodGet
+		localVarPostBody    interface{}
+		formFiles           []formFile
+		localVarReturnValue []HealthCheckInfo
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "HealthcheckAPIService.ListAllHealthChecks")
