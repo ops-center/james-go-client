@@ -1,6 +1,7 @@
 package james
 
 import (
+	"errors"
 	"fmt"
 	"io"
 	"strings"

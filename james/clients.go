@@ -58,7 +58,7 @@ const authRenewalCacheTTL = int64(1 * time.Second)
 type WebAdminClient struct {
 	openapi.APIClient
 	mu              sync.RWMutex
-	sessionEndpoint string
+	serviceEndpoint string
 
 	lastComputedCacheAtUnixTime int64
 	cachedRenewalErr            error
@@ -66,7 +66,7 @@ type WebAdminClient struct {
 
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 	client := WebAdminClient{
-		sessionEndpoint: wc.WebAdminSessionEndpoint,
+		serviceEndpoint: wc.WebAdminServiceEndpoint,
 	}
 	if err := client.renew(); err != nil {
 		return nil, err
@@ -124,7 +124,7 @@ func (w *WebAdminClient) renew() error {
 			configuration := openapi.NewConfiguration().WithAccessToken(token)
 			configuration.Servers = []openapi.ServerConfiguration{
 				{
-					URL:         w.sessionEndpoint,
+					URL:         w.serviceEndpoint,
 					Description: "Appscode James WebAdmin endpoint",
 				},
 			}

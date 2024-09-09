@@ -20,15 +20,16 @@ import (
 	"strings"
 )
 
+
 // AddressGroupAPIService AddressGroupAPI service
 type AddressGroupAPIService service
 
 type ApiAddMemberRequest struct {
-	ctx           context.Context
-	ApiService    *AddressGroupAPIService
-	groupAddress  string
+	ctx context.Context
+	ApiService *AddressGroupAPIService
+	groupAddress string
 	memberAddress *string
-	groups        []*Group
+	groups []*Group
 }
 
 // Member mail address
@@ -44,14 +45,14 @@ func (r ApiAddMemberRequest) Execute() (*http.Response, error) {
 /*
 AddMember Add a group member
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddress Group mail address
-	@return ApiAddMemberRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiAddMemberRequest
 */
 func (a *AddressGroupAPIService) AddMember(ctx context.Context, groupAddress string) ApiAddMemberRequest {
 	return ApiAddMemberRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddress: groupAddress,
 	}
 }
@@ -59,9 +60,9 @@ func (a *AddressGroupAPIService) AddMember(ctx context.Context, groupAddress str
 // Execute executes the request
 func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodPut
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.AddMember")
@@ -69,7 +70,8 @@ func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := fmt.Sprintf("%s/%s/%s", localBasePath+"/address/groups", r.groupAddress, *r.memberAddress)
+	localVarPath := fmt.Sprintf("%s/%s/%s", localBasePath + "/address/groups", r.groupAddress, *r.memberAddress)
+
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -125,39 +127,39 @@ func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.
 }
 
 type ApiAddGroupsRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AddressGroupAPIService
-	groups     []*Group
+	groups []*Group
 }
 
 func (r ApiAddGroupsRequest) Execute() (*http.Response, error) {
 	return r.ApiService.AddGroupsExecute(r)
 }
 
+
 /*
 AddGroups Add multiple groups with members
 
 Adds multiple groups along with their members.
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return AddGroupsRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return AddGroupsRequest
 */
 func (a *AddressGroupAPIService) AddGroups(ctx context.Context, groups []*Group) ApiAddGroupsRequest {
 	return ApiAddGroupsRequest{
 		ApiService: a,
-		ctx:        ctx,
-		groups:     groups,
+		ctx: ctx,
+		groups: groups,
 	}
 }
 
 // Execute executes the request
-//
-//	@return AddGroups200Response
-func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.Response, error) {
+//  @return AddGroups200Response
+func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) ( *http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodPost
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.AddressGroupsAddGroupsPost")
@@ -195,7 +197,7 @@ func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.
 	localVarPostBody = r.groups
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return  nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
@@ -207,7 +209,7 @@ func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return  localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -222,8 +224,9 @@ func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.
 	return localVarHTTPResponse, nil
 }
 
+
 type ApiListGroupsRequest struct {
-	ctx        context.Context
+	ctx context.Context
 	ApiService *AddressGroupAPIService
 }
 
@@ -234,25 +237,24 @@ func (r ApiListGroupsRequest) Execute() ([]string, *http.Response, error) {
 /*
 ListGroups List address groups
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@return ApiListGroupsRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiListGroupsRequest
 */
 func (a *AddressGroupAPIService) ListGroups(ctx context.Context) ApiListGroupsRequest {
 	return ApiListGroupsRequest{
 		ApiService: a,
-		ctx:        ctx,
+		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//
-//	@return []string
+//  @return []string
 func (a *AddressGroupAPIService) ListGroupsExecute(r ApiListGroupsRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue []string
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.ListGroups")
@@ -321,8 +323,8 @@ func (a *AddressGroupAPIService) ListGroupsExecute(r ApiListGroupsRequest) ([]st
 }
 
 type ApiListMembersRequest struct {
-	ctx          context.Context
-	ApiService   *AddressGroupAPIService
+	ctx context.Context
+	ApiService *AddressGroupAPIService
 	groupAddress string
 }
 
@@ -333,27 +335,26 @@ func (r ApiListMembersRequest) Execute() ([]string, *http.Response, error) {
 /*
 ListMembers List members of a group
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddress Group mail address
-	@return ApiListMembersRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiListMembersRequest
 */
 func (a *AddressGroupAPIService) ListMembers(ctx context.Context, groupAddress string) ApiListMembersRequest {
 	return ApiListMembersRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddress: groupAddress,
 	}
 }
 
 // Execute executes the request
-//
-//	@return []string
+//  @return []string
 func (a *AddressGroupAPIService) ListMembersExecute(r ApiListMembersRequest) ([]string, *http.Response, error) {
 	var (
-		localVarHTTPMethod  = http.MethodGet
-		localVarPostBody    interface{}
-		formFiles           []formFile
-		localVarReturnValue []string
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  []string
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.ListMembers")
@@ -423,9 +424,9 @@ func (a *AddressGroupAPIService) ListMembersExecute(r ApiListMembersRequest) ([]
 }
 
 type ApiRemoveMemberRequest struct {
-	ctx           context.Context
-	ApiService    *AddressGroupAPIService
-	groupAddress  string
+	ctx context.Context
+	ApiService *AddressGroupAPIService
+	groupAddress string
 	memberAddress *string
 }
 
@@ -442,14 +443,14 @@ func (r ApiRemoveMemberRequest) Execute() (*http.Response, error) {
 /*
 RemoveMember Remove a group member
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddress Group mail address
-	@return ApiRemoveMemberRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiRemoveMemberRequest
 */
 func (a *AddressGroupAPIService) RemoveMember(ctx context.Context, groupAddress string) ApiRemoveMemberRequest {
 	return ApiRemoveMemberRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddress: groupAddress,
 	}
 }
@@ -457,9 +458,9 @@ func (a *AddressGroupAPIService) RemoveMember(ctx context.Context, groupAddress 
 // Execute executes the request
 func (a *AddressGroupAPIService) RemoveMemberExecute(r ApiRemoveMemberRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodDelete
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.RemoveMember")
@@ -478,7 +479,8 @@ func (a *AddressGroupAPIService) RemoveMemberExecute(r ApiRemoveMemberRequest) (
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
-	// parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
+
+	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -524,9 +526,113 @@ func (a *AddressGroupAPIService) RemoveMemberExecute(r ApiRemoveMemberRequest) (
 	return localVarHTTPResponse, nil
 }
 
+type ApiCheckGruopMemberExistenceRequest struct {
+	ctx context.Context
+	ApiService *AddressGroupAPIService
+	groupAddress string
+	memberAddress *string
+}
+
+// Member mail address
+func (r ApiCheckGruopMemberExistenceRequest) MemberAddress(memberAddress string) ApiCheckGruopMemberExistenceRequest {
+	r.memberAddress = &memberAddress
+	return r
+}
+
+func (r ApiCheckGruopMemberExistenceRequest) Execute() (*http.Response, error) {
+	return r.ApiService.CheckGroupMemberExecute(r)
+}
+
+/*
+ CheckGruopMemberExistence checks if a member exists in the group
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiRemoveMemberRequest
+*/
+func (a *AddressGroupAPIService) CheckGruopMemberExistence(ctx context.Context, groupAddress string) ApiCheckGruopMemberExistenceRequest {
+	return ApiCheckGruopMemberExistenceRequest{
+		ApiService: a,
+		ctx: ctx,
+		groupAddress: groupAddress,
+	}
+}
+
+// Execute executes the request
+func (a *AddressGroupAPIService) CheckGroupMemberExecute(r ApiCheckGruopMemberExistenceRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.RemoveMember")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	if r.memberAddress == nil {
+		return nil, reportError("memberAddress is required and must be specified")
+	}
+
+	localVarPath := localBasePath + "/address/groups/{groupAddress}"
+	localVarPath = strings.Replace(localVarPath, "{"+"groupAddress"+"}", url.PathEscape(parameterValueToString(r.groupAddress, "groupAddress")), -1) + "/" + *r.memberAddress
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+
+	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+
 type ApiDeleteGroupRequest struct {
-	ctx          context.Context
-	ApiService   *AddressGroupAPIService
+	ctx context.Context
+	ApiService *AddressGroupAPIService
 	groupAddress *string
 }
 
@@ -537,14 +643,14 @@ func (r ApiDeleteGroupRequest) Execute() (*http.Response, error) {
 /*
 DeleteGroup deletes a group
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddress Group mail address
-	@return ApiDeleteGroupRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiDeleteGroupRequest
 */
 func (a *AddressGroupAPIService) DeleteGroup(ctx context.Context, groupAddress string) ApiDeleteGroupRequest {
 	return ApiDeleteGroupRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddress: &groupAddress,
 	}
 }
@@ -552,9 +658,9 @@ func (a *AddressGroupAPIService) DeleteGroup(ctx context.Context, groupAddress s
 // Execute executes the request
 func (a *AddressGroupAPIService) DeleteGroupExecute(r ApiDeleteGroupRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodDelete
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.DeleteGroup")
@@ -617,8 +723,8 @@ func (a *AddressGroupAPIService) DeleteGroupExecute(r ApiDeleteGroupRequest) (*h
 }
 
 type ApiDeleteGroupsRequest struct {
-	ctx            context.Context
-	ApiService     *AddressGroupAPIService
+	ctx context.Context
+	ApiService *AddressGroupAPIService
 	groupAddresses []string
 }
 
@@ -629,14 +735,14 @@ func (r ApiDeleteGroupsRequest) Execute() (*http.Response, error) {
 /*
 DeleteGroups Deletes a list of grups
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddresses is a list of Group mail address
-	@return ApiDeleteGroupsRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddresses is a list of Group mail address
+ @return ApiDeleteGroupsRequest
 */
 func (a *AddressGroupAPIService) DeleteGroups(ctx context.Context, groupAddress []string) ApiDeleteGroupsRequest {
 	return ApiDeleteGroupsRequest{
-		ApiService:     a,
-		ctx:            ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddresses: groupAddress,
 	}
 }
@@ -644,9 +750,9 @@ func (a *AddressGroupAPIService) DeleteGroups(ctx context.Context, groupAddress 
 // Execute executes the request
 func (a *AddressGroupAPIService) DeleteGroupsExecute(r ApiDeleteGroupsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodDelete
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodDelete
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.DeleteGroups")
@@ -712,8 +818,8 @@ func (a *AddressGroupAPIService) DeleteGroupsExecute(r ApiDeleteGroupsRequest) (
 }
 
 type ApiCreateGroupRequest struct {
-	ctx          context.Context
-	ApiService   *AddressGroupAPIService
+	ctx context.Context
+	ApiService *AddressGroupAPIService
 	groupAddress *string
 }
 
@@ -724,14 +830,14 @@ func (r ApiCreateGroupRequest) Execute() (*http.Response, error) {
 /*
 CreateGroup creates a group with dummy user
 
-	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param groupAddress Group mail address
-	@return ApiCreateGroupRequest
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param groupAddress Group mail address
+ @return ApiCreateGroupRequest
 */
 func (a *AddressGroupAPIService) CreateGroup(ctx context.Context, groupAddress string) ApiCreateGroupRequest {
 	return ApiCreateGroupRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService: a,
+		ctx: ctx,
 		groupAddress: &groupAddress,
 	}
 }
@@ -739,9 +845,9 @@ func (a *AddressGroupAPIService) CreateGroup(ctx context.Context, groupAddress s
 // Execute executes the request
 func (a *AddressGroupAPIService) CreateGroupExecute(r ApiCreateGroupRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodPost
-		localVarPostBody   interface{}
-		formFiles          []formFile
+		localVarHTTPMethod   = http.MethodPost
+		localVarPostBody     interface{}
+		formFiles            []formFile
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.CreateGroup")

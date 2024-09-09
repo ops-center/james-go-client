@@ -6,37 +6,32 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/pkg/errors"
-	openapi "go.opscenter.dev/james-go-client"
+	openapi "github.com/ops-center/james-go-client"
 )
 
 type WebAdminConf struct {
-	WebAdminServiceAddr     string
-	WebAdminServicePort     string
-	WebAdminSessionEndpoint string
+	WebAdminServiceEndpoint string
 	WebAdminAuthnToken      string
 }
 
 func (wc *WebAdminConf) checkValidity() (err error) {
-	if isEmptyString(wc.WebAdminServiceAddr) {
-		err = errors.Wrapf(err, "web admin address is required")
-	}
-	if isEmptyString(wc.WebAdminServicePort) {
-		err = errors.Wrapf(err, "web admin port is required")
+	if isEmptyString(wc.WebAdminServiceEndpoint) {
+		err = fmt.Errorf("web admin address is required: %v", err)
 	}
 
-	_, _, perr := jwt.NewParser().ParseUnverified(wc.WebAdminAuthnToken, jwt.MapClaims{})
-	if perr != nil {
-		err = errors.Wrapf(err, perr.Error())
+	if err != nil {
+		return
 	}
 
-	return err
+	_, _, err = jwt.NewParser().ParseUnverified(wc.WebAdminAuthnToken, jwt.MapClaims{})
+
+	return
 }
 
 func (wc *WebAdminConf) getJamesWebAdminApiClient() WebAdminClient {
 	configuration := openapi.NewConfiguration().WithAccessToken(wc.WebAdminAuthnToken)
 	configuration.Servers[0] = openapi.ServerConfiguration{
-		URL: fmt.Sprintf("%v:%v", wc.WebAdminServiceAddr, wc.WebAdminServicePort),
+		URL: wc.WebAdminServiceEndpoint,
 	}
 	apiClient := openapi.NewAPIClient(configuration)
 
@@ -47,13 +42,13 @@ func (wc *WebAdminConf) getJamesWebAdminApiClient() WebAdminClient {
 
 func (jc *JMAPConf) checkValidity() (err error) {
 	if isEmptyString(jc.JMAPServerAddr) {
-		err = errors.Wrapf(err, "jmap server address is required")
+		err = fmt.Errorf("jmap server address is required: %v", err)
 	}
 	if isEmptyString(jc.JMAPServerPort) {
-		err = errors.Wrapf(err, "jmap port address is required")
+		err = fmt.Errorf("jmap port address is required: %v", err)
 	}
 	if isEmptyString(jc.JMAPSessionEndpoint) {
-		err = errors.Wrapf(err, "jmap session endpoint is required")
+		err = fmt.Errorf("jmap session endpoint is required: %v", err)
 	}
 
 	return err
@@ -62,6 +57,24 @@ func (jc *JMAPConf) checkValidity() (err error) {
 type Config struct {
 	WebAdminConf
 	PrivateKey string
+}
+
+func (c *Config) checkValidity() (err error) {
+	err = c.WebAdminConf.checkValidity()
+	if isEmptyString(c.PrivateKey) {
+		err = fmt.Errorf("private key is required: %v", err)
+	}
+
+	return
+}
+
+func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
+	rsaPk, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(c.PrivateKey))
+	if err != nil {
+		return nil, err
+	}
+
+	return rsaPk, nil
 }
 
 type BasicAuthCredentials struct {
@@ -75,24 +88,6 @@ type JMAPConf struct {
 	JMAPSessionEndpoint string
 	ForceBasicAuth      bool
 	BasicAuthCreds      BasicAuthCredentials
-}
-
-func (c *Config) checkValidity() (err error) {
-	err = c.WebAdminConf.checkValidity()
-	if isEmptyString(c.PrivateKey) {
-		err = errors.Wrapf(err, "private key is required")
-	}
-
-	return
-}
-
-func (c *Config) getRsaPrivateKey() (*rsa.PrivateKey, error) {
-	rsaPk, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(c.PrivateKey))
-	if err != nil {
-		return nil, err
-	}
-
-	return rsaPk, nil
 }
 
 const (
