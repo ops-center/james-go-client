@@ -422,3 +422,16 @@ func (w *WebAdminClient) CreateObjectIfNotExists(object Object) error {
 
 	return nil
 }
+
+func (w *WebAdminClient) HealthCheck() (*openapi.CheckAllComponents200Response, error) {
+	checkAllComponentsResponse, r, err := w.HealthcheckAPI.CheckAllComponents(context.TODO()).Execute()
+	if err != nil {
+		return nil, newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return checkAllComponentsResponse, nil
+}
