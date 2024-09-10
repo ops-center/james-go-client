@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	openapi "github.com/ops-center/james-go-client"
+	openapi "go.opscenter.dev/james-go-client"
 )
 
 type WebAdminConf struct {

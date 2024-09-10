@@ -12,7 +12,6 @@ import (
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	"git.sr.ht/~rockorager/go-jmap/mail/emailsubmission"
 	"git.sr.ht/~rockorager/go-jmap/mail/mailbox"
-	"github.com/pkg/errors"
 )
 
 func (j *JMAPClient) SendEmail(myMail *email.Email) error {

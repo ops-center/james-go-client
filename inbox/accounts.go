@@ -5,7 +5,7 @@ import (
 	"github.com/pkg/errors"
 	"net/http"
 
-	openapi "github.com/ops-center/james-go-client"
+	openapi "go.opscenter.dev/james-go-client"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
