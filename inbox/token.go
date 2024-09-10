@@ -1,11 +1,7 @@
-package james
+package inbox
 
 import (
-	"crypto/rand"
 	"crypto/rsa"
-	"crypto/x509"
-	"encoding/pem"
-	"errors"
 	"fmt"
 	"time"
 
@@ -68,23 +64,12 @@ func (t *tokenService) GetUserTokenCookieDuration() time.Duration {
 	return TokenCookieDuration
 }
 
-type AppCredentials struct {
-	PrivateKey string
-	AdminToken string
-}
-
-func GenerateAppCredentials() (*AppCredentials, error) {
-	privateKey, err := rsa.GenerateKey(rand.Reader, 2048)
+func GetAdminToken(privateKey string) (string, error) {
+	rsaPrivateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKey))
 	if err != nil {
-		return nil, errors.New("failed to generate private key")
+		return "", err
 	}
-
-	privateKeyPEM := pem.Block{
-		Type:  "RSA PRIVATE KEY",
-		Bytes: x509.MarshalPKCS1PrivateKey(privateKey),
-	}
-
-	tokenService := newTokenService(privateKey)
+	service := newTokenService(rsaPrivateKey)
 	adminClaims := jwt.MapClaims{
 		"sub":  "admin",
 		"exp":  time.Now().Add(AdminTokenExpDuration).Unix(),
@@ -92,13 +77,10 @@ func GenerateAppCredentials() (*AppCredentials, error) {
 		"iss":  "ACE Platform",
 		"type": "admin",
 	}
-	adminToken, err := tokenService.CreateJwtTokenFromClaims(adminClaims)
+	adminToken, err := service.CreateJwtTokenFromClaims(adminClaims)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 
-	return &AppCredentials{
-		PrivateKey: string(pem.EncodeToMemory(&privateKeyPEM)),
-		AdminToken: adminToken,
-	}, nil
+	return adminToken, nil
 }

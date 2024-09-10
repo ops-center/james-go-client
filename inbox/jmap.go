@@ -1,4 +1,4 @@
-package james
+package inbox
 
 import (
 	"errors"
