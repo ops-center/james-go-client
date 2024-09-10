@@ -212,6 +212,12 @@ type Object interface {
 	// Return value:
 	//   - map[string]string: Key-value pairs representing the bounded user identity.
 	GetBoundedUserIdentity() *UserIdentity
+
+	// GetAddressAlias retrieves an alias or alternative address for the object, which
+	// can be used in addition to the primary identifier. This alias serves as a secondary
+	// means of addressing the object, typically used for email forwarding, nicknames, or
+	// alternate contact points.
+	GetAddressAlias() (string, error)
 }
 
 type ObjectIdentifier struct {
@@ -222,6 +228,7 @@ type ObjectIdentifier struct {
 	ParentObject        *ObjectIdentifier
 	AdditionalClaims    *jwt.MapClaims
 	BoundedUserIdentity *UserIdentity
+	AddressAlias        string
 }
 
 func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
@@ -269,10 +276,6 @@ func (o ObjectIdentifier) HasParentObject() bool {
 }
 
 func (o ObjectIdentifier) GetParentObject() (Object, error) {
-	//if !o.HasParentObject() {
-	//	return nil, nil
-	//}
-
 	return o.ParentObject, nil
 }
 
@@ -286,6 +289,10 @@ func (o ObjectIdentifier) AdditionalTokenClaims() *jwt.MapClaims {
 
 func (o ObjectIdentifier) GetBoundedUserIdentity() *UserIdentity {
 	return o.BoundedUserIdentity
+}
+
+func (o ObjectIdentifier) GetAddressAlias() (string, error) {
+	return o.AddressAlias, nil
 }
 
 type UserIdentity struct {

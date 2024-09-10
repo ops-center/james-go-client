@@ -9,7 +9,7 @@ import (
 	"sync"
 
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	v1alpha12 "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
+	identityapis "kmodules.xyz/resource-metadata/apis/identity/v1alpha1"
 	"kmodules.xyz/resource-metadata/client/clientset/versioned/typed/identity/v1alpha1"
 	ctrl "sigs.k8s.io/controller-runtime"
 )
@@ -35,7 +35,7 @@ func getJamesToken() (string, error) {
 	})
 
 	tokenRequest := identityClient.InboxTokenRequests()
-	tokenResp, err := tokenRequest.Create(context.TODO(), &v1alpha12.InboxTokenRequest{
+	tokenResp, err := tokenRequest.Create(context.TODO(), &identityapis.InboxTokenRequest{
 		TypeMeta: v1.TypeMeta{
 			Kind:       "InboxTokenRequest",
 			APIVersion: "identity.k8s.appscode.com/v1alpha1",
