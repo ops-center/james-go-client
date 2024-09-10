@@ -97,6 +97,109 @@ func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) error {
 	return w.addGroups(groupList)
 }
 
+func (w *WebAdminClient) AddObjectAlias(object Object) error {
+	userAddr, err := generateObjectAddr(object)
+	if err != nil {
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+	}
+	addrAlias, err := object.GetAddressAlias()
+	if err != nil {
+		return newServerError(nil, errors.Errorf("couldn't get address alias: %v", err))
+	}
+
+	return w.addAddressAlias(userAddr, addrAlias)
+}
+
+func (w *WebAdminClient) addAddressAlias(userAddr string, alias string) error {
+	r, err := w.AddressAliasAPI.CreateAlias(context.TODO(), userAddr).SourceAddress(alias).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusNoContent {
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) RemoveObjectAlias(object Object) error {
+	userAddr, err := generateObjectAddr(object)
+	if err != nil {
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+	}
+	addrAlias, err := object.GetAddressAlias()
+	if err != nil {
+		return newServerError(nil, errors.Errorf("couldn't get address alias: %v", err))
+	}
+
+	return w.removeAddressAlias(userAddr, addrAlias)
+}
+
+func (w *WebAdminClient) removeAddressAlias(userAddr string, alias string) error {
+	r, err := w.AddressAliasAPI.DeleteAlias(context.TODO(), userAddr).SourceAddress(alias).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusNoContent {
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) ListObjectAliases(object Object) ([]openapi.GetAlias200ResponseInner, error) {
+	userAddr, err := generateObjectAddr(object)
+	if err != nil {
+		return nil, newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+	}
+
+	return w.listAddressAliases(userAddr)
+}
+
+func (w *WebAdminClient) listAddressAliases(userAddr string) ([]openapi.GetAlias200ResponseInner, error) {
+	aliases, r, err := w.AddressAliasAPI.GetAlias(context.TODO(), userAddr).Execute()
+	if err != nil {
+		return nil, newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return aliases, nil
+}
+
+func (w *WebAdminClient) RemoveAllObjectAliases(object Object) error {
+	userAddr, err := generateObjectAddr(object)
+	if err != nil {
+		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+	}
+
+	return w.removeAllAddressAliases(userAddr)
+}
+
+func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
+	aliases, err := w.listAddressAliases(userAddr)
+	if err != nil {
+		return err
+	}
+
+	for _, alias := range aliases {
+		r, err := w.AddressAliasAPI.DeleteAlias(context.TODO(), userAddr).SourceAddress(*alias.Source).Execute()
+		if err != nil {
+			return newServerError(r, err)
+		}
+
+		if r.StatusCode != http.StatusNoContent {
+			return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		}
+	}
+
+	return nil
+}
+
 func (w *WebAdminClient) addGroups(groups []*openapi.Group) error {
 	r, err := w.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
 	if err != nil {
