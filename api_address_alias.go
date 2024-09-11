@@ -68,14 +68,14 @@ func (a *AddressAliasAPIService) CreateAliasExecute(r ApiCreateAliasRequest) (*h
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, r.sourceAddress)
+	if r.sourceAddress == nil {
+		return nil, reportError("sourceAddress is required and must be specified")
+	}
+	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, *r.sourceAddress)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.sourceAddress == nil {
-		return nil, reportError("sourceAddress is required and must be specified")
-	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "sourceAddress", r.sourceAddress, "")
 	// to determine the Content-Type header
@@ -167,15 +167,14 @@ func (a *AddressAliasAPIService) DeleteAliasExecute(r ApiDeleteAliasRequest) (*h
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
-
-	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, r.sourceAddress)
+	if r.sourceAddress == nil {
+		return nil, reportError("sourceAddress is required and must be specified")
+	}
+	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, *r.sourceAddress)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.sourceAddress == nil {
-		return nil, reportError("sourceAddress is required and must be specified")
-	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "sourceAddress", r.sourceAddress, "")
 	// to determine the Content-Type header

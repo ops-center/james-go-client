@@ -69,14 +69,14 @@ func (a *AddressGroupAPIService) AddMemberExecute(r ApiAddMemberRequest) (*http.
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
+	if r.memberAddress == nil {
+		return nil, reportError("memberAddress is required and must be specified")
+	}
 	localVarPath := fmt.Sprintf("%s/%s/%s", localBasePath+"/address/groups", r.groupAddress, *r.memberAddress)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.memberAddress == nil {
-		return nil, reportError("memberAddress is required and must be specified")
-	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
