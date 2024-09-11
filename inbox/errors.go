@@ -1,6 +1,7 @@
 package inbox
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -32,10 +33,21 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 		}
 	}
 
-	return &JamesServerError{
+	jamesServerError := &JamesServerError{
 		StatusCode: resp.StatusCode,
-		Message:    string(body),
+		Message:    resp.Status,
 	}
+
+	if len(body) > 0 {
+		if err = json.Unmarshal(body, jamesServerError); err != nil {
+			return &JamesServerError{
+				StatusCode: http.StatusInternalServerError,
+				Message:    errors.Wrap(err, "failed to unmarshal error response").Error(),
+			}
+		}
+	}
+
+	return jamesServerError
 }
 
 func IsUnauthorizedError(err error) bool {
