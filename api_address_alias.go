@@ -13,6 +13,7 @@ package openapi
 import (
 	"bytes"
 	"context"
+	"fmt"
 	"io"
 	"net/http"
 	"net/url"
@@ -67,8 +68,7 @@ func (a *AddressAliasAPIService) CreateAliasExecute(r ApiCreateAliasRequest) (*h
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/address/aliases/{userAddress}"
-	localVarPath = strings.Replace(localVarPath, "{"+"userAddress"+"}", url.PathEscape(parameterValueToString(r.userAddress, "userAddress")), -1)
+	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, r.sourceAddress)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
@@ -168,8 +168,7 @@ func (a *AddressAliasAPIService) DeleteAliasExecute(r ApiDeleteAliasRequest) (*h
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/address/aliases/{userAddress}"
-	localVarPath = strings.Replace(localVarPath, "{"+"userAddress"+"}", url.PathEscape(parameterValueToString(r.userAddress, "userAddress")), -1)
+	localVarPath := fmt.Sprintf("%s/address/aliases/%s/sources/%s", localBasePath, r.userAddress, r.sourceAddress)
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
