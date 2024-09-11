@@ -27,12 +27,14 @@ func (t *tokenService) CreateJwtTokenForObject(object Object, setAliasAsSubject 
 	if setAliasAsSubject {
 		sub, err = object.GetAddressAlias()
 		if err != nil {
-			return "", fmt.Errorf("generate object addr: %v", err)
+			return "", fmt.Errorf("failed to get address alias: %v", err)
 		}
+
+		sub = fmt.Sprintf("%s@%s", sub, GlobalMailDomain)
 	} else {
 		sub, err = generateObjectAddr(object)
 		if err != nil {
-			return "", fmt.Errorf("generate object addr: %v", err)
+			return "", fmt.Errorf("failed to generate object addr: %v", err)
 		}
 	}
 
