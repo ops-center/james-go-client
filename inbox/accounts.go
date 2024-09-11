@@ -2,6 +2,7 @@ package inbox
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"net/http"
 
@@ -106,6 +107,7 @@ func (w *WebAdminClient) AddObjectAlias(object Object) error {
 	if err != nil {
 		return newServerError(nil, errors.Errorf("couldn't get address alias: %v", err))
 	}
+	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
 
 	return w.addAddressAlias(userAddr, addrAlias)
 }
