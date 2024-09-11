@@ -437,3 +437,22 @@ func (w *WebAdminClient) HealthCheck() (*openapi.CheckAllComponents200Response, 
 
 	return checkAllComponentsResponse, nil
 }
+
+func (w *WebAdminClient) CreateDomains(domains ...string) error {
+	for _, domain := range domains {
+		r, err := w.DomainsAPI.CreateDomain(context.TODO(), domain).Execute()
+		if err != nil {
+			return newServerError(r, err)
+		}
+
+		if r.StatusCode != http.StatusNoContent {
+			return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		}
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) CreateCloudAppcodeDomain() error {
+	return w.CreateDomains(GlobalMailDomain)
+}
