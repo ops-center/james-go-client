@@ -2,8 +2,10 @@ package inbox
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/pkg/errors"
+	"io"
 	"net/http"
 
 	openapi "go.opscenter.dev/james-go-client"
@@ -77,22 +79,31 @@ func (w *WebAdminClient) DeleteObject(object Object) error {
 	return w.deleteAccount(object)
 }
 
-func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) error {
-	var groupList []*openapi.Group
+func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]GroupsWithMembersInfo, error) {
+	groupMap := make(map[string]*openapi.Group)
 
 	for _, group := range groups {
 
 		groupAddr, err := generateObjectAddr(group.GetGroup())
 		if err != nil {
-			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+			return nil, newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
 		}
 
 		memberAddr, err := generateObjectAddr(group.GetMember())
 		if err != nil {
-			return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+			return nil, newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
 		}
 
-		groupList = append(groupList, openapi.NewGroup(groupAddr, []string{memberAddr}))
+		if openapiGroup, ok := groupMap[groupAddr]; !ok {
+			groupMap[groupAddr] = openapi.NewGroup(groupAddr, []string{memberAddr})
+		} else {
+			openapiGroup.MemberAddrs = append(openapiGroup.MemberAddrs, memberAddr)
+		}
+	}
+
+	var groupList []*openapi.Group
+	for _, group := range groupMap {
+		groupList = append(groupList, group)
 	}
 
 	return w.addGroups(groupList)
@@ -202,17 +213,58 @@ func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
 	return nil
 }
 
-func (w *WebAdminClient) addGroups(groups []*openapi.Group) error {
+func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]GroupsWithMembersInfo, error) {
 	r, err := w.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
 	if err != nil {
-		return newServerError(r, err)
+		return nil, newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
 	}
 
-	return nil
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		return nil, newServerError(r, errors.Wrapf(err, "failed to read body: %v", err))
+	}
+
+	var addGroupsStatus []GroupsWithMembersInfo
+	err = json.Unmarshal(body, &addGroupsStatus)
+	if err != nil {
+		return nil, newServerError(r, errors.Wrapf(err, "failed to unmarshal body: %v", err))
+	}
+
+	var failedGroups []GroupsWithMembersInfo
+
+	for _, group := range addGroupsStatus {
+		if group.Status != GroupAddStatusSuccess {
+			failedGroups = append(failedGroups, group)
+			continue
+		}
+
+		candidate := GroupsWithMembersInfo{
+			Address:     group.Address,
+			Status:      group.Status,
+			Reason:      group.Reason,
+			MembersInfo: nil,
+		}
+
+		for _, member := range group.MembersInfo {
+			if member.Status != GroupAddStatusSuccess {
+				candidate.MembersInfo = append(candidate.MembersInfo, member)
+			}
+		}
+
+		if candidate.MembersInfo != nil {
+			failedGroups = append(failedGroups, candidate)
+		}
+	}
+
+	if failedGroups != nil {
+		return failedGroups, newServerError(r, errors.Errorf("failed to add groups: %v", failedGroups))
+	}
+
+	return nil, nil
 }
 
 func (w *WebAdminClient) AddGroupMember(grpObject, memberObject Object) error {

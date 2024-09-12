@@ -123,6 +123,24 @@ func (i ObjectTypeIdentifier) EnumIndex() int {
 	return int(i)
 }
 
+const (
+	GroupAddStatusFail    = "failed"
+	GroupAddStatusSuccess = "success"
+)
+
+type GroupMembersInfo struct {
+	Address string `json:"address"`
+	Status  string `json:"status"`
+	Reason  string `json:"reason"`
+}
+
+type GroupsWithMembersInfo struct {
+	Address     string             `json:"address"`
+	Status      string             `json:"status"`
+	Reason      string             `json:"reason"`
+	MembersInfo []GroupMembersInfo `json:"membersInfo,omitempty"`
+}
+
 type GroupAndAssociatedMember interface {
 	GetGroup() Object
 	GetMember() Object
@@ -221,14 +239,14 @@ type Object interface {
 }
 
 type ObjectIdentifier struct {
-	ObjectName          string
-	ObjectUniqueID      string
-	ObjectType          ObjectTypeIdentifier
-	IsGroupType         bool
-	ParentObject        *ObjectIdentifier
-	AdditionalClaims    *jwt.MapClaims
-	BoundedUserIdentity *UserIdentity
-	AddressAlias        string
+	ObjectName          string               `json:"ObjectName"`
+	ObjectUniqueID      string               `json:"ObjectUniqueID"`
+	ObjectType          ObjectTypeIdentifier `json:"ObjectType"`
+	IsGroupType         bool                 `json:"IsGroupType"`
+	ParentObject        *ObjectIdentifier    `json:"ParentObject,omitempty"`
+	AdditionalClaims    *jwt.MapClaims       `json:"AdditionalClaims,omitempty"`
+	BoundedUserIdentity *UserIdentity        `json:"BoundedUserIdentity,omitempty"`
+	AddressAlias        string               `json:"AddressAlias,omitempty"`
 }
 
 func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
@@ -237,10 +255,9 @@ func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
 	}
 
 	out := new(ObjectIdentifier)
-	if o.BoundedUserIdentity != nil {
-		out.BoundedUserIdentity = new(UserIdentity)
-		*out.BoundedUserIdentity = *o.BoundedUserIdentity
-	}
+	*out = *o
+
+	out.BoundedUserIdentity = o.BoundedUserIdentity.DeepCopy()
 
 	if o.AdditionalClaims != nil {
 		additionalClaims := jwt.MapClaims{}
@@ -299,6 +316,17 @@ type UserIdentity struct {
 	OwnerName string
 	OwnerID   string
 	OwnerType string
+}
+
+func (u *UserIdentity) DeepCopy() *UserIdentity {
+	if u == nil {
+		return nil
+	}
+	return &UserIdentity{
+		OwnerName: u.OwnerName,
+		OwnerID:   u.OwnerID,
+		OwnerType: u.OwnerType,
+	}
 }
 
 func (u UserIdentity) String() string {
