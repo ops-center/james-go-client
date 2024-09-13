@@ -907,11 +907,6 @@ func (a *AddressGroupAPIService) CreateGroupExecute(r ApiCreateGroupRequest) (*h
 	return localVarHTTPResponse, nil
 }
 
-////////////////////////////////
-type GroupMemberPair struct {
-	groupAddress  string 	`json:"groupAddr"`
-	memberAddress string	`json:"memberAddr"`
-}
 type ApiCheckMultipleGroupMemberPairExistenceRequest struct {
 	ctx           			   context.Context
 	ApiService    			  *AddressGroupAPIService
