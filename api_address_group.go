@@ -940,17 +940,20 @@ func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckM
 		formFiles          []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.RemoveMember") //todo
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.CheckMultipleGruopMemberPairExecute")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
+
 	localVarPath := localBasePath + "/address/groups/associations"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
+	if r.groupMemberPair == nil {
+		return nil, reportError("group is required and must be specified")
+	}
 
-	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{"application/json"}
 
@@ -961,13 +964,16 @@ func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckM
 	}
 
 	// to determine the Accept header
-	localVarHTTPHeaderAccepts := []string{}
+	localVarHTTPHeaderAccepts := []string{"application/json"}
 
 	// set Accept header
 	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	// body params
+	localVarPostBody = r.groupMemberPair
+
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
@@ -990,6 +996,7 @@ func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckM
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+
 		return localVarHTTPResponse, newErr
 	}
 
