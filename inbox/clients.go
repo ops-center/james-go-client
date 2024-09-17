@@ -115,7 +115,7 @@ func (w *WebAdminClient) renew() error {
 		5*time.Second,
 		true,
 		func(ctx context.Context) (bool, error) {
-			token, err := getJamesToken()
+			token, err := getInboxServiceToken()
 			if err != nil {
 				lastErr = err
 				return false, nil
@@ -125,7 +125,7 @@ func (w *WebAdminClient) renew() error {
 			configuration.Servers = []openapi.ServerConfiguration{
 				{
 					URL:         w.serviceEndpoint,
-					Description: "Appscode James WebAdmin endpoint",
+					Description: "Appscode Inbox Service WebAdmin endpoint",
 				},
 			}
 			w.APIClient = *openapi.NewAPIClient(configuration)
@@ -215,7 +215,7 @@ func (j *JMAPClient) renew() error {
 			if j.forceBasicAuth {
 				j.WithBasicAuth(j.basicAuthCreds.Username, j.basicAuthCreds.Password)
 			} else {
-				if token, err := getJamesToken(); err == nil {
+				if token, err := getInboxServiceToken(); err == nil {
 					j.WithAccessToken(token)
 				} else {
 					lastErr = err
