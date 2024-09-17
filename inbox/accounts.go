@@ -296,6 +296,19 @@ func (w *WebAdminClient) checkGroupMemberExistence(grpAddr, memberAddr string) e
 	return nil
 }
 
+func (w *WebAdminClient) CheckMultipleGroupMemberPairExistence(groupMemberPair []openapi.GroupMemberPair) error {
+	r, err := w.AddressGroupAPI.CheckMultipleGroupMemberPairExistence(context.TODO(), groupMemberPair).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+	}
+
+	return nil
+}
+
 func (w *WebAdminClient) createGroup(object Object) error {
 	grpAddr, err := generateObjectAddr(object)
 	if err != nil {

@@ -160,6 +160,8 @@ func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.
 		formFiles          []formFile
 	)
 
+
+
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.AddressGroupsAddGroupsPost")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
@@ -899,6 +901,102 @@ func (a *AddressGroupAPIService) CreateGroupExecute(r ApiCreateGroupRequest) (*h
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
+type ApiCheckMultipleGroupMemberPairExistenceRequest struct {
+	ctx           			   context.Context
+	ApiService    			  *AddressGroupAPIService
+	groupMemberPairs 		  []GroupMemberPair
+}
+
+func (r ApiCheckMultipleGroupMemberPairExistenceRequest) Execute() (*http.Response, error) {
+	return r.ApiService.CheckMultipleGruopMemberPairExecute(r)
+}
+
+/*
+ApiCheckMultipleGruopMemberPairExistenceRequest checks if a member exists in the group for multiple pair of (group,member)
+
+@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+@param groupMemberPair
+@return ApiRemoveMemberRequest
+*/
+func (a *AddressGroupAPIService) CheckMultipleGroupMemberPairExistence(ctx context.Context, groupMemberPair []GroupMemberPair) ApiCheckMultipleGroupMemberPairExistenceRequest {
+	return ApiCheckMultipleGroupMemberPairExistenceRequest{
+		ApiService:   a,
+		ctx:          ctx,
+		groupMemberPairs: groupMemberPair,
+	}
+}
+
+// Execute executes the request
+func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckMultipleGroupMemberPairExistenceRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodGet
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.CheckMultipleGruopMemberPairExecute")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/address/groups/associations"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.groupMemberPairs == nil {
+		return nil, reportError("group_members_pairs is required and can't be empty")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	// body params
+	localVarPostBody = r.groupMemberPairs
+
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+
 		return localVarHTTPResponse, newErr
 	}
 

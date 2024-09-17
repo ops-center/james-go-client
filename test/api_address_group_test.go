@@ -65,4 +65,15 @@ func Test_openapi_AddressGroupAPIService(t *testing.T) {
 		require.Nil(t, err)
 		assert.Equal(t, 200, httpRes.StatusCode)
 	})
+
+	t.Run("Test AddressGroupAPIService CheckMultipleGroupMemberPairExistence", func(t *testing.T) {
+		t.Skip("skip test") // remove to run test
+
+		var groupAddress []openapiclient.GroupMemberPair
+		groupAddress = append(groupAddress, openapiclient.NewGroupMemberPair("group1@mydomain", "group2@mydomain"))
+		httpRes, err := apiClient.AddressGroupAPI.CheckMultipleGroupMemberPairExistence(context.Background(), groupAddress).Execute()
+
+		require.Nil(t, err)
+		assert.Equal(t, 200, httpRes.StatusCode)
+	})
 }

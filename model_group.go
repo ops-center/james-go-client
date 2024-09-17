@@ -32,3 +32,15 @@ func NewGroup(groupAddr string, memberAddrs []string) *Group {
 	this.MemberAddrs = memberAddrs
 	return &this
 }
+
+
+type GroupMemberPair struct {
+	GroupAddress  string 	`json:"groupAddr"`
+	MemberAddress string	`json:"memberAddr"`
+}
+func NewGroupMemberPair(groupAddr string, memberAddr string) GroupMemberPair {
+	this := GroupMemberPair{}
+	this.GroupAddress = groupAddr
+	this.MemberAddress = memberAddr
+	return this
+}

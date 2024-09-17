@@ -607,6 +607,10 @@ func setBody(body interface{}, contentType string) (bodyBuf *bytes.Buffer, err e
 		encoder := json.NewEncoder(bodyBuf)
 		encoder.SetEscapeHTML(false)
 		err = encoder.Encode(groups)
+	} else if groupMemberPair, ok := body.([]GroupMemberPair); ok {
+		encoder := json.NewEncoder(bodyBuf)
+		encoder.SetEscapeHTML(false)
+		err = encoder.Encode(groupMemberPair)
 	} else if JsonCheck.MatchString(contentType) {
 		err = json.NewEncoder(bodyBuf).Encode(body)
 	} else if XmlCheck.MatchString(contentType) {
