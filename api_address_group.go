@@ -910,7 +910,7 @@ func (a *AddressGroupAPIService) CreateGroupExecute(r ApiCreateGroupRequest) (*h
 type ApiCheckMultipleGroupMemberPairExistenceRequest struct {
 	ctx           			   context.Context
 	ApiService    			  *AddressGroupAPIService
-	groupMemberPair 		  []GroupMemberPair
+	groupMemberPairs 		  []GroupMemberPair
 }
 
 func (r ApiCheckMultipleGroupMemberPairExistenceRequest) Execute() (*http.Response, error) {
@@ -928,7 +928,7 @@ func (a *AddressGroupAPIService) CheckMultipleGroupMemberPairExistence(ctx conte
 	return ApiCheckMultipleGroupMemberPairExistenceRequest{
 		ApiService:   a,
 		ctx:          ctx,
-		groupMemberPair: groupMemberPair,
+		groupMemberPairs: groupMemberPair,
 	}
 }
 
@@ -950,8 +950,8 @@ func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckM
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
-	if r.groupMemberPair == nil {
-		return nil, reportError("group is required and must be specified")
+	if r.groupMemberPairs == nil {
+		return nil, reportError("group_members_pairs is required and can't be empty")
 	}
 
 	// to determine the Content-Type header
@@ -972,7 +972,7 @@ func (a *AddressGroupAPIService) CheckMultipleGruopMemberPairExecute(r ApiCheckM
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
 	// body params
-	localVarPostBody = r.groupMemberPair
+	localVarPostBody = r.groupMemberPairs
 
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
