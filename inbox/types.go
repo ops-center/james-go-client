@@ -95,7 +95,7 @@ const (
 	DefaultTokenExpDuration = DurationDay
 	AdminTokenExpDuration   = DurationDay * 10 * 365
 
-	TokenCookieName     = "_james_token"
+	TokenCookieName     = "_inbox_token"
 	TokenCookieDuration = DurationDay
 
 	GlobalMailDomain = "cloud.appscode.com"
@@ -141,7 +141,7 @@ func (g *GroupAndAssociatedMemberIdentifier) GetMember() Object {
 	return g.Member
 }
 
-// Object interface represents an entity within the Apache James server,
+// Object interface represents an entity within the Apache Inbox server,
 // encompassing both accounts and groups. It facilitates the generation of
 // account addresses and management of object relationships.
 type Object interface {

@@ -2,7 +2,6 @@ package inbox
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"log"
 	"os"
@@ -19,11 +18,9 @@ var (
 	once           sync.Once
 )
 
-func getJamesToken() (string, error) {
-	{
-		if token, ok := os.LookupEnv("INBOX_SERVER_TOKEN"); ok && len(token) > 0 {
-			return token, nil
-		}
+func getInboxServiceToken() (string, error) {
+	if token, ok := os.LookupEnv("INBOX_SERVER_TOKEN"); ok && len(token) > 0 {
+		return token, nil
 	}
 
 	once.Do(func() {
@@ -46,14 +43,10 @@ func getJamesToken() (string, error) {
 		return "", fmt.Errorf("error creating authtoken %v", err)
 	}
 
-	var tokenMap map[string]string
-	if jsonErr := json.Unmarshal([]byte(tokenResp.Response.AdminJWTToken), &tokenMap); jsonErr != nil {
-		return "", fmt.Errorf("error unmarshalling authtoken %v", jsonErr)
+	token := tokenResp.Response.AgentJWTToken
+	if token == "" {
+		return "", fmt.Errorf("invalid agent token: token is empty")
 	}
 
-	if token, ok := tokenMap["token"]; ok {
-		return token, nil
-	}
-
-	return "", fmt.Errorf("key \"token\" missing in authtoken response")
+	return token, nil
 }
