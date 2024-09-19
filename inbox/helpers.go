@@ -8,15 +8,9 @@ import (
 )
 
 func generateObjectAddr(object Object) (string, error) {
-	addr, err := genObjectTreeAddr(object, "")
+	addr, err := generateAddr(object, "")
 	if err != nil {
 		return "", err
-	}
-
-	if object.IsGroup() {
-		addr = fmt.Sprintf("%s.x&type-grp", addr)
-	} else {
-		addr = fmt.Sprintf("%s.x&type-acc", addr)
 	}
 
 	boundedUserIdentity := object.GetBoundedUserIdentity()
@@ -30,14 +24,14 @@ func generateObjectAddr(object Object) (string, error) {
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
 }
 
-func genObjectTreeAddr(object Object, addr string) (string, error) {
+func generateAddr(object Object, addr string) (string, error) {
 	if object == nil {
 		return addr, nil
 	}
 	if isEmptyString(addr) {
-		addr = fmt.Sprintf("%s$%s&%s", object.GetName(), object.GetUniqueID(), object.GetType())
+		addr = fmt.Sprintf("%s&%s$%s", object.GetType(), object.GetName(), object.GetUniqueID())
 	} else {
-		addr = fmt.Sprintf("%s.%s$%s&%s", addr, object.GetName(), object.GetUniqueID(), object.GetType())
+		addr = fmt.Sprintf("%s.%s&%s$%s", addr, object.GetType(), object.GetName(), object.GetUniqueID())
 	}
 
 	if len(addr) > MaxEmailLength {
@@ -49,7 +43,7 @@ func genObjectTreeAddr(object Object, addr string) (string, error) {
 		if err != nil {
 			return "", err
 		}
-		return genObjectTreeAddr(parentObject, addr)
+		return generateAddr(parentObject, addr)
 	}
 
 	return addr, nil

@@ -302,5 +302,5 @@ type UserIdentity struct {
 }
 
 func (u UserIdentity) String() string {
-	return fmt.Sprintf("nm-%s&id-%s&typ-%s", u.OwnerName, u.OwnerID, u.OwnerType)
+	return fmt.Sprintf("meta&%s$%s&%s", u.OwnerName, u.OwnerID, u.OwnerType)
 }
