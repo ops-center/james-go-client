@@ -80,7 +80,7 @@ func (w *WebAdminClient) DeleteObject(object Object) error {
 	return w.deleteAccount(object)
 }
 
-func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]GroupsWithMembersInfo, error) {
+func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]openapi.GroupsWithMembersInfo, error) {
 	groupMap := make(map[string]*openapi.Group)
 
 	for _, group := range groups {
@@ -214,10 +214,10 @@ func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
 	return nil
 }
 
-func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]GroupsWithMembersInfo, error) {
+func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]openapi.GroupsWithMembersInfo, error) {
 	r, err := w.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
 	if err != nil {
-		return nil, newServerError(r, err)
+		return nil, newServerError(r, errors.Wrapf(err, "failed to add groups: %v", err))
 	}
 
 	if r.StatusCode != http.StatusOK {
@@ -229,21 +229,21 @@ func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]GroupsWithMembers
 		return nil, newServerError(r, errors.Wrapf(err, "failed to read body: %v", err))
 	}
 
-	var addGroupsStatus []GroupsWithMembersInfo
+	var addGroupsStatus []openapi.GroupsWithMembersInfo
 	err = json.Unmarshal(body, &addGroupsStatus)
 	if err != nil {
 		return nil, newServerError(r, errors.Wrapf(err, "failed to unmarshal body: %v", err))
 	}
 
-	var failedGroups []GroupsWithMembersInfo
+	var failedGroups []openapi.GroupsWithMembersInfo
 
 	for _, group := range addGroupsStatus {
-		if group.Status != GroupAddStatusSuccess {
+		if group.Status != openapi.GroupAddStatusSuccess {
 			failedGroups = append(failedGroups, group)
 			continue
 		}
 
-		candidate := GroupsWithMembersInfo{
+		candidate := openapi.GroupsWithMembersInfo{
 			Address:     group.Address,
 			Status:      group.Status,
 			Reason:      group.Reason,
@@ -251,7 +251,7 @@ func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]GroupsWithMembers
 		}
 
 		for _, member := range group.MembersInfo {
-			if member.Status != GroupAddStatusSuccess {
+			if member.Status != openapi.GroupAddStatusSuccess {
 				candidate.MembersInfo = append(candidate.MembersInfo, member)
 			}
 		}

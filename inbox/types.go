@@ -123,24 +123,6 @@ func (i ObjectTypeIdentifier) EnumIndex() int {
 	return int(i)
 }
 
-const (
-	GroupAddStatusFail    = "failed"
-	GroupAddStatusSuccess = "success"
-)
-
-type GroupMembersInfo struct {
-	Address string `json:"address"`
-	Status  string `json:"status"`
-	Reason  string `json:"reason"`
-}
-
-type GroupsWithMembersInfo struct {
-	Address     string             `json:"address"`
-	Status      string             `json:"status"`
-	Reason      string             `json:"reason"`
-	MembersInfo []GroupMembersInfo `json:"membersInfo,omitempty"`
-}
-
 type GroupAndAssociatedMember interface {
 	GetGroup() Object
 	GetMember() Object
