@@ -130,6 +130,24 @@ type ApiAddGroupsRequest struct {
 	groups     []*Group
 }
 
+const (
+	GroupAddStatusFail    = "failed"
+	GroupAddStatusSuccess = "success"
+)
+
+type GroupMembersInfo struct {
+	Address string `json:"address"`
+	Status  string `json:"status"`
+	Reason  string `json:"reason"`
+}
+
+type GroupsWithMembersInfo struct {
+	Address     string             `json:"address"`
+	Status      string             `json:"status"`
+	Reason      string             `json:"reason"`
+	MembersInfo []GroupMembersInfo `json:"membersInfo,omitempty"`
+}
+
 func (r ApiAddGroupsRequest) Execute() (*http.Response, error) {
 	return r.ApiService.AddGroupsExecute(r)
 }
