@@ -9,7 +9,7 @@ import (
 
 	"github.com/pkg/errors"
 
-	openapi "go.opscenter.dev/james-go-client"
+	apis "go.opscenter.dev/james-go-client"
 )
 
 var ErrUserAlreadyExists = errors.New("user already exists")
@@ -29,7 +29,7 @@ func (w *WebAdminClient) createAccount(object Object) error {
 	}
 
 	r, err := w.UsersAPI.UpsertUser(context.TODO(), objectAddr).
-		UpsertUserRequest(openapi.UpsertUserRequest{Password: password}).Execute()
+		UpsertUserRequest(apis.UpsertUserRequest{Password: password}).Execute()
 
 	if err != nil {
 		return newServerError(r, err)
@@ -80,8 +80,8 @@ func (w *WebAdminClient) DeleteObject(object Object) error {
 	return w.deleteAccount(object)
 }
 
-func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]openapi.GroupsWithMembersInfo, error) {
-	groupMap := make(map[string]*openapi.Group)
+func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]apis.GroupsWithMembersInfo, error) {
+	groupMap := make(map[string]*apis.Group)
 
 	for _, group := range groups {
 
@@ -95,14 +95,14 @@ func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]openapi
 			return nil, newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
 		}
 
-		if openapiGroup, ok := groupMap[groupAddr]; !ok {
-			groupMap[groupAddr] = openapi.NewGroup(groupAddr, []string{memberAddr})
+		if apisGroup, ok := groupMap[groupAddr]; !ok {
+			groupMap[groupAddr] = apis.NewGroup(groupAddr, []string{memberAddr})
 		} else {
-			openapiGroup.MemberAddrs = append(openapiGroup.MemberAddrs, memberAddr)
+			apisGroup.MemberAddrs = append(apisGroup.MemberAddrs, memberAddr)
 		}
 	}
 
-	var groupList []*openapi.Group
+	var groupList []*apis.Group
 	for _, group := range groupMap {
 		groupList = append(groupList, group)
 	}
@@ -163,7 +163,7 @@ func (w *WebAdminClient) removeAddressAlias(userAddr string, alias string) error
 	return nil
 }
 
-func (w *WebAdminClient) ListObjectAliases(object Object) ([]openapi.GetAlias200ResponseInner, error) {
+func (w *WebAdminClient) ListObjectAliases(object Object) ([]apis.GetAlias200ResponseInner, error) {
 	userAddr, err := generateObjectAddr(object)
 	if err != nil {
 		return nil, newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
@@ -172,7 +172,7 @@ func (w *WebAdminClient) ListObjectAliases(object Object) ([]openapi.GetAlias200
 	return w.listAddressAliases(userAddr)
 }
 
-func (w *WebAdminClient) listAddressAliases(userAddr string) ([]openapi.GetAlias200ResponseInner, error) {
+func (w *WebAdminClient) listAddressAliases(userAddr string) ([]apis.GetAlias200ResponseInner, error) {
 	aliases, r, err := w.AddressAliasAPI.GetAlias(context.TODO(), userAddr).Execute()
 	if err != nil {
 		return nil, newServerError(r, err)
@@ -214,7 +214,7 @@ func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
 	return nil
 }
 
-func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]openapi.GroupsWithMembersInfo, error) {
+func (w *WebAdminClient) addGroups(groups []*apis.Group) ([]apis.GroupsWithMembersInfo, error) {
 	r, err := w.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
 	if err != nil {
 		return nil, newServerError(r, errors.Wrapf(err, "failed to add groups: %v", err))
@@ -229,21 +229,21 @@ func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]openapi.GroupsWit
 		return nil, newServerError(r, errors.Wrapf(err, "failed to read body: %v", err))
 	}
 
-	var addGroupsStatus []openapi.GroupsWithMembersInfo
+	var addGroupsStatus []apis.GroupsWithMembersInfo
 	err = json.Unmarshal(body, &addGroupsStatus)
 	if err != nil {
 		return nil, newServerError(r, errors.Wrapf(err, "failed to unmarshal body: %v", err))
 	}
 
-	var failedGroups []openapi.GroupsWithMembersInfo
+	var failedGroups []apis.GroupsWithMembersInfo
 
 	for _, group := range addGroupsStatus {
-		if group.Status != openapi.GroupAddStatusSuccess {
+		if group.Status != apis.GroupAddStatusSuccess {
 			failedGroups = append(failedGroups, group)
 			continue
 		}
 
-		candidate := openapi.GroupsWithMembersInfo{
+		candidate := apis.GroupsWithMembersInfo{
 			Address:     group.Address,
 			Status:      group.Status,
 			Reason:      group.Reason,
@@ -251,7 +251,7 @@ func (w *WebAdminClient) addGroups(groups []*openapi.Group) ([]openapi.GroupsWit
 		}
 
 		for _, member := range group.MembersInfo {
-			if member.Status != openapi.GroupAddStatusSuccess {
+			if member.Status != apis.GroupAddStatusSuccess {
 				candidate.MembersInfo = append(candidate.MembersInfo, member)
 			}
 		}
@@ -349,7 +349,7 @@ func (w *WebAdminClient) checkGroupMemberExistence(grpAddr, memberAddr string) e
 	return nil
 }
 
-func (w *WebAdminClient) CheckMultipleGroupMemberPairExistence(groupMemberPair []openapi.GroupMemberPair) error {
+func (w *WebAdminClient) CheckMultipleGroupMemberPairExistence(groupMemberPair []apis.GroupMemberPair) error {
 	r, err := w.AddressGroupAPI.CheckMultipleGroupMemberPairExistence(context.TODO(), groupMemberPair).Execute()
 	if err != nil {
 		return newServerError(r, err)
@@ -491,7 +491,7 @@ func (w *WebAdminClient) CreateObjectIfNotExists(object Object) error {
 	return nil
 }
 
-func (w *WebAdminClient) HealthCheck() (*openapi.CheckAllComponents200Response, error) {
+func (w *WebAdminClient) HealthCheck() (*apis.CheckAllComponents200Response, error) {
 	checkAllComponentsResponse, r, err := w.HealthcheckAPI.CheckAllComponents(context.TODO()).Execute()
 	if err != nil {
 		return nil, newServerError(r, err)
