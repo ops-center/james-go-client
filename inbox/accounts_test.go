@@ -1,12 +1,13 @@
 package inbox
 
 import (
-	"github.com/pkg/errors"
 	"log"
 	"math/rand"
 	"os"
 	"strings"
 	"testing"
+
+	"github.com/pkg/errors"
 )
 
 const testRandomSeed = 42

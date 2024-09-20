@@ -101,10 +101,7 @@ func (w *WebAdminClient) RenewSession() error {
 }
 
 func (w *WebAdminClient) refreshRequired() bool {
-	if time.Now().UnixNano() > authRenewalCacheTTL+w.lastComputedCacheAtUnixTime {
-		return true
-	}
-	return false
+	return time.Now().UnixNano() > authRenewalCacheTTL+w.lastComputedCacheAtUnixTime
 }
 
 func (w *WebAdminClient) renew() error {
@@ -198,10 +195,8 @@ func (j *JMAPClient) RenewSession() error {
 }
 
 func (j *JMAPClient) refreshRequired() bool {
-	if time.Now().UnixNano() > authRenewalCacheTTL+j.lastComputedCacheAtUnixTime {
-		return true
-	}
-	return false
+	return time.Now().UnixNano() > authRenewalCacheTTL+j.lastComputedCacheAtUnixTime
+
 }
 
 func (j *JMAPClient) renew() error {
