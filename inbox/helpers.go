@@ -2,9 +2,10 @@ package inbox
 
 import (
 	"fmt"
-	"github.com/google/uuid"
 	"reflect"
 	"strings"
+
+	"github.com/google/uuid"
 )
 
 func generateObjectAddr(object Object) (string, error) {
