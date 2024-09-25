@@ -18,24 +18,12 @@ func newTokenService(privateKey *rsa.PrivateKey) tokenService {
 	}
 }
 
-func (t *tokenService) CreateJwtTokenForObject(object Object, setAliasAsSubject bool) (string, error) {
+func (t *tokenService) CreateJwtTokenForObject(object Object) (string, error) {
 	defaultExpTime := time.Now().Add(DefaultTokenExpDuration).Unix()
 
-	var sub string
-	var err error
-
-	if setAliasAsSubject {
-		sub, err = object.GetAddressAlias()
-		if err != nil {
-			return "", fmt.Errorf("failed to get address alias: %v", err)
-		}
-
-		sub = fmt.Sprintf("%s@%s", sub, GlobalMailDomain)
-	} else {
-		sub, err = generateObjectAddr(object)
-		if err != nil {
-			return "", fmt.Errorf("failed to generate object addr: %v", err)
-		}
+	sub, err := generateObjectAddr(object)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate object addr: %v", err)
 	}
 
 	payload := jwt.MapClaims{
