@@ -1,8 +1,9 @@
 package inbox
 
 import (
-	"encoding/json"
 	"fmt"
+	"github.com/google/go-cmp/cmp"
+	"sort"
 	"testing"
 )
 
@@ -26,42 +27,96 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		},
 	}
 
-	expectedParent := make(map[string]string)
-	expectedParent["database"] = "namespace"
-	expectedParent["namespace"] = "cluster"
-
 	results, err := GetGroupAndAssociatedMemberIdentifier(jamesIdentifier)
 	if err != nil {
 		t.Error(err)
 		return
 	}
 
-	if len(results) != 2 {
-		t.Error(fmt.Errorf("length of result doesn't match: expected: %v, got: %v", 3, len(results)))
-		return
+	expected := []GroupAndAssociatedMemberIdentifier{
+		{
+			Group: ObjectIdentifier{
+				ObjectName:     "database",
+				ObjectUniqueID: "1",
+				ObjectType:     7,
+				IsGroupType:    true,
+				ParentObject: &ObjectIdentifier{
+					ObjectName:     "namespace",
+					ObjectUniqueID: "2",
+					ObjectType:     7,
+					IsGroupType:    true,
+					ParentObject: &ObjectIdentifier{
+						ObjectName:     "cluster",
+						ObjectUniqueID: "3",
+						ObjectType:     7,
+						IsGroupType:    true,
+					},
+				},
+			},
+			Member: ObjectIdentifier{
+				ObjectName:     "namespace",
+				ObjectUniqueID: "2",
+				ObjectType:     7,
+				IsGroupType:    true,
+				ParentObject: &ObjectIdentifier{
+					ObjectName:     "cluster",
+					ObjectUniqueID: "3",
+					ObjectType:     7,
+					IsGroupType:    true,
+				},
+			},
+		},
+		{
+			Group: ObjectIdentifier{
+				ObjectName:     "namespace",
+				ObjectUniqueID: "2",
+				ObjectType:     7,
+				IsGroupType:    true,
+				ParentObject: &ObjectIdentifier{
+					ObjectName:     "cluster",
+					ObjectUniqueID: "3",
+					ObjectType:     7,
+					IsGroupType:    true,
+				},
+			},
+			Member: ObjectIdentifier{
+				ObjectName:     "cluster",
+				ObjectUniqueID: "3",
+				ObjectType:     7,
+				IsGroupType:    true,
+			},
+		},
 	}
 
-	prettyJSON, err := json.MarshalIndent(results, "  ", "   ")
-	if err != nil {
+	if err = isEqual(results, expected); err != nil {
 		t.Error(err)
-		return
 	}
-	fmt.Printf("%v\n", string(prettyJSON))
+}
 
-	for _, g := range results {
-		if g.Member.HasParentObject() && g.Member.ParentObject.ObjectUniqueID == g.Group.ObjectUniqueID {
-			t.Errorf("member's parent's unique id cannot be the same as its group's")
-		}
-
-		verifyStructure := func(identifier ObjectIdentifier) {
-			for ; identifier.ParentObject != nil; identifier = *identifier.ParentObject {
-				if identifier.ParentObject.ObjectName != expectedParent[identifier.ObjectName] {
-					t.Errorf("for object %s, expected parent %s, got %s\n", identifier.ObjectName, expectedParent[identifier.ObjectName], identifier.ParentObject.ObjectName)
-				}
-			}
-			return
-		}
-		verifyStructure(g.Group)
-		verifyStructure(g.Member)
+func isEqual(results, expected []GroupAndAssociatedMemberIdentifier) error {
+	if len(results) != len(expected) {
+		return fmt.Errorf("slice length mismatch. expected %d, got %d", len(expected), len(results))
 	}
+
+	sort.Slice(results, func(i, j int) bool {
+		if results[i].Group.ObjectName == results[j].Group.ObjectName {
+			return results[i].Member.ObjectName < results[j].Member.ObjectName
+		}
+		return results[i].Group.ObjectName < results[j].Group.ObjectName
+	})
+
+	sort.Slice(expected, func(i, j int) bool {
+		if expected[i].Group.ObjectName == expected[j].Group.ObjectName {
+			return expected[i].Member.ObjectName < expected[j].Member.ObjectName
+		}
+		return expected[i].Group.ObjectName < expected[j].Group.ObjectName
+	})
+
+	for i := 0; i < len(results); i++ {
+		if diff := cmp.Diff(results[i], expected[i]); len(diff) != 0 {
+			return fmt.Errorf("difference between expected output and result:\n%s", diff)
+		}
+	}
+
+	return nil
 }
