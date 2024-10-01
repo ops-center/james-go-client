@@ -96,10 +96,6 @@ func GetGroupAndAssociatedMemberIdentifier(object Object) ([]GroupAndAssociatedM
 	}
 
 	for ; obj != nil && obj.HasParentObject(); obj = obj.ParentObject {
-		if obj.ParentObject == nil {
-			return nil, fmt.Errorf("expected parent existence")
-		}
-
 		groups = append(groups, GroupAndAssociatedMemberIdentifier{
 			Group:  *obj,
 			Member: *obj.ParentObject,

@@ -1,13 +1,13 @@
 package inbox
 
 import (
-	"fmt"
-	"github.com/google/go-cmp/cmp"
-	"sort"
 	"testing"
+
+	"github.com/google/go-cmp/cmp"
 )
 
 func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
+
 	jamesIdentifier := ObjectIdentifier{
 		ObjectName:     "database",
 		ObjectUniqueID: "1",
@@ -16,12 +16,12 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		ParentObject: &ObjectIdentifier{
 			ObjectName:     "namespace",
 			ObjectUniqueID: "2",
-			ObjectType:     DbType,
+			ObjectType:     NamespaceType,
 			IsGroupType:    true,
 			ParentObject: &ObjectIdentifier{
 				ObjectName:     "cluster",
 				ObjectUniqueID: "3",
-				ObjectType:     DbType,
+				ObjectType:     ClusterType,
 				IsGroupType:    true,
 			},
 		},
@@ -38,17 +38,17 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 			Group: ObjectIdentifier{
 				ObjectName:     "database",
 				ObjectUniqueID: "1",
-				ObjectType:     7,
+				ObjectType:     DbType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
 					ObjectName:     "namespace",
 					ObjectUniqueID: "2",
-					ObjectType:     7,
+					ObjectType:     NamespaceType,
 					IsGroupType:    true,
 					ParentObject: &ObjectIdentifier{
 						ObjectName:     "cluster",
 						ObjectUniqueID: "3",
-						ObjectType:     7,
+						ObjectType:     ClusterType,
 						IsGroupType:    true,
 					},
 				},
@@ -56,12 +56,12 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 			Member: ObjectIdentifier{
 				ObjectName:     "namespace",
 				ObjectUniqueID: "2",
-				ObjectType:     7,
+				ObjectType:     NamespaceType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
 					ObjectName:     "cluster",
 					ObjectUniqueID: "3",
-					ObjectType:     7,
+					ObjectType:     ClusterType,
 					IsGroupType:    true,
 				},
 			},
@@ -70,53 +70,25 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 			Group: ObjectIdentifier{
 				ObjectName:     "namespace",
 				ObjectUniqueID: "2",
-				ObjectType:     7,
+				ObjectType:     NamespaceType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
 					ObjectName:     "cluster",
 					ObjectUniqueID: "3",
-					ObjectType:     7,
+					ObjectType:     ClusterType,
 					IsGroupType:    true,
 				},
 			},
 			Member: ObjectIdentifier{
 				ObjectName:     "cluster",
 				ObjectUniqueID: "3",
-				ObjectType:     7,
+				ObjectType:     ClusterType,
 				IsGroupType:    true,
 			},
 		},
 	}
 
-	if err = isEqual(results, expected); err != nil {
-		t.Error(err)
+	if diff := cmp.Diff(results, expected); len(diff) != 0 {
+		t.Errorf("difference between expected output and result:\n%s", diff)
 	}
-}
-
-func isEqual(results, expected []GroupAndAssociatedMemberIdentifier) error {
-	if len(results) != len(expected) {
-		return fmt.Errorf("slice length mismatch. expected %d, got %d", len(expected), len(results))
-	}
-
-	sort.Slice(results, func(i, j int) bool {
-		if results[i].Group.ObjectName == results[j].Group.ObjectName {
-			return results[i].Member.ObjectName < results[j].Member.ObjectName
-		}
-		return results[i].Group.ObjectName < results[j].Group.ObjectName
-	})
-
-	sort.Slice(expected, func(i, j int) bool {
-		if expected[i].Group.ObjectName == expected[j].Group.ObjectName {
-			return expected[i].Member.ObjectName < expected[j].Member.ObjectName
-		}
-		return expected[i].Group.ObjectName < expected[j].Group.ObjectName
-	})
-
-	for i := 0; i < len(results); i++ {
-		if diff := cmp.Diff(results[i], expected[i]); len(diff) != 0 {
-			return fmt.Errorf("difference between expected output and result:\n%s", diff)
-		}
-	}
-
-	return nil
 }
