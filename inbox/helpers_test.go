@@ -1,13 +1,14 @@
 package inbox
 
 import (
+	"encoding/json"
 	"fmt"
 	"testing"
 )
 
 func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 	jamesIdentifier := ObjectIdentifier{
-		ObjectName:     "workload",
+		ObjectName:     "database",
 		ObjectUniqueID: "1",
 		ObjectType:     DbType,
 		IsGroupType:    true,
@@ -25,7 +26,11 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		},
 	}
 
-	results, err := getGroupAndAssociatedMemberIdentifier(jamesIdentifier, nil)
+	expectedParent := make(map[string]string)
+	expectedParent["database"] = "namespace"
+	expectedParent["namespace"] = "cluster"
+
+	results, err := GetGroupAndAssociatedMemberIdentifier(jamesIdentifier)
 	if err != nil {
 		t.Error(err)
 		return
@@ -36,15 +41,27 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		return
 	}
 
-	for _, result := range results {
-		fmt.Printf("group: %s, member: %s\n", result.Group.ObjectName, result.Member.ObjectName)
-		if !result.Member.HasParentObject() {
-			t.Errorf("member %s does not have parent object", result.Member.ObjectName)
+	prettyJSON, err := json.MarshalIndent(results, "  ", "   ")
+	if err != nil {
+		t.Error(err)
+		return
+	}
+	fmt.Printf("%v\n", string(prettyJSON))
+
+	for _, g := range results {
+		if g.Member.HasParentObject() && g.Member.ParentObject.ObjectUniqueID == g.Group.ObjectUniqueID {
+			t.Errorf("member's parent's unique id cannot be the same as its group's")
+		}
+
+		verifyStructure := func(identifier ObjectIdentifier) {
+			for ; identifier.ParentObject != nil; identifier = *identifier.ParentObject {
+				if identifier.ParentObject.ObjectName != expectedParent[identifier.ObjectName] {
+					t.Errorf("for object %s, expected parent %s, got %s\n", identifier.ObjectName, expectedParent[identifier.ObjectName], identifier.ParentObject.ObjectName)
+				}
+			}
 			return
 		}
-		if result.Member.ParentObject.GetUniqueID() != result.Group.GetUniqueID() {
-			t.Errorf("member parent reference does not point to group object")
-			return
-		}
+		verifyStructure(g.Group)
+		verifyStructure(g.Member)
 	}
 }

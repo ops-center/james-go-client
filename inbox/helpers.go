@@ -85,44 +85,28 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 }
 
 func GetGroupAndAssociatedMemberIdentifier(object Object) ([]GroupAndAssociatedMemberIdentifier, error) {
-	return getGroupAndAssociatedMemberIdentifier(object, nil)
-}
-
-func getGroupAndAssociatedMemberIdentifier(object Object, childObject Object) ([]GroupAndAssociatedMemberIdentifier, error) {
 	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
 		return nil, nil
 	}
 
-	objectIdentifier, err := getObjectIdentifierFromObjectInterface(object)
+	groups := make([]GroupAndAssociatedMemberIdentifier, 0)
+	obj, err := getObjectIdentifierFromObjectInterface(object)
 	if err != nil {
 		return nil, err
-	}
-	if objectIdentifier == nil {
-		return nil, nil
 	}
 
-	member, err := getObjectIdentifierFromObjectInterface(childObject)
-	if err != nil {
-		return nil, err
-	}
-	if member == nil {
-		if !object.HasParentObject() {
-			return nil, nil
+	for ; obj != nil && obj.HasParentObject(); obj = obj.ParentObject {
+		if obj.ParentObject == nil {
+			return nil, fmt.Errorf("expected parent existence")
 		}
-		return getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, objectIdentifier)
+
+		groups = append(groups, GroupAndAssociatedMemberIdentifier{
+			Group:  *obj,
+			Member: *obj.ParentObject,
+		})
 	}
 
-	result := GroupAndAssociatedMemberIdentifier{
-		Group:  *objectIdentifier,
-		Member: *member,
-	}
-
-	resultOfParentObject, err := getGroupAndAssociatedMemberIdentifier(objectIdentifier.ParentObject, object)
-	if err != nil {
-		return nil, err
-	}
-
-	return append(resultOfParentObject, result), nil
+	return groups, nil
 }
 
 func generateRandomPassword() (string, error) {
