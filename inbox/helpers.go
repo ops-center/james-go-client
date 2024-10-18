@@ -8,6 +8,10 @@ import (
 	"github.com/google/uuid"
 )
 
+func GenerateObjectAddr(object Object) (string, error) {
+	return generateObjectAddr(object)
+}
+
 func generateObjectAddr(object Object) (string, error) {
 	addr, err := generateAddr(object, "")
 	if err != nil {
