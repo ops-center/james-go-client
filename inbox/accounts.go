@@ -3,11 +3,10 @@ package inbox
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
-
-	"github.com/pkg/errors"
 
 	apis "go.opscenter.dev/james-go-client"
 )
@@ -20,23 +19,22 @@ func (w *WebAdminClient) createAccount(object Object) error {
 	}
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	password, err := generateRandomPassword()
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate random password: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate random password: %w", err))
 	}
 
 	r, err := w.UsersAPI.UpsertUser(context.TODO(), objectAddr).
 		UpsertUserRequest(apis.UpsertUserRequest{Password: password}).Execute()
-
 	if err != nil {
 		return newServerError(r, err)
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -49,7 +47,7 @@ func (w *WebAdminClient) deleteAccount(object Object) error {
 
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	r, err := w.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
@@ -58,7 +56,7 @@ func (w *WebAdminClient) deleteAccount(object Object) error {
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -87,12 +85,12 @@ func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]apis.Gr
 
 		groupAddr, err := generateObjectAddr(group.GetGroup())
 		if err != nil {
-			return nil, newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+			return nil, newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 		}
 
 		memberAddr, err := generateObjectAddr(group.GetMember())
 		if err != nil {
-			return nil, newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+			return nil, newServerError(nil, fmt.Errorf("failed to generate member object address: %w", err))
 		}
 
 		if apisGroup, ok := groupMap[groupAddr]; !ok {
@@ -113,11 +111,11 @@ func (w *WebAdminClient) AddGroups(groups []GroupAndAssociatedMember) ([]apis.Gr
 func (w *WebAdminClient) AddObjectAlias(object Object) error {
 	userAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 	addrAlias, err := object.GetAddressAlias()
 	if err != nil {
-		return newServerError(nil, errors.Errorf("couldn't get address alias: %v", err))
+		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
 	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
 
@@ -131,7 +129,7 @@ func (w *WebAdminClient) addAddressAlias(userAddr string, alias string) error {
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -140,11 +138,11 @@ func (w *WebAdminClient) addAddressAlias(userAddr string, alias string) error {
 func (w *WebAdminClient) RemoveObjectAlias(object Object) error {
 	userAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 	addrAlias, err := object.GetAddressAlias()
 	if err != nil {
-		return newServerError(nil, errors.Errorf("couldn't get address alias: %v", err))
+		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
 
 	return w.removeAddressAlias(userAddr, addrAlias)
@@ -157,7 +155,7 @@ func (w *WebAdminClient) removeAddressAlias(userAddr string, alias string) error
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -166,7 +164,7 @@ func (w *WebAdminClient) removeAddressAlias(userAddr string, alias string) error
 func (w *WebAdminClient) ListObjectAliases(object Object) ([]apis.GetAlias200ResponseInner, error) {
 	userAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return nil, newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return nil, newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	return w.listAddressAliases(userAddr)
@@ -179,7 +177,7 @@ func (w *WebAdminClient) listAddressAliases(userAddr string) ([]apis.GetAlias200
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return aliases, nil
@@ -188,7 +186,7 @@ func (w *WebAdminClient) listAddressAliases(userAddr string) ([]apis.GetAlias200
 func (w *WebAdminClient) RemoveAllObjectAliases(object Object) error {
 	userAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	return w.removeAllAddressAliases(userAddr)
@@ -207,7 +205,7 @@ func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
 		}
 
 		if r.StatusCode != http.StatusNoContent {
-			return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+			return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 		}
 	}
 
@@ -217,22 +215,22 @@ func (w *WebAdminClient) removeAllAddressAliases(userAddr string) error {
 func (w *WebAdminClient) addGroups(groups []*apis.Group) ([]apis.GroupsWithMembersInfo, error) {
 	r, err := w.AddressGroupAPI.AddGroups(context.TODO(), groups).Execute()
 	if err != nil {
-		return nil, newServerError(r, errors.Wrapf(err, "failed to add groups: %v", err))
+		return nil, newServerError(r, fmt.Errorf("failed to add groups: %w", err))
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		return nil, newServerError(r, errors.Wrapf(err, "failed to read body: %v", err))
+		return nil, newServerError(r, fmt.Errorf("failed to read body: %w", err))
 	}
 
 	var addGroupsStatus []apis.GroupsWithMembersInfo
 	err = json.Unmarshal(body, &addGroupsStatus)
 	if err != nil {
-		return nil, newServerError(r, errors.Wrapf(err, "failed to unmarshal body: %v", err))
+		return nil, newServerError(r, fmt.Errorf("failed to unmarshal body: %w", err))
 	}
 
 	var failedGroups []apis.GroupsWithMembersInfo
@@ -262,7 +260,7 @@ func (w *WebAdminClient) addGroups(groups []*apis.Group) ([]apis.GroupsWithMembe
 	}
 
 	if failedGroups != nil {
-		return failedGroups, newServerError(r, errors.Errorf("failed to add groups: %v", failedGroups))
+		return failedGroups, newServerError(r, fmt.Errorf("failed to add groups: %s", failedGroups))
 	}
 
 	return nil, nil
@@ -271,12 +269,11 @@ func (w *WebAdminClient) addGroups(groups []*apis.Group) ([]apis.GroupsWithMembe
 func (w *WebAdminClient) AddGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := w.GetObjectAddr(grpObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 	}
 	memberAddr, err := w.GetObjectAddr(memberObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
-
+		return newServerError(nil, fmt.Errorf("failed to generate member object address: %w", err))
 	}
 
 	return w.addGroupMember(grpAddr, memberAddr)
@@ -289,7 +286,7 @@ func (w *WebAdminClient) addGroupMember(grpAddr, memberAddr string) error {
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -298,13 +295,11 @@ func (w *WebAdminClient) addGroupMember(grpAddr, memberAddr string) error {
 func (w *WebAdminClient) RemoveGroupMember(grpObject, memberObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
-
+		return newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 	}
 	memberAddr, err := generateObjectAddr(memberObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
-
+		return newServerError(nil, fmt.Errorf("failed to generate member object address: %w", err))
 	}
 
 	return w.removeGroupMember(grpAddr, memberAddr)
@@ -317,7 +312,7 @@ func (w *WebAdminClient) removeGroupMember(grpAddr, memberAddr string) error {
 	}
 
 	if r.StatusCode != http.StatusNoContent {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -326,11 +321,11 @@ func (w *WebAdminClient) removeGroupMember(grpAddr, memberAddr string) error {
 func (w *WebAdminClient) CheckGroupMemberExistence(grpObject, memberObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 	}
 	memberAddr, err := generateObjectAddr(memberObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate member object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate member object address: %w", err))
 	}
 
 	return w.checkGroupMemberExistence(grpAddr, memberAddr)
@@ -343,7 +338,7 @@ func (w *WebAdminClient) checkGroupMemberExistence(grpAddr, memberAddr string) e
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -356,7 +351,7 @@ func (w *WebAdminClient) CheckMultipleGroupMemberPairExistence(groupMemberPair [
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -365,7 +360,7 @@ func (w *WebAdminClient) CheckMultipleGroupMemberPairExistence(groupMemberPair [
 func (w *WebAdminClient) createGroup(object Object) error {
 	grpAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 	r, err := w.AddressGroupAPI.CreateGroup(context.Background(), grpAddr).Execute()
 	if err != nil {
@@ -378,7 +373,7 @@ func (w *WebAdminClient) createGroup(object Object) error {
 func (w *WebAdminClient) deleteGroup(grpObject Object) error {
 	grpAddr, err := generateObjectAddr(grpObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 	}
 
 	r, err := w.AddressGroupAPI.DeleteGroup(context.TODO(), grpAddr).Execute()
@@ -394,7 +389,7 @@ func (w *WebAdminClient) DeleteGroups(grpObjects []Object) error {
 	for i := 0; i < len(grpObjects); i++ {
 		grpAddr, err := w.GetObjectAddr(grpObjects[i])
 		if err != nil {
-			return newServerError(nil, errors.Errorf("failed to generate group object address: %v", err))
+			return newServerError(nil, fmt.Errorf("failed to generate group object address: %w", err))
 		}
 		grpAddresses[i] = grpAddr
 	}
@@ -409,7 +404,7 @@ func (w *WebAdminClient) DeleteGroups(grpObjects []Object) error {
 func (w *WebAdminClient) CheckObjectExistence(object Object) error {
 	objectAddr, err := generateObjectAddr(object)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	return w.checkAddrExistence(objectAddr)
@@ -430,28 +425,28 @@ func (w *WebAdminClient) checkAddrExistence(objectAddr string) error {
 func (w *WebAdminClient) UpdateObjectAddr(oldObject, newObject Object) error {
 	oldObjectAddr, err := generateObjectAddr(oldObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 	newObjectAddr, err := generateObjectAddr(newObject)
 	if err != nil {
-		return newServerError(nil, errors.Errorf("failed to generate object address: %v", err))
+		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
 	if err = w.checkAddrExistence(oldObjectAddr); err != nil {
-		return errors.Errorf("address doesn't exits: %v", err)
+		return fmt.Errorf("address doesn't exits: %w", err)
 	}
 
 	err = w.createAccount(newObject)
-	if err != nil && errors.As(err, &ErrUserAlreadyExists) {
+	if err != nil && errors.Is(err, ErrUserAlreadyExists) {
 		return err
 	}
 
 	r, err := w.UsersAPI.ChangeUsername(context.TODO(), oldObjectAddr, newObjectAddr).Execute()
 	if err != nil {
-		return newServerError(r, errors.Errorf("failed to change username: %v", err))
+		return newServerError(r, fmt.Errorf("failed to change username: %w", err))
 	}
 	if r.StatusCode != http.StatusCreated {
-		return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -498,7 +493,7 @@ func (w *WebAdminClient) HealthCheck() (*apis.CheckAllComponents200Response, err
 	}
 
 	if r.StatusCode != http.StatusOK {
-		return nil, newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return checkAllComponentsResponse, nil
@@ -512,7 +507,7 @@ func (w *WebAdminClient) CreateDomains(domains ...string) error {
 		}
 
 		if r.StatusCode != http.StatusNoContent {
-			return newServerError(r, errors.Errorf("unknown error: status: %v", r.Status))
+			return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 		}
 	}
 

@@ -2,6 +2,7 @@ package inbox
 
 import (
 	"context"
+	go_errs "errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -10,7 +11,6 @@ import (
 	"git.sr.ht/~rockorager/go-jmap"
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
-	"github.com/pkg/errors"
 	openapi "go.opscenter.dev/james-go-client"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
@@ -42,10 +42,7 @@ type ClientsHubConf struct {
 }
 
 func (ch *ClientsHubConf) checkValidity() (err error) {
-	err = ch.WebAdminConf.checkValidity()
-	err = errors.Wrapf(err, ch.JMAPConf.checkValidity().Error())
-
-	return err
+	return ch.WebAdminConf.checkValidity()
 }
 
 type ClientsHubService struct {
@@ -106,15 +103,11 @@ func (w *WebAdminClient) refreshRequired() bool {
 
 func (w *WebAdminClient) renew() error {
 	var lastErr error
-	err := wait.PollUntilContextTimeout(
-		context.TODO(),
-		100*time.Millisecond,
-		5*time.Second,
-		true,
+	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 1*time.Minute, true,
 		func(ctx context.Context) (bool, error) {
 			token, err := getInboxServiceToken()
 			if err != nil {
-				lastErr = err
+				lastErr = fmt.Errorf("failed to get inbox service token: %w", err)
 				return false, nil
 			}
 
@@ -131,20 +124,17 @@ func (w *WebAdminClient) renew() error {
 		},
 	)
 	if err != nil {
-		return errors.Wrap(lastErr, err.Error())
+		return fmt.Errorf("failed to renew WebAdmin client: %w", go_errs.Join(lastErr, err))
 	}
 	return nil
 }
 
 type JMAPClient struct {
 	jmap.Client
-	muJmap     sync.RWMutex
-	userId     jmap.ID
-	userEmail  string
-	mailboxIds map[string]jmap.ID
-
-	forceBasicAuth              bool
-	basicAuthCreds              BasicAuthCredentials
+	mu                          sync.RWMutex
+	userId                      jmap.ID
+	userEmail                   string
+	mailboxIds                  map[string]jmap.ID
 	lastComputedCacheAtUnixTime int64
 	cachedRenewalErr            error
 }
@@ -154,12 +144,6 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		Client: jmap.Client{
 			SessionEndpoint: jc.JMAPSessionEndpoint,
 		},
-		forceBasicAuth: false,
-	}
-
-	if jc.ForceBasicAuth {
-		client.basicAuthCreds = jc.BasicAuthCreds
-		client.forceBasicAuth = true
 	}
 
 	if err := client.renew(); err != nil {
@@ -173,17 +157,17 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 }
 
 func (j *JMAPClient) RenewSession() error {
-	j.muJmap.RLock()
+	j.mu.RLock()
 
 	if !j.refreshRequired() {
 		err := j.cachedRenewalErr
-		j.muJmap.RUnlock()
+		j.mu.RUnlock()
 		return err
 	}
-	j.muJmap.RUnlock()
+	j.mu.RUnlock()
 
-	j.muJmap.Lock()
-	defer j.muJmap.Unlock()
+	j.mu.Lock()
+	defer j.mu.Unlock()
 
 	if j.cachedRenewalErr != nil || j.refreshRequired() {
 		j.cachedRenewalErr = j.renew()
@@ -196,56 +180,42 @@ func (j *JMAPClient) RenewSession() error {
 
 func (j *JMAPClient) refreshRequired() bool {
 	return time.Now().UnixNano() > authRenewalCacheTTL+j.lastComputedCacheAtUnixTime
-
 }
 
 func (j *JMAPClient) renew() error {
 	var lastErr error
-	err := wait.PollUntilContextTimeout(
-		context.TODO(),
-		100*time.Millisecond,
-		3*time.Second,
-		true,
+	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 1*time.Minute, true,
 		func(ctx context.Context) (bool, error) {
-			if j.forceBasicAuth {
-				j.WithBasicAuth(j.basicAuthCreds.Username, j.basicAuthCreds.Password)
+			if token, err := getInboxServiceToken(); err == nil {
+				j.WithAccessToken(token)
 			} else {
-				if token, err := getInboxServiceToken(); err == nil {
-					j.WithAccessToken(token)
-				} else {
-					lastErr = err
-					return false, nil
-				}
+				lastErr = err
+				return false, nil
 			}
-
 			if err := j.Client.Authenticate(); err != nil {
 				lastErr = err
 				return false, nil
 			}
-
 			if userId, ok := j.Session.PrimaryAccounts[mail.URI]; ok {
 				j.userId = userId
 			} else {
 				lastErr = fmt.Errorf("user id not found in session")
 				return false, nil
 			}
-
 			if account, ok := j.Session.Accounts[j.userId]; ok {
 				j.userEmail = account.Name
 			} else {
 				lastErr = fmt.Errorf("user email not found in session")
 				return false, nil
 			}
-
 			if err := j.initializeMailboxIds(); err != nil {
 				lastErr = err
 				return false, nil
 			}
-
 			return true, nil
 		})
 	if err != nil {
-		return errors.Wrap(lastErr, err.Error())
+		return fmt.Errorf("failed to renew JMAP client: %w", go_errs.Join(lastErr, err))
 	}
 	return nil
 }
