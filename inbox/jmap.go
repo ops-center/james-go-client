@@ -15,8 +15,8 @@ import (
 )
 
 func (j *JMAPClient) SendEmail(myMail *email.Email) error {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
+	j.mu.RLock()
+	defer j.mu.RUnlock()
 
 	const draftEmailId = "draft"
 	const sendIt = "sendIt"
@@ -86,8 +86,8 @@ func (j *JMAPClient) SendEmail(myMail *email.Email) error {
 }
 
 func (j *JMAPClient) GetEmails(filter JmapEmailFilter) ([]*email.Email, error) {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
+	j.mu.RLock()
+	defer j.mu.RUnlock()
 
 	if !isEmptyString(string(filter.InMailboxWithName)) {
 		if mailboxId, err := j.getMailboxId(filter.InMailboxWithName); err == nil {
@@ -147,8 +147,8 @@ func (j *JMAPClient) GetEmails(filter JmapEmailFilter) ([]*email.Email, error) {
 
 // DestroyAllEmails will require multiple calls if the number of emails is large enough
 func (j *JMAPClient) DestroyAllEmails() (destroyed []jmap.ID, notDestroyed map[jmap.ID]*jmap.SetError, err error) {
-	j.muJmap.Lock()
-	defer j.muJmap.Unlock()
+	j.mu.Lock()
+	defer j.mu.Unlock()
 
 	req := &jmap.Request{
 		Using: []jmap.URI{"urn:ietf:params:jmap:core", "urn:ietf:params:jmap:mail"},
@@ -237,8 +237,8 @@ func (j *JMAPClient) initializeMailboxIds() error {
 
 // TODO: Remove this
 func (j *JMAPClient) GetTestRecipient() (string, error) {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
+	j.mu.RLock()
+	defer j.mu.RUnlock()
 	return "recipient.acc@cloud.appscode.com", nil
 }
 
@@ -254,8 +254,8 @@ type emailData struct {
 type Option func(data *emailData) error
 
 func (j *JMAPClient) NewEmail(options ...Option) (*email.Email, error) {
-	j.muJmap.RLock()
-	defer j.muJmap.RUnlock()
+	j.mu.RLock()
+	defer j.mu.RUnlock()
 
 	myMailData := &emailData{client: j}
 

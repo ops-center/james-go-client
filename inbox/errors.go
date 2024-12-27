@@ -2,12 +2,12 @@ package inbox
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
 
 	"git.sr.ht/~rockorager/go-jmap"
-	"github.com/pkg/errors"
 )
 
 type JamesServerError struct {
@@ -29,7 +29,7 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 	if err != nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    errors.Wrap(err, "failed to read response body").Error(),
+			Message:    fmt.Errorf("failed to read response body : %w", err).Error(),
 		}
 	}
 
@@ -42,7 +42,7 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 		if err = json.Unmarshal(body, jamesServerError); err != nil {
 			return &JamesServerError{
 				StatusCode: http.StatusInternalServerError,
-				Message:    errors.Wrap(err, "failed to unmarshal error response").Error(),
+				Message:    fmt.Errorf("failed to unmarshal error response : %w", err).Error(),
 			}
 		}
 	}
@@ -67,10 +67,10 @@ func (j *JamesServerError) Error() string {
 func (j *JamesServerError) GetError() error {
 	err := fmt.Errorf("%s", j.Type)
 	if !isEmptyString(j.Message) {
-		err = errors.Wrap(err, j.Message)
+		err = fmt.Errorf("%w : %s", err, j.Message)
 	}
 	if !isEmptyString(j.Details) {
-		err = errors.Wrap(err, j.Details)
+		err = fmt.Errorf("%w : %s", err, j.Details)
 	}
 
 	return err
