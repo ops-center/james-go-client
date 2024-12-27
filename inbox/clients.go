@@ -2,6 +2,7 @@ package inbox
 
 import (
 	"context"
+	go_errs "errors"
 	"fmt"
 	"strings"
 	"sync"
@@ -105,16 +106,16 @@ func (w *WebAdminClient) refreshRequired() bool {
 }
 
 func (w *WebAdminClient) renew() error {
-	var lastErr error
+	errs := make([]error, 0)
 	err := wait.PollUntilContextTimeout(
 		context.TODO(),
-		100*time.Millisecond,
-		5*time.Second,
+		3*time.Second,
+		1*time.Minute,
 		true,
 		func(ctx context.Context) (bool, error) {
 			token, err := getInboxServiceToken()
 			if err != nil {
-				lastErr = err
+				errs = append(errs, fmt.Errorf("failed to get inbox service token: %w", err))
 				return false, nil
 			}
 
@@ -131,7 +132,8 @@ func (w *WebAdminClient) renew() error {
 		},
 	)
 	if err != nil {
-		return errors.Wrap(lastErr, err.Error())
+		errs = append(errs, err)
+		return fmt.Errorf("failed to renew webadmin session: %s", go_errs.Join(errs...))
 	}
 	return nil
 }
@@ -187,56 +189,53 @@ func (j *JMAPClient) RenewSession() error {
 
 func (j *JMAPClient) refreshRequired() bool {
 	return time.Now().UnixNano() > authRenewalCacheTTL+j.lastComputedCacheAtUnixTime
-
 }
 
 func (j *JMAPClient) renew() error {
-	var lastErr error
+	errs := make([]error, 0)
+
 	err := wait.PollUntilContextTimeout(
 		context.TODO(),
-		100*time.Millisecond,
 		3*time.Second,
+		1*time.Minute,
 		true,
 		func(ctx context.Context) (bool, error) {
-			if j.forceBasicAuth {
-				j.WithBasicAuth(j.basicAuthCreds.Username, j.basicAuthCreds.Password)
+			if token, err := getInboxServiceToken(); err == nil {
+				j.WithAccessToken(token)
 			} else {
-				if token, err := getInboxServiceToken(); err == nil {
-					j.WithAccessToken(token)
-				} else {
-					lastErr = err
-					return false, nil
-				}
+				errs = append(errs, fmt.Errorf("failed to get inbox service token: %w", err))
+				return false, nil
 			}
 
 			if err := j.Client.Authenticate(); err != nil {
-				lastErr = err
+				errs = append(errs, fmt.Errorf("failed to authenticate: %w", err))
 				return false, nil
 			}
 
 			if userId, ok := j.Session.PrimaryAccounts[mail.URI]; ok {
 				j.userId = userId
 			} else {
-				lastErr = fmt.Errorf("user id not found in session")
+				errs = append(errs, fmt.Errorf("user id not found in session"))
 				return false, nil
 			}
 
 			if account, ok := j.Session.Accounts[j.userId]; ok {
 				j.userEmail = account.Name
 			} else {
-				lastErr = fmt.Errorf("user email not found in session")
+				errs = append(errs, fmt.Errorf("user email not found in session"))
 				return false, nil
 			}
 
 			if err := j.initializeMailboxIds(); err != nil {
-				lastErr = err
+				errs = append(errs, fmt.Errorf("failed to initialize mailbox ids: %w", err))
 				return false, nil
 			}
 
 			return true, nil
 		})
 	if err != nil {
-		return errors.Wrap(lastErr, err.Error())
+		errs = append(errs, err)
+		return fmt.Errorf("failed to renew JMAP Session: %s", go_errs.Join(errs...))
 	}
 	return nil
 }
