@@ -138,13 +138,10 @@ func (w *WebAdminClient) renew() error {
 
 type JMAPClient struct {
 	jmap.Client
-	muJmap     sync.RWMutex
-	userId     jmap.ID
-	userEmail  string
-	mailboxIds map[string]jmap.ID
-
-	forceBasicAuth              bool
-	basicAuthCreds              BasicAuthCredentials
+	muJmap                      sync.RWMutex
+	userId                      jmap.ID
+	userEmail                   string
+	mailboxIds                  map[string]jmap.ID
 	lastComputedCacheAtUnixTime int64
 	cachedRenewalErr            error
 }
@@ -154,12 +151,6 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		Client: jmap.Client{
 			SessionEndpoint: jc.JMAPSessionEndpoint,
 		},
-		forceBasicAuth: false,
-	}
-
-	if jc.ForceBasicAuth {
-		client.basicAuthCreds = jc.BasicAuthCreds
-		client.forceBasicAuth = true
 	}
 
 	if err := client.renew(); err != nil {
