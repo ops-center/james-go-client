@@ -106,4 +106,4 @@ require (
 	x-helm.dev/apimachinery v0.0.16 // indirect
 )
 
-replace git.sr.ht/~rockorager/go-jmap => github.com/ops-center/go-jmap v0.5.1-0.20240906224703-e149c43dd412
+replace git.sr.ht/~rockorager/go-jmap => github.com/ops-center/go-jmap v0.5.1-0.20250106121223-3cf5b4c818e4
