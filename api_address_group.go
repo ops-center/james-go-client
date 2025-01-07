@@ -178,8 +178,6 @@ func (a *AddressGroupAPIService) AddGroupsExecute(r ApiAddGroupsRequest) (*http.
 		formFiles          []formFile
 	)
 
-
-
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressGroupAPIService.AddressGroupsAddGroupsPost")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
@@ -498,7 +496,7 @@ func (a *AddressGroupAPIService) RemoveMemberExecute(r ApiRemoveMemberRequest) (
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
-	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
+	// parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -600,7 +598,7 @@ func (a *AddressGroupAPIService) CheckGroupMemberExecute(r ApiCheckGruopMemberEx
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
-	//parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
+	// parameterAddToHeaderOrQuery(localVarQueryParams, "memberAddress", r.memberAddress, "")
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
@@ -926,9 +924,9 @@ func (a *AddressGroupAPIService) CreateGroupExecute(r ApiCreateGroupRequest) (*h
 }
 
 type ApiCheckMultipleGroupMemberPairExistenceRequest struct {
-	ctx           			   context.Context
-	ApiService    			  *AddressGroupAPIService
-	groupMemberPairs 		  []GroupMemberPair
+	ctx              context.Context
+	ApiService       *AddressGroupAPIService
+	groupMemberPairs []GroupMemberPair
 }
 
 func (r ApiCheckMultipleGroupMemberPairExistenceRequest) Execute() (*http.Response, error) {
@@ -944,8 +942,8 @@ ApiCheckMultipleGruopMemberPairExistenceRequest checks if a member exists in the
 */
 func (a *AddressGroupAPIService) CheckMultipleGroupMemberPairExistence(ctx context.Context, groupMemberPair []GroupMemberPair) ApiCheckMultipleGroupMemberPairExistenceRequest {
 	return ApiCheckMultipleGroupMemberPairExistenceRequest{
-		ApiService:   a,
-		ctx:          ctx,
+		ApiService:       a,
+		ctx:              ctx,
 		groupMemberPairs: groupMemberPair,
 	}
 }

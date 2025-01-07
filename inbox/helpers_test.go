@@ -7,7 +7,6 @@ import (
 )
 
 func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
-
 	jamesIdentifier := ObjectIdentifier{
 		ObjectName:     "database",
 		ObjectUniqueID: "1",
