@@ -1,45 +1,59 @@
 package inbox
 
 import (
+	"context"
 	"crypto/rsa"
 	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
 	openapi "go.opscenter.dev/james-go-client"
+	"golang.org/x/oauth2"
 )
+
+type TokenGetterFunc func() (*http.Client, string, error)
 
 type WebAdminConf struct {
 	WebAdminServiceEndpoint string
-	WebAdminAuthnToken      string
+	TokenGetter             TokenGetterFunc
 }
 
 func (wc *WebAdminConf) checkValidity() (err error) {
 	if isEmptyString(wc.WebAdminServiceEndpoint) {
 		err = fmt.Errorf("web admin address is required: %v", err)
 	}
-
 	if err != nil {
 		return
 	}
 
-	_, _, err = jwt.NewParser().ParseUnverified(wc.WebAdminAuthnToken, jwt.MapClaims{})
+	_, token, err := wc.TokenGetter()
+	if err != nil {
+		return
+	}
 
+	_, _, err = jwt.NewParser().ParseUnverified(token, jwt.MapClaims{})
 	return
 }
 
-func (wc *WebAdminConf) getJamesWebAdminApiClient() WebAdminClient {
-	configuration := openapi.NewConfiguration().WithAccessToken(wc.WebAdminAuthnToken)
+func (wc *WebAdminConf) getJamesWebAdminApiClient() (*WebAdminClient, error) {
+	hc, token, err := wc.TokenGetter()
+	if err != nil {
+		return nil, err
+	}
+	ctx2 := context.WithValue(context.Background(), oauth2.HTTPClient, hc)
+	configuration := openapi.NewConfiguration().WithAccessToken(ctx2, token)
 	configuration.Servers[0] = openapi.ServerConfiguration{
 		URL: wc.WebAdminServiceEndpoint,
 	}
 	apiClient := openapi.NewAPIClient(configuration)
 
-	return WebAdminClient{
+	return &WebAdminClient{
 		APIClient: *apiClient,
-	}
+	}, nil
 }
 
+//nolint:unused
 func (jc *JMAPConf) checkValidity() (err error) {
 	if isEmptyString(jc.JMAPServerAddr) {
 		err = fmt.Errorf("jmap server address is required: %v", err)
@@ -88,6 +102,7 @@ type JMAPConf struct {
 	JMAPSessionEndpoint string
 	ForceBasicAuth      bool
 	BasicAuthCreds      BasicAuthCredentials
+	TokenGetter         TokenGetterFunc
 }
 
 const (
