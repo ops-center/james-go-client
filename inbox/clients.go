@@ -12,11 +12,12 @@ import (
 	"git.sr.ht/~rockorager/go-jmap/mail"
 	"git.sr.ht/~rockorager/go-jmap/mail/email"
 	openapi "go.opscenter.dev/james-go-client"
+	"golang.org/x/oauth2"
 	"k8s.io/apimachinery/pkg/util/wait"
 )
 
 type Service struct {
-	WebAdminClient
+	*WebAdminClient
 	tokenService
 }
 
@@ -30,8 +31,13 @@ func New(c *Config) (*Service, error) {
 		return nil, err
 	}
 
+	client, err := c.getJamesWebAdminApiClient()
+	if err != nil {
+		return nil, err
+	}
+
 	return &Service{
-		WebAdminClient: c.getJamesWebAdminApiClient(),
+		WebAdminClient: client,
 		tokenService:   newTokenService(rsaPrivateKey),
 	}, nil
 }
@@ -41,7 +47,11 @@ type ClientsHubConf struct {
 	JMAPConf
 }
 
+//nolint:unused
 func (ch *ClientsHubConf) checkValidity() (err error) {
+	if err := ch.JMAPConf.checkValidity(); err != nil {
+		return err
+	}
 	return ch.WebAdminConf.checkValidity()
 }
 
@@ -54,6 +64,7 @@ const authRenewalCacheTTL = int64(1 * time.Second)
 
 type WebAdminClient struct {
 	openapi.APIClient
+	tokenGetter     TokenGetterFunc
 	mu              sync.RWMutex
 	serviceEndpoint string
 
@@ -64,6 +75,7 @@ type WebAdminClient struct {
 func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 	client := WebAdminClient{
 		serviceEndpoint: wc.WebAdminServiceEndpoint,
+		tokenGetter:     wc.TokenGetter,
 	}
 	if err := client.renew(); err != nil {
 		return nil, err
@@ -105,13 +117,14 @@ func (w *WebAdminClient) renew() error {
 	var lastErr error
 	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 1*time.Minute, true,
 		func(ctx context.Context) (bool, error) {
-			token, err := getInboxServiceToken()
+			hc, token, err := w.tokenGetter()
 			if err != nil {
 				lastErr = fmt.Errorf("failed to get inbox service token: %w", err)
 				return false, nil
 			}
 
-			configuration := openapi.NewConfiguration().WithAccessToken(token)
+			ctx2 := context.WithValue(context.Background(), oauth2.HTTPClient, hc)
+			configuration := openapi.NewConfiguration().WithAccessToken(ctx2, token)
 			configuration.Servers = []openapi.ServerConfiguration{
 				{
 					URL:         w.serviceEndpoint,
@@ -131,6 +144,7 @@ func (w *WebAdminClient) renew() error {
 
 type JMAPClient struct {
 	jmap.Client
+	tokenGetter                 TokenGetterFunc
 	mu                          sync.RWMutex
 	userId                      jmap.ID
 	userEmail                   string
@@ -144,6 +158,7 @@ func NewJMAPClient(jc *JMAPConf) (*JMAPClient, error) {
 		Client: jmap.Client{
 			SessionEndpoint: jc.JMAPSessionEndpoint,
 		},
+		tokenGetter: jc.TokenGetter,
 	}
 
 	if err := client.renew(); err != nil {
@@ -186,8 +201,10 @@ func (j *JMAPClient) renew() error {
 	var lastErr error
 	err := wait.PollUntilContextTimeout(context.TODO(), 3*time.Second, 1*time.Minute, true,
 		func(ctx context.Context) (bool, error) {
-			if token, err := getInboxServiceToken(); err == nil {
-				j.WithAccessToken(token)
+			hc, token, err := j.tokenGetter()
+			if err == nil {
+				ctx2 := context.WithValue(context.Background(), oauth2.HTTPClient, hc)
+				j.WithAccessToken(ctx2, token)
 			} else {
 				lastErr = err
 				return false, nil

@@ -218,8 +218,7 @@ func (c *Configuration) ServerURLWithContext(ctx context.Context, endpoint strin
 
 // WithBasicAuth sets the HttpClient to a client which authenticates using the provided
 // username and password
-func (c *Configuration) WithBasicAuth(username string, password string) *Configuration {
-	ctx := context.Background()
+func (c *Configuration) WithBasicAuth(ctx context.Context, username string, password string) *Configuration {
 	auth := username + ":" + password
 	t := &oauth2.Token{
 		AccessToken: base64.StdEncoding.EncodeToString([]byte(auth)),
@@ -232,8 +231,7 @@ func (c *Configuration) WithBasicAuth(username string, password string) *Configu
 
 // WithAccessToken sets the HttpClient to a client which authenticates using the provided Access
 // Token
-func (c *Configuration) WithAccessToken(token string) *Configuration {
-	ctx := context.Background()
+func (c *Configuration) WithAccessToken(ctx context.Context, token string) *Configuration {
 	t := &oauth2.Token{
 		AccessToken: token,
 		TokenType:   "bearer",
