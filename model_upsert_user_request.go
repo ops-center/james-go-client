@@ -92,7 +92,6 @@ func (o *UpsertUserRequest) UnmarshalJSON(bytes []byte) (err error) {
 	allProperties := make(map[string]interface{})
 
 	err = json.Unmarshal(bytes, &allProperties)
-
 	if err != nil {
 		return err
 	}
@@ -106,7 +105,6 @@ func (o *UpsertUserRequest) UnmarshalJSON(bytes []byte) (err error) {
 	varUpsertUserRequest := _UpsertUserRequest{}
 
 	err = json.Unmarshal(bytes, &varUpsertUserRequest)
-
 	if err != nil {
 		return err
 	}
