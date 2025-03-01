@@ -8,17 +8,14 @@ import (
 
 func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 	jamesIdentifier := ObjectIdentifier{
-		ObjectName:     "database",
 		ObjectUniqueID: "1",
 		ObjectType:     DbType,
 		IsGroupType:    true,
 		ParentObject: &ObjectIdentifier{
-			ObjectName:     "namespace",
 			ObjectUniqueID: "2",
 			ObjectType:     NamespaceType,
 			IsGroupType:    true,
 			ParentObject: &ObjectIdentifier{
-				ObjectName:     "cluster",
 				ObjectUniqueID: "3",
 				ObjectType:     ClusterType,
 				IsGroupType:    true,
@@ -35,17 +32,14 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 	expected := []GroupAndAssociatedMemberIdentifier{
 		{
 			Group: ObjectIdentifier{
-				ObjectName:     "database",
 				ObjectUniqueID: "1",
 				ObjectType:     DbType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
-					ObjectName:     "namespace",
 					ObjectUniqueID: "2",
 					ObjectType:     NamespaceType,
 					IsGroupType:    true,
 					ParentObject: &ObjectIdentifier{
-						ObjectName:     "cluster",
 						ObjectUniqueID: "3",
 						ObjectType:     ClusterType,
 						IsGroupType:    true,
@@ -53,12 +47,10 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 				},
 			},
 			Member: ObjectIdentifier{
-				ObjectName:     "namespace",
 				ObjectUniqueID: "2",
 				ObjectType:     NamespaceType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
-					ObjectName:     "cluster",
 					ObjectUniqueID: "3",
 					ObjectType:     ClusterType,
 					IsGroupType:    true,
@@ -67,19 +59,16 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		},
 		{
 			Group: ObjectIdentifier{
-				ObjectName:     "namespace",
 				ObjectUniqueID: "2",
 				ObjectType:     NamespaceType,
 				IsGroupType:    true,
 				ParentObject: &ObjectIdentifier{
-					ObjectName:     "cluster",
 					ObjectUniqueID: "3",
 					ObjectType:     ClusterType,
 					IsGroupType:    true,
 				},
 			},
 			Member: ObjectIdentifier{
-				ObjectName:     "cluster",
 				ObjectUniqueID: "3",
 				ObjectType:     ClusterType,
 				IsGroupType:    true,

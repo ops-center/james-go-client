@@ -1,6 +1,7 @@
 package inbox
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -13,14 +14,14 @@ func GenerateObjectAddr(object Object) (string, error) {
 }
 
 func generateObjectAddr(object Object) (string, error) {
-	addr, err := generateAddr(object, "")
+	addr, err := GenerateBaseAddress(object)
 	if err != nil {
 		return "", err
 	}
 
-	boundedUserIdentity := object.GetBoundedUserIdentity()
-	if boundedUserIdentity != nil {
-		addr = fmt.Sprintf("%s&%s", addr, boundedUserIdentity.String())
+	resourceOwner := object.ResourceOwnerIdentity()
+	if resourceOwner != nil {
+		addr = fmt.Sprintf("%s&%s", addr, resourceOwner.String())
 	}
 
 	if len(addr) > MaxEmailLength {
@@ -29,26 +30,28 @@ func generateObjectAddr(object Object) (string, error) {
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
 }
 
-func generateAddr(object Object, addr string) (string, error) {
+func GenerateBaseAddress(object Object) (string, error) {
 	if object == nil {
-		return addr, nil
-	}
-	if isEmptyString(addr) {
-		addr = fmt.Sprintf("%s&%s$%s", object.GetType(), object.GetName(), object.GetUniqueID())
-	} else {
-		addr = fmt.Sprintf("%s.%s&%s$%s", addr, object.GetType(), object.GetName(), object.GetUniqueID())
+		return "", errors.New("nil object reference")
 	}
 
-	if len(addr) > MaxEmailLength {
-		return "", ErrMaxEmailLengthExceeded
+	if val := reflect.ValueOf(object); val.Kind() == reflect.Ptr && val.IsNil() {
+		return "", errors.New("nil object pointer")
 	}
 
-	if object.HasParentObject() {
-		parentObject, err := object.GetParentObject()
+	addr := fmt.Sprintf("%s$%s", object.GetType(), object.GetUniqueID())
+	for object.HasParentObject() {
+		parent, err := object.GetParentObject()
 		if err != nil {
-			return "", err
+			return "", fmt.Errorf("parent resolution failed: %w", err)
 		}
-		return generateAddr(parentObject, addr)
+
+		if parent == nil {
+			return "", errors.New("nil parent object")
+		}
+
+		addr = fmt.Sprintf("%s.%s$%s", addr, parent.GetType(), parent.GetUniqueID())
+		object = parent
 	}
 
 	return addr, nil
@@ -78,13 +81,12 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 	}
 
 	return &ObjectIdentifier{
-		ObjectName:          object.GetName(),
-		ObjectUniqueID:      object.GetUniqueID(),
-		ObjectType:          object.GetType(),
-		IsGroupType:         object.IsGroup(),
-		ParentObject:        parentObjectIdentifier,
-		AdditionalClaims:    object.AdditionalTokenClaims(),
-		BoundedUserIdentity: object.GetBoundedUserIdentity(),
+		ObjectUniqueID:   object.GetUniqueID(),
+		ObjectType:       object.GetType(),
+		IsGroupType:      object.IsGroup(),
+		ParentObject:     parentObjectIdentifier,
+		AdditionalClaims: object.AdditionalTokenClaims(),
+		ResourceOwner:    object.ResourceOwnerIdentity(),
 	}, nil
 }
 
