@@ -144,6 +144,7 @@ func (w *WebAdminClient) RemoveObjectAlias(object Object) error {
 	if err != nil {
 		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
+	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
 
 	return w.removeAddressAlias(userAddr, addrAlias)
 }

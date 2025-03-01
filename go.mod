@@ -12,6 +12,7 @@ require (
 	github.com/stretchr/testify v1.9.0
 	golang.org/x/oauth2 v0.23.0
 	k8s.io/apimachinery v0.30.2
+	xorm.io/xorm v1.3.9
 )
 
 require (

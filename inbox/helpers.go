@@ -1,6 +1,7 @@
 package inbox
 
 import (
+	"errors"
 	"fmt"
 	"reflect"
 	"strings"
@@ -13,14 +14,14 @@ func GenerateObjectAddr(object Object) (string, error) {
 }
 
 func generateObjectAddr(object Object) (string, error) {
-	addr, err := generateAddr(object, "")
+	addr, err := genBaseAddr(object)
 	if err != nil {
 		return "", err
 	}
 
-	boundedUserIdentity := object.GetBoundedUserIdentity()
-	if boundedUserIdentity != nil {
-		addr = fmt.Sprintf("%s&%s", addr, boundedUserIdentity.String())
+	resourceOwner := object.ResourceOwnerIdentity()
+	if resourceOwner != nil {
+		addr = fmt.Sprintf("%s&%s", addr, resourceOwner.String())
 	}
 
 	if len(addr) > MaxEmailLength {
@@ -29,26 +30,18 @@ func generateObjectAddr(object Object) (string, error) {
 	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
 }
 
-func generateAddr(object Object, addr string) (string, error) {
+func genBaseAddr(object Object) (string, error) {
 	if object == nil {
-		return addr, nil
+		return "", errors.New("object cannot be nil")
 	}
-	if isEmptyString(addr) {
-		addr = fmt.Sprintf("%s&%s$%s", object.GetType(), object.GetName(), object.GetUniqueID())
-	} else {
-		addr = fmt.Sprintf("%s.%s&%s$%s", addr, object.GetType(), object.GetName(), object.GetUniqueID())
-	}
-
-	if len(addr) > MaxEmailLength {
-		return "", ErrMaxEmailLengthExceeded
-	}
+	addr := fmt.Sprintf("%s$%s", object.GetType(), object.GetUniqueID())
 
 	if object.HasParentObject() {
 		parentObject, err := object.GetParentObject()
 		if err != nil {
 			return "", err
 		}
-		return generateAddr(parentObject, addr)
+		addr = fmt.Sprintf("%s.%s$%s", addr, parentObject.GetType(), parentObject.GetUniqueID())
 	}
 
 	return addr, nil
@@ -78,13 +71,12 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 	}
 
 	return &ObjectIdentifier{
-		ObjectName:          object.GetName(),
-		ObjectUniqueID:      object.GetUniqueID(),
-		ObjectType:          object.GetType(),
-		IsGroupType:         object.IsGroup(),
-		ParentObject:        parentObjectIdentifier,
-		AdditionalClaims:    object.AdditionalTokenClaims(),
-		BoundedUserIdentity: object.GetBoundedUserIdentity(),
+		ObjectUniqueID:   object.GetUniqueID(),
+		ObjectType:       object.GetType(),
+		IsGroupType:      object.IsGroup(),
+		ParentObject:     parentObjectIdentifier,
+		AdditionalClaims: object.AdditionalTokenClaims(),
+		ResourceOwner:    object.ResourceOwnerIdentity(),
 	}, nil
 }
 
