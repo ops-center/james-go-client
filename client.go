@@ -329,8 +329,6 @@ func (c *APIClient) callAPI(request *http.Request) (*http.Response, error) {
 		log.Printf("\n%s\n", string(dump))
 	}
 
-	request.Header.Set("Connection", "close")
-
 	resp, err := c.cfg.HTTPClient.Do(request)
 	if err != nil {
 		return resp, err
