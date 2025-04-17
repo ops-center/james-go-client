@@ -321,9 +321,9 @@ func (a *HealthcheckAPIService) ListAllHealthChecksExecute(r ApiListAllHealthChe
 }
 
 type ApiCheckComponentsRequest struct {
-	ctx            context.Context
-	ApiService     *HealthcheckAPIService
-	componentNames []string
+	ctx        context.Context
+	ApiService *HealthcheckAPIService
+	components []string
 }
 
 func (r ApiCheckComponentsRequest) Execute() (*http.Response, error) {
@@ -334,21 +334,21 @@ func (r ApiCheckComponentsRequest) Execute() (*http.Response, error) {
 CheckComponents Check multiple components
 
 	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
-	@param componentNames is a list of component names
+	@param components is a list of component names
 	@return ApiCheckComponentsRequest
 */
-func (a *HealthcheckAPIService) CheckComponents(ctx context.Context, componentNames []string) ApiCheckComponentsRequest {
+func (a *HealthcheckAPIService) CheckComponents(ctx context.Context, components []string) ApiCheckComponentsRequest {
 	return ApiCheckComponentsRequest{
-		ApiService:     a,
-		ctx:            ctx,
-		componentNames: componentNames,
+		ApiService: a,
+		ctx:        ctx,
+		components: components,
 	}
 }
 
 // Execute executes the request
 func (a *HealthcheckAPIService) CheckComponentsExecute(r ApiCheckComponentsRequest) (*http.Response, error) {
 	var (
-		localVarHTTPMethod = http.MethodDelete
+		localVarHTTPMethod = http.MethodGet
 		localVarPostBody   interface{}
 		formFiles          []formFile
 	)
@@ -358,7 +358,7 @@ func (a *HealthcheckAPIService) CheckComponentsExecute(r ApiCheckComponentsReque
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	if r.componentNames == nil {
+	if r.components == nil {
 		return nil, reportError("components list is required and must be specified")
 	}
 	localVarPath := localBasePath + "/healthcheck"
@@ -386,7 +386,7 @@ func (a *HealthcheckAPIService) CheckComponentsExecute(r ApiCheckComponentsReque
 	}
 
 	// body params
-	localVarPostBody = r.componentNames
+	localVarPostBody = r.components
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
 		return nil, err
