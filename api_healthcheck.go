@@ -319,3 +319,98 @@ func (a *HealthcheckAPIService) ListAllHealthChecksExecute(r ApiListAllHealthChe
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
+
+type ApiCheckComponentsRequest struct {
+	ctx            context.Context
+	ApiService     *HealthcheckAPIService
+	componentNames []string
+}
+
+func (r ApiCheckComponentsRequest) Execute() (*http.Response, error) {
+	return r.ApiService.CheckComponentsExecute(r)
+}
+
+/*
+CheckComponents Check multiple components
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param componentNames is a list of component names
+	@return ApiCheckComponentsRequest
+*/
+func (a *HealthcheckAPIService) CheckComponents(ctx context.Context, componentNames []string) ApiCheckComponentsRequest {
+	return ApiCheckComponentsRequest{
+		ApiService:     a,
+		ctx:            ctx,
+		componentNames: componentNames,
+	}
+}
+
+// Execute executes the request
+func (a *HealthcheckAPIService) CheckComponentsExecute(r ApiCheckComponentsRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "HealthcheckAPIService.CheckComponents")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	if r.componentNames == nil {
+		return nil, reportError("components list is required and must be specified")
+	}
+	localVarPath := localBasePath + "/healthcheck"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+
+	// body params
+	localVarPostBody = r.componentNames
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
