@@ -421,3 +421,98 @@ func (a *AddressAliasAPIService) ListAliasesExecute(r ApiListAliasesRequest) ([]
 
 	return localVarReturnValue, localVarHTTPResponse, nil
 }
+
+type ApiDeleteAliasesRequest struct {
+	ctx            context.Context
+	ApiService     *AddressAliasAPIService
+	aliasAddresses []string
+}
+
+func (r ApiDeleteAliasesRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteAliasesExecute(r)
+}
+
+/*
+DeleteAliases Deletes a list of users with aliases and their corresponding aliases
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param aliasAddresses is a list of User has aliases
+	@return ApiDeleteAliasesRequest
+*/
+func (a *AddressAliasAPIService) DeleteAliases(ctx context.Context, aliasAddresses []string) ApiDeleteAliasesRequest {
+	return ApiDeleteAliasesRequest{
+		ApiService:     a,
+		ctx:            ctx,
+		aliasAddresses: aliasAddresses,
+	}
+}
+
+// Execute executes the request
+func (a *AddressAliasAPIService) DeleteAliasesExecute(r ApiDeleteAliasesRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "AddressAliasAPIService.DeleteAliases")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	if r.aliasAddresses == nil {
+		return nil, reportError("aliasAddresses is requiered and must be specified")
+	}
+	localVarPath := localBasePath + "/address/aliases"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+
+	// body params
+	localVarPostBody = r.aliasAddresses
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}

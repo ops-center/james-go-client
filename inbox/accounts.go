@@ -50,6 +50,14 @@ func (w *WebAdminClient) deleteAccount(object Object) error {
 		return newServerError(nil, fmt.Errorf("failed to generate object address: %w", err))
 	}
 
+	if err = w.deleteAccountAddr(objectAddr); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) deleteAccountAddr(objectAddr string) error {
 	r, err := w.UsersAPI.DeleteUser(context.TODO(), objectAddr).Execute()
 	if err != nil {
 		return newServerError(r, err)
@@ -144,6 +152,7 @@ func (w *WebAdminClient) RemoveObjectAlias(object Object) error {
 	if err != nil {
 		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
+	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
 
 	return w.removeAddressAlias(userAddr, addrAlias)
 }
@@ -393,9 +402,22 @@ func (w *WebAdminClient) DeleteGroups(grpObjects []Object) error {
 		}
 		grpAddresses[i] = grpAddr
 	}
+
+	if err := w.deleteGroupAddresses(grpAddresses); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) deleteGroupAddresses(grpAddresses []string) error {
 	r, err := w.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
 	if err != nil {
 		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusNoContent {
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
@@ -509,6 +531,76 @@ func (w *WebAdminClient) CreateDomains(domains ...string) error {
 		if r.StatusCode != http.StatusNoContent {
 			return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 		}
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) GetAllUsers() ([]string, error) {
+	listUsersResponse, r, err := w.UsersAPI.ListUsers(context.TODO()).Execute()
+	if err != nil {
+		return nil, newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
+	}
+
+	var users []string
+	for _, userResp := range listUsersResponse {
+		users = append(users, *userResp.Username)
+	}
+
+	return users, nil
+}
+
+func (w *WebAdminClient) DeleteUserAddresses(userAddresses []string) error {
+	r, err := w.UsersAPI.DeleteUsers(context.TODO(), userAddresses).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusNoContent && r.StatusCode != http.StatusOK {
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
+	}
+
+	return nil
+}
+
+func (w *WebAdminClient) GetAllGroups() ([]string, error) {
+	listGroupsResponse, r, err := w.AddressGroupAPI.ListGroups(context.TODO()).Execute()
+	if err != nil {
+		return nil, newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
+	}
+
+	return listGroupsResponse, nil
+}
+
+func (w *WebAdminClient) ListAliasAddresses() ([]string, error) {
+	listAliasesResponse, r, err := w.AddressAliasAPI.ListAliases(context.TODO()).Execute()
+	if err != nil {
+		return nil, newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusOK {
+		return nil, newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
+	}
+
+	return listAliasesResponse, nil
+}
+
+func (w *WebAdminClient) DeleteAliasAddresses(aliasAddresses []string) error {
+	r, err := w.AddressAliasAPI.DeleteAliases(context.TODO(), aliasAddresses).Execute()
+	if err != nil {
+		return newServerError(r, err)
+	}
+
+	if r.StatusCode != http.StatusNoContent && r.StatusCode != http.StatusOK {
+		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
 	return nil
