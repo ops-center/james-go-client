@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
+	"net/mail"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -16,6 +17,7 @@ type TokenGetterFunc func() (*http.Client, string, error)
 
 type WebAdminConf struct {
 	WebAdminServiceEndpoint string
+	EmailDomain             string
 	TokenGetter             TokenGetterFunc
 }
 
@@ -29,6 +31,10 @@ func (wc *WebAdminConf) checkValidity() (err error) {
 
 	_, token, err := wc.TokenGetter()
 	if err != nil {
+		return
+	}
+
+	if _, err = mail.ParseAddress(wc.EmailDomain); err != nil {
 		return
 	}
 
@@ -49,7 +55,8 @@ func (wc *WebAdminConf) getJamesWebAdminApiClient() (*WebAdminClient, error) {
 	apiClient := openapi.NewAPIClient(configuration)
 
 	return &WebAdminClient{
-		APIClient: *apiClient,
+		APIClient:   *apiClient,
+		emailDomain: wc.EmailDomain,
 	}, nil
 }
 
@@ -112,8 +119,6 @@ const (
 
 	TokenCookieName     = "_inbox_token"
 	TokenCookieDuration = DurationDay
-
-	GlobalMailDomain = "cloud.appscode.com"
 )
 
 type ObjectType int

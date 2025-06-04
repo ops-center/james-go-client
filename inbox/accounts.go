@@ -125,7 +125,7 @@ func (w *WebAdminClient) AddObjectAlias(object Object) error {
 	if err != nil {
 		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
-	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
+	addrAlias = fmt.Sprintf("%s@%s", addrAlias, w.emailDomain)
 
 	return w.addAddressAlias(userAddr, addrAlias)
 }
@@ -152,7 +152,7 @@ func (w *WebAdminClient) RemoveObjectAlias(object Object) error {
 	if err != nil {
 		return newServerError(nil, fmt.Errorf("couldn't get address alias: %w", err))
 	}
-	addrAlias = fmt.Sprintf("%s@%s", addrAlias, GlobalMailDomain)
+	addrAlias = fmt.Sprintf("%s@%s", addrAlias, w.emailDomain)
 
 	return w.removeAddressAlias(userAddr, addrAlias)
 }
@@ -607,5 +607,5 @@ func (w *WebAdminClient) DeleteAliasAddresses(aliasAddresses []string) error {
 }
 
 func (w *WebAdminClient) CreateCloudAppcodeDomain() error {
-	return w.CreateDomains(GlobalMailDomain)
+	return w.CreateDomains(w.emailDomain)
 }

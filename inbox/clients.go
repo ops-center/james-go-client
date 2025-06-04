@@ -67,6 +67,7 @@ type WebAdminClient struct {
 	tokenGetter     TokenGetterFunc
 	mu              sync.RWMutex
 	serviceEndpoint string
+	emailDomain     string
 
 	lastComputedCacheAtUnixTime int64
 	cachedRenewalErr            error
