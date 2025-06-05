@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
+	"net/mail"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -16,6 +17,7 @@ type TokenGetterFunc func() (*http.Client, string, error)
 
 type WebAdminConf struct {
 	WebAdminServiceEndpoint string
+	EmailDomain             string
 	TokenGetter             TokenGetterFunc
 }
 
@@ -29,6 +31,10 @@ func (wc *WebAdminConf) checkValidity() (err error) {
 
 	_, token, err := wc.TokenGetter()
 	if err != nil {
+		return
+	}
+
+	if _, err = mail.ParseAddress(wc.EmailDomain); err != nil {
 		return
 	}
 
@@ -49,7 +55,8 @@ func (wc *WebAdminConf) getJamesWebAdminApiClient() (*WebAdminClient, error) {
 	apiClient := openapi.NewAPIClient(configuration)
 
 	return &WebAdminClient{
-		APIClient: *apiClient,
+		APIClient:   *apiClient,
+		emailDomain: wc.EmailDomain,
 	}, nil
 }
 
@@ -112,14 +119,12 @@ const (
 
 	TokenCookieName     = "_inbox_token"
 	TokenCookieDuration = DurationDay
-
-	GlobalMailDomain = "cloud.appscode.com"
 )
 
-type ObjectTypeIdentifier int
+type ObjectType int
 
 const (
-	UserType ObjectTypeIdentifier = iota + 1
+	UserType ObjectType = iota + 1
 	OrgType
 	TeamType
 	GroupType
@@ -130,11 +135,11 @@ const (
 	WorkloadType
 )
 
-func (i ObjectTypeIdentifier) String() string {
+func (i ObjectType) String() string {
 	return []string{"usr", "org", "tm", "grp", "cluster", "ns", "db", "agent", "wl"}[i-1]
 }
 
-func (i ObjectTypeIdentifier) EnumIndex() int {
+func (i ObjectType) EnumIndex() int {
 	return int(i)
 }
 
@@ -160,22 +165,6 @@ func (g *GroupAndAssociatedMemberIdentifier) GetMember() Object {
 // encompassing both accounts and groups. It facilitates the generation of
 // account addresses and management of object relationships.
 type Object interface {
-	// GetName returns the primary identifier or name of the object. This name
-	// is used for various operations, such as generating email addresses,
-	// identifying objects within the server, and displaying user-facing names.
-	//
-	// It is typically a concise and unique identifier, often automatically
-	// generated based on the object's type and internal properties. However,
-	// some implementations might allow setting a custom name.
-	//
-	// Return value:
-	//   - string: The name of the object.
-	//
-	// Example:
-	//   - For a user object, GetName() might return a username like "john.doe".
-	//   - For a product object, GetName() might return a product code like "ABC123".
-	GetName() string
-
 	// GetUniqueID returns a globally unique identifier for the object. This identifier
 	// is distinct from the name returned by GetName(), providing a guaranteed unique
 	// reference to the object within the system.
@@ -190,7 +179,7 @@ type Object interface {
 	// GetType returns the type of the object, indicating whether it's
 	// an account or a group. This is important to decide what
 	// actions and behaviors are allowed for the object.
-	GetType() ObjectTypeIdentifier
+	GetType() ObjectType
 
 	// HasParentObject signifies whether the object belongs to a parent
 	// group. This information is essential for understanding object
@@ -216,17 +205,14 @@ type Object interface {
 	// allowing for more context-rich authentication and authorization mechanisms.
 	AdditionalTokenClaims() *jwt.MapClaims
 
-	// GetBoundedUserIdentity returns key-value pairs representing the system user
-	// associated with the object, in cases where the object is not a user or organization.
-	// This can include details such as userID, userName, etc.
-	//
-	// This method is useful for identifying the system user context associated with
-	// non-user objects, facilitating better tracking and management of object-user
-	// relationships within the system.
+	// ResourceOwnerIdentity returns a pointer to a UserIdentity that represents the owner of the resource
+	// when creating an object for non-user entities such as PODs, Namespaces, or Clusters.
+	// In these cases, the returned identity typically identifies the individual responsible for importing
+	// or managing the resource, thereby facilitating accurate tracking and administration of object ownership.
 	//
 	// Return value:
-	//   - map[string]string: Key-value pairs representing the bounded user identity.
-	GetBoundedUserIdentity() *UserIdentity
+	//   - *UserIdentity representing the resource owner.
+	ResourceOwnerIdentity() *UserIdentity
 
 	// GetAddressAlias retrieves an alias or alternative address for the object, which
 	// can be used in addition to the primary identifier. This alias serves as a secondary
@@ -236,52 +222,22 @@ type Object interface {
 }
 
 type ObjectIdentifier struct {
-	ObjectName          string               `json:"ObjectName"`
-	ObjectUniqueID      string               `json:"ObjectUniqueID"`
-	ObjectType          ObjectTypeIdentifier `json:"ObjectType"`
-	IsGroupType         bool                 `json:"IsGroupType"`
-	ParentObject        *ObjectIdentifier    `json:"ParentObject,omitempty"`
-	AdditionalClaims    *jwt.MapClaims       `json:"AdditionalClaims,omitempty"`
-	BoundedUserIdentity *UserIdentity        `json:"BoundedUserIdentity,omitempty"`
-	AddressAlias        string               `json:"AddressAlias,omitempty"`
+	ObjectUniqueID   string            `json:"objectUniqueID"`
+	ObjectType       ObjectType        `json:"objectType"`
+	IsGroupType      bool              `json:"IsGroupType"`
+	ParentObject     *ObjectIdentifier `json:"parentObject,omitempty"`
+	AdditionalClaims *jwt.MapClaims    `json:"additionalClaims,omitempty"`
+	ResourceOwner    *UserIdentity     `json:"boundedUserIdentity,omitempty"`
+	AddressAlias     string            `json:"addressAlias,omitempty"`
 }
 
-func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
-	if o == nil {
-		return nil
-	}
-
-	out := new(ObjectIdentifier)
-	*out = *o
-
-	out.BoundedUserIdentity = o.BoundedUserIdentity.DeepCopy()
-
-	if o.AdditionalClaims != nil {
-		additionalClaims := jwt.MapClaims{}
-		for k, v := range *o.AdditionalClaims {
-			additionalClaims[k] = v
-		}
-		out.AdditionalClaims = &additionalClaims
-	}
-
-	if o.ParentObject != nil {
-		out.ParentObject = o.ParentObject.DeepCopy()
-	}
-	return out
-}
-
-// Implements the Object interface
 var _ Object = (*ObjectIdentifier)(nil)
-
-func (o ObjectIdentifier) GetName() string {
-	return o.ObjectName
-}
 
 func (o ObjectIdentifier) GetUniqueID() string {
 	return o.ObjectUniqueID
 }
 
-func (o ObjectIdentifier) GetType() ObjectTypeIdentifier {
+func (o ObjectIdentifier) GetType() ObjectType {
 	return o.ObjectType
 }
 
@@ -301,12 +257,36 @@ func (o ObjectIdentifier) AdditionalTokenClaims() *jwt.MapClaims {
 	return o.AdditionalClaims
 }
 
-func (o ObjectIdentifier) GetBoundedUserIdentity() *UserIdentity {
-	return o.BoundedUserIdentity
+func (o ObjectIdentifier) ResourceOwnerIdentity() *UserIdentity {
+	return o.ResourceOwner
 }
 
 func (o ObjectIdentifier) GetAddressAlias() (string, error) {
 	return o.AddressAlias, nil
+}
+
+func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
+	if o == nil {
+		return nil
+	}
+
+	out := new(ObjectIdentifier)
+	*out = *o
+
+	out.ResourceOwner = o.ResourceOwner.DeepCopy()
+
+	if o.AdditionalClaims != nil {
+		additionalClaims := jwt.MapClaims{}
+		for k, v := range *o.AdditionalClaims {
+			additionalClaims[k] = v
+		}
+		out.AdditionalClaims = &additionalClaims
+	}
+
+	if o.ParentObject != nil {
+		out.ParentObject = o.ParentObject.DeepCopy()
+	}
+	return out
 }
 
 type UserIdentity struct {
@@ -326,6 +306,6 @@ func (u *UserIdentity) DeepCopy() *UserIdentity {
 	}
 }
 
-func (u UserIdentity) String() string {
-	return fmt.Sprintf("meta&%s$%s&%s", u.OwnerName, u.OwnerID, u.OwnerType)
+func (u *UserIdentity) String() string {
+	return fmt.Sprintf("meta$%s$%s", u.OwnerID, u.OwnerType)
 }

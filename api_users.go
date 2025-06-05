@@ -411,6 +411,101 @@ func (a *UsersAPIService) DeleteUserExecute(r ApiDeleteUserRequest) (*http.Respo
 	return localVarHTTPResponse, nil
 }
 
+type ApiDeleteUsersRequest struct {
+	ctx           context.Context
+	ApiService    *UsersAPIService
+	userAddresses []string
+}
+
+func (r ApiDeleteUsersRequest) Execute() (*http.Response, error) {
+	return r.ApiService.DeleteUsersExecute(r)
+}
+
+/*
+DeleteUsers Deletes a list of users
+
+	@param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+	@param users is a list of User mail address
+	@return ApiDeleteUsersRequest
+*/
+func (a *UsersAPIService) DeleteUsers(ctx context.Context, userAddresses []string) ApiDeleteUsersRequest {
+	return ApiDeleteUsersRequest{
+		ApiService:    a,
+		ctx:           ctx,
+		userAddresses: userAddresses,
+	}
+}
+
+// Execute executes the request
+func (a *UsersAPIService) DeleteUsersExecute(r ApiDeleteUsersRequest) (*http.Response, error) {
+	var (
+		localVarHTTPMethod = http.MethodDelete
+		localVarPostBody   interface{}
+		formFiles          []formFile
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UsersAPIService.DeleteUsers")
+	if err != nil {
+		return nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	if r.userAddresses == nil {
+		return nil, reportError("userAddresses is required and must be specified")
+	}
+	localVarPath := localBasePath + "/users"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+
+	// body params
+	localVarPostBody = r.userAddresses
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		return localVarHTTPResponse, newErr
+	}
+
+	return localVarHTTPResponse, nil
+}
+
 type ApiExistsUserRequest struct {
 	ctx        context.Context
 	ApiService *UsersAPIService

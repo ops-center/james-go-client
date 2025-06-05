@@ -9,7 +9,8 @@ import (
 )
 
 type tokenService struct {
-	privateKey *rsa.PrivateKey
+	privateKey  *rsa.PrivateKey
+	emailDomain string
 }
 
 func newTokenService(privateKey *rsa.PrivateKey) tokenService {
@@ -21,7 +22,7 @@ func newTokenService(privateKey *rsa.PrivateKey) tokenService {
 func (t *tokenService) CreateJwtTokenForObject(object Object) (string, error) {
 	defaultExpTime := time.Now().Add(DefaultTokenExpDuration).Unix()
 
-	sub, err := generateObjectAddr(object)
+	sub, err := generateObjectAddr(object, t.emailDomain)
 	if err != nil {
 		return "", fmt.Errorf("failed to generate object addr: %v", err)
 	}
