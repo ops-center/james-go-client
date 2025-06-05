@@ -82,6 +82,7 @@ func NewWebAdminClient(wc *WebAdminConf) (*WebAdminClient, error) {
 		return nil, err
 	}
 
+	client.emailDomain = wc.EmailDomain
 	client.lastComputedCacheAtUnixTime = time.Now().UnixNano()
 	client.cachedRenewalErr = nil
 
