@@ -80,3 +80,26 @@ func TestGetGroupAndAssociatedMemberIdentifier(t *testing.T) {
 		t.Errorf("difference between expected output and result:\n%s", diff)
 	}
 }
+
+func TestIsValidDomainFormat(t *testing.T) {
+	tests := []struct {
+		emailDomain string
+		expected    bool
+	}{
+		{"example.com", true},
+		{"sub.example.com", true},
+		{"ace.internal", true},
+		{"example.co.bd", true},
+		{"example", false},
+		{"@example.com", false},
+		{"example@com", false},
+		{"", false},
+	}
+
+	for _, test := range tests {
+		result := isValidDomainFormat(test.emailDomain)
+		if result != test.expected {
+			t.Errorf("IsValidEmailDomain(%q) = %v; expected %v", test.emailDomain, result, test.expected)
+		}
+	}
+}

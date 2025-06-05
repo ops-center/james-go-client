@@ -5,7 +5,6 @@ import (
 	"crypto/rsa"
 	"fmt"
 	"net/http"
-	"net/mail"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -34,8 +33,8 @@ func (wc *WebAdminConf) checkValidity() (err error) {
 		return
 	}
 
-	if _, err = mail.ParseAddress(wc.EmailDomain); err != nil {
-		return
+	if !isValidDomainFormat(wc.EmailDomain) {
+		return fmt.Errorf("invalid email domain format: %s", wc.EmailDomain)
 	}
 
 	_, _, err = jwt.NewParser().ParseUnverified(token, jwt.MapClaims{})

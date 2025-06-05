@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"reflect"
+	"regexp"
 	"strings"
 
 	"github.com/google/uuid"
@@ -121,4 +122,9 @@ func generateRandomPassword() (string, error) {
 
 func isEmptyString(s string) bool {
 	return len(strings.TrimSpace(s)) == 0
+}
+
+func isValidDomainFormat(domain string) bool {
+	re := regexp.MustCompile(`^(?i)[a-z0-9-]{1,63}(\.[a-z0-9-]{1,63})+\.?$`)
+	return re.MatchString(domain)
 }
