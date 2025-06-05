@@ -340,10 +340,8 @@ func (w *WebAdminClient) CleanupPreAppliedData(preAppliedSyncOps SyncOpsSet) err
 			if err != nil {
 				return fmt.Errorf("failed to get all users: %w", err)
 			}
-			for _, user := range users {
-				if err = w.deleteAccountAddr(user); err != nil {
-					return fmt.Errorf("failed to delete account addr: %w", err)
-				}
+			if err = w.deleteMultipleAccounts(users); err != nil {
+				return fmt.Errorf("failed to delete all accounts: %w", err)
 			}
 
 			groups, err := w.GetAllGroups()
@@ -359,10 +357,8 @@ func (w *WebAdminClient) CleanupPreAppliedData(preAppliedSyncOps SyncOpsSet) err
 				return fmt.Errorf("failed to get all aliases: %w", err)
 			}
 
-			for _, address := range addresses {
-				if err = w.removeAllAddressAliases(address); err != nil {
-					return fmt.Errorf("failed to remove all address aliases: %w", err)
-				}
+			if err = w.deleteAllAddressAliasesOfAListOfUsers(addresses); err != nil {
+				return fmt.Errorf("failed to remove all aliases: %w", err)
 			}
 		}
 	}

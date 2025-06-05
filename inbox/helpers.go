@@ -9,11 +9,11 @@ import (
 	"github.com/google/uuid"
 )
 
-func GenerateObjectAddr(object Object) (string, error) {
-	return generateObjectAddr(object)
+func GenerateObjectAddr(object Object, domain string) (string, error) {
+	return generateObjectAddr(object, domain)
 }
 
-func generateObjectAddr(object Object) (string, error) {
+func generateObjectAddr(object Object, domain string) (string, error) {
 	addr, err := GenerateBaseAddress(object)
 	if err != nil {
 		return "", err
@@ -27,7 +27,7 @@ func generateObjectAddr(object Object) (string, error) {
 	if len(addr) > MaxEmailLength {
 		return "", ErrMaxEmailLengthExceeded
 	}
-	return fmt.Sprintf("%s@%s", addr, GlobalMailDomain), nil
+	return fmt.Sprintf("%s@%s", addr, domain), nil
 }
 
 func GenerateBaseAddress(object Object) (string, error) {
