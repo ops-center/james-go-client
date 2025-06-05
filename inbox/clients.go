@@ -38,7 +38,7 @@ func New(c *Config) (*Service, error) {
 
 	return &Service{
 		WebAdminClient: client,
-		tokenService:   newTokenService(rsaPrivateKey),
+		tokenService:   newTokenService(rsaPrivateKey, c.EmailDomain),
 	}, nil
 }
 
