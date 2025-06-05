@@ -13,9 +13,10 @@ type tokenService struct {
 	emailDomain string
 }
 
-func newTokenService(privateKey *rsa.PrivateKey) tokenService {
+func newTokenService(privateKey *rsa.PrivateKey, emailDomain string) tokenService {
 	return tokenService{
-		privateKey: privateKey,
+		privateKey:  privateKey,
+		emailDomain: emailDomain,
 	}
 }
 
@@ -66,12 +67,12 @@ func (t *tokenService) GetUserTokenCookieDuration() time.Duration {
 	return TokenCookieDuration
 }
 
-func GetAdminToken(privateKey string) (string, error) {
+func GetAdminToken(privateKey, emailDomain string) (string, error) {
 	rsaPrivateKey, err := jwt.ParseRSAPrivateKeyFromPEM([]byte(privateKey))
 	if err != nil {
 		return "", err
 	}
-	service := newTokenService(rsaPrivateKey)
+	service := newTokenService(rsaPrivateKey, emailDomain)
 	adminClaims := jwt.MapClaims{
 		"sub":  "admin",
 		"exp":  time.Now().Add(AdminTokenExpDuration).Unix(),
