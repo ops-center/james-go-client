@@ -21,15 +21,15 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 	if resp == nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    err.Error(),
+			Message:    fmt.Sprintf("response is nil.\nerror msg: %s", err.Error()),
 		}
 	}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
+	body, parseErr := io.ReadAll(resp.Body)
+	if parseErr != nil {
 		return &JamesServerError{
-			StatusCode: http.StatusInternalServerError,
-			Message:    fmt.Errorf("failed to read response body : %w", err).Error(),
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("failed to read response body: %s.\nerror msg: %s", parseErr.Error(), err.Error()),
 		}
 	}
 
@@ -39,10 +39,10 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 	}
 
 	if len(body) > 0 {
-		if err = json.Unmarshal(body, jamesServerError); err != nil {
+		if parseErr = json.Unmarshal(body, jamesServerError); parseErr != nil {
 			return &JamesServerError{
-				StatusCode: http.StatusInternalServerError,
-				Message:    fmt.Errorf("failed to unmarshal error response : %w", err).Error(),
+				StatusCode: resp.StatusCode,
+				Message:    fmt.Sprintf("failed to unmarshal error response: %s.\nerror msg: %s", parseErr.Error(), err.Error()),
 			}
 		}
 	}
