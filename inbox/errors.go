@@ -17,11 +17,11 @@ type JamesServerError struct {
 	Details    string `json:"details"`
 }
 
-func newServerError(resp *http.Response, err error) *JamesServerError {
+func newServerError(resp *http.Response, respErr error) *JamesServerError {
 	if resp == nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    err.Error(),
+			Message:    fmt.Sprintf("response is nil. err: %v", respErr),
 		}
 	}
 
@@ -29,25 +29,26 @@ func newServerError(resp *http.Response, err error) *JamesServerError {
 	if err != nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
-			Message:    fmt.Errorf("failed to read response body : %w", err).Error(),
+			Message:    fmt.Sprintf("failed to read response body: %v. error: %v", err, respErr),
 		}
 	}
 
-	jamesServerError := &JamesServerError{
-		StatusCode: resp.StatusCode,
-		Message:    resp.Status,
-	}
-
-	if len(body) > 0 {
-		if err = json.Unmarshal(body, jamesServerError); err != nil {
-			return &JamesServerError{
-				StatusCode: http.StatusInternalServerError,
-				Message:    fmt.Errorf("failed to unmarshal error response : %w", err).Error(),
-			}
+	if !json.Valid(body) {
+		return &JamesServerError{
+			StatusCode: resp.StatusCode,
+			Message:    fmt.Sprintf("response: %v. err: %v", string(body), respErr),
 		}
 	}
 
-	return jamesServerError
+	var jamesServerError JamesServerError
+	if err = json.Unmarshal(body, &jamesServerError); err != nil {
+		return &JamesServerError{
+			StatusCode: http.StatusInternalServerError,
+			Message:    fmt.Sprintf("failed to unmarshal error response: %v. error: %v", err, respErr),
+		}
+	}
+
+	return &jamesServerError
 }
 
 func IsUnauthorizedError(err error) bool {
