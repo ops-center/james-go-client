@@ -40,15 +40,15 @@ func newServerError(resp *http.Response, respErr error) *JamesServerError {
 		}
 	}
 
-	var jamesServerError *JamesServerError
-	if err = json.Unmarshal(body, jamesServerError); err != nil {
+	var jamesServerError JamesServerError
+	if err = json.Unmarshal(body, &jamesServerError); err != nil {
 		return &JamesServerError{
 			StatusCode: http.StatusInternalServerError,
 			Message:    fmt.Sprintf("failed to unmarshal error response: %v. error: %v", err, respErr),
 		}
 	}
 
-	return jamesServerError
+	return &jamesServerError
 }
 
 func IsUnauthorizedError(err error) bool {
