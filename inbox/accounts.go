@@ -71,6 +71,9 @@ func (w *WebAdminClient) deleteAccountAddr(objectAddr string) error {
 }
 
 func (w *WebAdminClient) deleteMultipleAccounts(objectAddresses []string) error {
+	if len(objectAddresses) == 0 {
+		return nil
+	}
 	r, err := w.UsersAPI.DeleteUsers(context.TODO(), objectAddresses).Execute()
 	if err != nil {
 		return newServerError(r, err)
@@ -437,6 +440,9 @@ func (w *WebAdminClient) DeleteGroups(grpObjects []Object) error {
 }
 
 func (w *WebAdminClient) deleteGroupAddresses(grpAddresses []string) error {
+	if len(grpAddresses) == 0 {
+		return nil
+	}
 	r, err := w.AddressGroupAPI.DeleteGroups(context.TODO(), grpAddresses).Execute()
 	if err != nil {
 		return newServerError(r, err)
