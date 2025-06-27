@@ -238,12 +238,15 @@ func (w *WebAdminClient) removeAllAddressAliasesOfAUserAddr(userAddr string) err
 }
 
 func (w *WebAdminClient) deleteAllAddressAliasesOfAListOfUsers(userAddresses []string) error {
+	if len(userAddresses) == 0 {
+		return nil
+	}
 	r, err := w.AddressAliasAPI.DeleteAliases(context.TODO(), userAddresses).Execute()
 	if err != nil {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
