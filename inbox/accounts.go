@@ -33,7 +33,7 @@ func (w *WebAdminClient) createAccount(object Object) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -63,7 +63,7 @@ func (w *WebAdminClient) deleteAccountAddr(objectAddr string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -79,7 +79,7 @@ func (w *WebAdminClient) deleteMultipleAccounts(objectAddresses []string) error 
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -152,7 +152,7 @@ func (w *WebAdminClient) addAddressAlias(userAddr string, alias string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -179,7 +179,7 @@ func (w *WebAdminClient) removeAddressAlias(userAddr string, alias string) error
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -229,7 +229,7 @@ func (w *WebAdminClient) removeAllAddressAliasesOfAUserAddr(userAddr string) err
 			return newServerError(r, err)
 		}
 
-		if r.StatusCode != http.StatusNoContent {
+		if r.StatusCode >= 300 {
 			return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 		}
 	}
@@ -326,7 +326,7 @@ func (w *WebAdminClient) addGroupMember(grpAddr, memberAddr string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -352,7 +352,7 @@ func (w *WebAdminClient) removeGroupMember(grpAddr, memberAddr string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -451,7 +451,7 @@ func (w *WebAdminClient) deleteGroupAddresses(grpAddresses []string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -563,7 +563,7 @@ func (w *WebAdminClient) CreateDomains(domains ...string) error {
 			return newServerError(r, err)
 		}
 
-		if r.StatusCode != http.StatusNoContent {
+		if r.StatusCode >= 300 {
 			return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 		}
 	}
@@ -595,7 +595,7 @@ func (w *WebAdminClient) DeleteUserAddresses(userAddresses []string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent && r.StatusCode != http.StatusOK {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
@@ -634,7 +634,7 @@ func (w *WebAdminClient) DeleteAliasAddresses(aliasAddresses []string) error {
 		return newServerError(r, err)
 	}
 
-	if r.StatusCode != http.StatusNoContent && r.StatusCode != http.StatusOK {
+	if r.StatusCode >= 300 {
 		return newServerError(r, fmt.Errorf("unknown error: status: %s", r.Status))
 	}
 
