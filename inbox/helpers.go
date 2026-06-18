@@ -36,7 +36,7 @@ func GenerateBaseAddress(object Object) (string, error) {
 		return "", errors.New("nil object reference")
 	}
 
-	if val := reflect.ValueOf(object); val.Kind() == reflect.Ptr && val.IsNil() {
+	if val := reflect.ValueOf(object); val.Kind() == reflect.Pointer && val.IsNil() {
 		return "", errors.New("nil object pointer")
 	}
 
@@ -63,7 +63,7 @@ func GetObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 }
 
 func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, error) {
-	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
+	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Pointer && reflect.ValueOf(object).IsNil()) {
 		return nil, nil
 	}
 
@@ -92,7 +92,7 @@ func getObjectIdentifierFromObjectInterface(object Object) (*ObjectIdentifier, e
 }
 
 func GetGroupAndAssociatedMemberIdentifier(object Object) ([]GroupAndAssociatedMemberIdentifier, error) {
-	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Ptr && reflect.ValueOf(object).IsNil()) {
+	if object == nil || (reflect.ValueOf(object).Kind() == reflect.Pointer && reflect.ValueOf(object).IsNil()) {
 		return nil, nil
 	}
 
