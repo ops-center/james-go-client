@@ -218,6 +218,7 @@ type Object interface {
 	// means of addressing the object, typically used for email forwarding, nicknames, or
 	// alternate contact points.
 	GetAddressAlias() (string, error)
+	DeepCopyObject() Object
 }
 
 type ObjectIdentifier struct {
@@ -286,6 +287,10 @@ func (o *ObjectIdentifier) DeepCopy() *ObjectIdentifier {
 		out.ParentObject = o.ParentObject.DeepCopy()
 	}
 	return out
+}
+
+func (o ObjectIdentifier) DeepCopyObject() Object {
+	return o.DeepCopy()
 }
 
 type UserIdentity struct {
